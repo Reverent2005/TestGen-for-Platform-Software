@@ -28,9 +28,21 @@ public class NewGenATC implements GenATC {
         // - etc.
         // For now, we're just generating a skeleton
         atcFileContent.append("// TODO: Algorithm not yet implemented\n");
-        atcFileContent.append("// This is a placeholder - implement generateTestFunction() to generate actual test code\n");
+        atcFileContent.append("// This is a placeholder - implement generateTestFunction() to generate actual test code\n");        
+        // TODO: When algorithm is implemented, this will generate actual test code
+        // For now, just show what spec we're processing
+        atcFileContent.append("    //----------------------------------------------------------------\n");
+        atcFileContent.append("    // TODO: Implement test generation algorithm\n");
+        atcFileContent.append("    // Steps to implement:\n");
+        atcFileContent.append("    // 1. Extract function signature from spec.getSignature()\n");
+        atcFileContent.append("    // 2. Create symbolic input variables (e.g., Debug.makeSymbolicInt())\n");
+        atcFileContent.append("    // 3. Translate preconditions to Debug.assume()\n");
+        atcFileContent.append("    // 4. Snapshot old state for postconditions\n");
+        atcFileContent.append("    // 5. Generate the actual method call\n");
+        atcFileContent.append("    // 6. Translate postconditions to assertions\n");
+        atcFileContent.append("    //----------------------------------------------------------------\n");
         atcFileContent.append("\n");
-        
+
         atcFileContent.append("public class GeneratedATCs {\n\n");
 
         // Iterate through the calls in the test string
@@ -75,21 +87,10 @@ public class NewGenATC implements GenATC {
         
         StringBuilder func = new StringBuilder();
         
-        // TODO: When algorithm is implemented, this will generate actual test code
-        // For now, just show what spec we're processing
-        func.append("    // Function: ").append(spec.getName()).append("\n");
-        func.append("    // TODO: Implement test generation algorithm\n");
-        func.append("    // Steps to implement:\n");
-        func.append("    // 1. Extract function signature from spec.getSignature()\n");
-        func.append("    // 2. Create symbolic input variables (e.g., Debug.makeSymbolicInt())\n");
-        func.append("    // 3. Translate preconditions to Debug.assume()\n");
-        func.append("    // 4. Snapshot old state for postconditions\n");
-        func.append("    // 5. Generate the actual method call\n");
-        func.append("    // 6. Translate postconditions to assertions\n");
-        func.append("    //\n");
         Object pre = spec.getPrecondition();
         Object post = spec.getPostcondition();
         func.append("    // Pre-condition: ").append(pre != null ? pre.toString() : "(none)").append("\n");
+        func.append("    // Function call: ").append(spec.getSignature().getName()).append("(").append(spec.getSignature().getParameters().toString()).append(")").append("\n");
         func.append("    // Post-condition: ").append(post != null ? post.toString() : "(none)").append("\n");
         
         return func.toString();
