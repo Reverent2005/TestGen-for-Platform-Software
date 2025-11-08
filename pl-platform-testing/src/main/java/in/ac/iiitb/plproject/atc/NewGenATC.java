@@ -34,7 +34,7 @@ public class NewGenATC implements GenATC {
         atcFileContent.append("    //----------------------------------------------------------------\n");
         atcFileContent.append("    // TODO: Implement test generation algorithm\n");
         atcFileContent.append("    // Steps to implement:\n");
-        atcFileContent.append("    // 1. Extract function signature from spec.getSignature()\n");
+        // [COMPLETED] atcFileContent.append("    // 1. Extract function signature from spec.getSignature()\n");
         atcFileContent.append("    // 2. Create symbolic input variables (e.g., Debug.makeSymbolicInt())\n");
         atcFileContent.append("    // 3. Translate preconditions to Debug.assume()\n");
         atcFileContent.append("    // 4. Snapshot old state for postconditions\n");
