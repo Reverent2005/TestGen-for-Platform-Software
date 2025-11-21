@@ -30,33 +30,81 @@ public class NewGenATC implements GenATC {
         imports.add("java.util.Arrays"); // Needed for SetExpr conversion to Java code
         // TODO: Add imports for user-defined classes (e.g., com.example.lms.Stack) - need a mechanism to collect these
 
-        List<AtcTestMethod> testMethods = new ArrayList<>();
+        List<AtcTestMethod> actualTestMethods = new ArrayList<>(); // This will hold our unique helper methods
 
         List<String> calls = testStringAst.getCalls();
         
-        // Use a for-i loop to get an index for unique function names
-        for (int i = 0; i < calls.size(); i++) {
-            String functionName = calls.get(i);
-            
-            // Find the corresponding JML spec for this function
+        // NEW: Maps to store unique function specifications and their generated helper methods
+        Map<String, JmlFunctionSpec> uniqueFunctionSpecs = new LinkedHashMap<>(); // Use LinkedHashMap to preserve order
+        Map<String, AtcTestMethod> generatedHelperMethods = new HashMap<>(); // Store generated AtcTestMethod objects
+
+        // 1. Identify unique function specifications from the test string calls
+        for (String functionName : calls) {
             JmlFunctionSpec spec = jmlSpecAst.findSpecFor(functionName);
-            
             if (spec != null) {
-                // Generate a self-contained test function for this spec
-                // Pass the index 'i' to make the function name unique
-                AtcTestMethod testMethod = generateTestFunction(spec, i); // Changed to AtcTestMethod
-                testMethods.add(testMethod);
+                // Assuming functionName is unique enough for now.
+                // For real overloading, you'd need to consider the full signature.
+                uniqueFunctionSpecs.putIfAbsent(functionName, spec);
             }
         }
+        
+        // Use a for-i loop to get an index for unique function names
+        // for (int i = 0; i < calls.size(); i++) {
+        //     String functionName = calls.get(i);
+            
+        //     // Find the corresponding JML spec for this function
+        //     JmlFunctionSpec spec = jmlSpecAst.findSpecFor(functionName);
+            
+        //     if (spec != null) {
+        //         // Generate a self-contained test function for this spec
+        //         // Pass the index 'i' to make the function name unique
+        //         AtcTestMethod testMethod = generateTestFunction(spec, i); // Changed to AtcTestMethod
+        //         testMethods.add(testMethod);
+        //     }
+        // }
+        
+        // 2. Generate a helper method for each unique function specification
+        for (Map.Entry<String, JmlFunctionSpec> entry : uniqueFunctionSpecs.entrySet()) {
+            String funcName = entry.getKey();
+            JmlFunctionSpec spec = entry.getValue();
+            // Generate helper method, e.g., "increment_helper"
+            AtcTestMethod helperMethod = generateHelperFunction(spec); // Renamed and modified
+            generatedHelperMethods.put(funcName, helperMethod);
+            actualTestMethods.add(helperMethod); // Add to the list of methods in the class
+        }
+
+        // 3. Generate the main method calls based on the original test string order
+        List<AtcStatement> mainMethodStatements = new ArrayList<>();
+        // Assuming a constructor call for GeneratedATCs, adjust if AtcClass handles this differently
+        mainMethodStatements.add(new AtcVarDecl("GeneratedATCs", "instance", AstHelper.createObjectCreationExpr("GeneratedATCs", new ArrayList<>())));
+
+        for (String functionName : calls) { // Iterate through original calls to maintain order
+            AtcTestMethod helperMethod = generatedHelperMethods.get(functionName);
+            if (helperMethod != null) {
+                // Create a method call statement for the helper
+                in.ac.iiitb.plproject.ast.MethodCallExpr callExpr =
+                    AstHelper.createMethodCallExpr(AstHelper.createNameExpr("instance"), helperMethod.getMethodName(), new ArrayList<>());
+                mainMethodStatements.add(new AtcMethodCallStmt(callExpr));
+            }
+        }
+
+        // Create the main method AtcTestMethod object
+        // We'll need to define a way for AtcTestMethod to signify a static main method.
+        // For now, let's assume a constructor like: public AtcTestMethod(String name, List<AtcStatement> statements, boolean isStatic, boolean isMain)
+        // I will add a placeholder for isStatic and isMain, assuming they are part of the AtcTestMethod or a new AtcMainMethod class.
+        // For simplicity now, let's assume AtcTestMethod has a constructor to signify a main method.
+        // If it doesn't, we will need to explore the 'ir' package further.
+        AtcTestMethod mainMethod = new AtcTestMethod("main", mainMethodStatements, true, true); // true for static, true for main
+        actualTestMethods.add(mainMethod);
         
         String packageName = "in.ac.iiitb.plproject.atc.generated"; // Assuming a default generated package
         String className = "GeneratedATCs";
         String runWithAnnotation = null; // No @RunWith for now, can be added later if needed
 
-        return new AtcClass(packageName, className, imports, testMethods, runWithAnnotation);
+        return new AtcClass(packageName, className, imports, actualTestMethods, runWithAnnotation);
     }
   
-    private AtcTestMethod generateTestFunction(JmlFunctionSpec spec, int index) {
+    private AtcTestMethod generateHelperFunction(JmlFunctionSpec spec) {
         // StringBuilder func = new StringBuilder(); // Comment out old StringBuilder
         List<AtcStatement> statements = new ArrayList<>(); // New list to hold IR statements
         FunctionSignature signature = spec.getSignature();
@@ -181,8 +229,8 @@ public class NewGenATC implements GenATC {
         // func.append("    }\n");
         // return func.toString();
         
-        String testName = "test_" + spec.getName() + "_" + index;
-        return new AtcTestMethod(testName, statements);
+        String helperMethodName = spec.getName() + "_helper"; // e.g., "increment_helper"
+        return new AtcTestMethod(helperMethodName, statements);
     }
     // ===================================
     // Helper Methods - Implement using AstHelper
