@@ -94,9 +94,10 @@ public class IncrementalTestExample {
             // Convert IR to Java code string for display using prettyPrint
             String javaCode = genAtc.prettyPrint(atcClass);
             
-            // Demonstrate SpfWrapper transformation (prints both simple and JPF versions)
+            // Use SpfWrapper to transform and save files (prints both simple and JPF versions, and saves to outputs/)
             SpfWrapper spfWrapper = new SpfWrapper();
-            spfWrapper.printBothVersions(javaCode);
+            JavaFile javaFile = new JavaFile(javaCode);
+            spfWrapper.run(javaFile, atcClass);
             
         } catch (Exception e) {
             System.err.println("Error in simple example: " + e.getMessage());
@@ -146,9 +147,10 @@ public class IncrementalTestExample {
             // Convert IR to Java code string for display using prettyPrint
             String javaCode = genAtc.prettyPrint(atcClass);
             
-            // Demonstrate SpfWrapper transformation (prints both simple and JPF versions)
+            // Use SpfWrapper to transform and save files (prints both simple and JPF versions, and saves to outputs/)
             SpfWrapper spfWrapper = new SpfWrapper();
-            spfWrapper.printBothVersions(javaCode);
+            JavaFile javaFile = new JavaFile(javaCode);
+            spfWrapper.run(javaFile, atcClass);
             
         } catch (Exception e) {
             System.err.println("Error in complex example: " + e.getMessage());

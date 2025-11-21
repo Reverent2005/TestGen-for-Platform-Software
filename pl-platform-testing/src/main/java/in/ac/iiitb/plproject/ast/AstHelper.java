@@ -111,6 +111,12 @@ public class AstHelper {
                 for (Expr arg : methodCallExpr.args) {
                     args.add(transformPostConditionRecursive(arg, resultVarName, oldStateMap, params, false));
                 }
+                
+                // If scope is null and method name is a known helper function (like "update"), prefix with Helper.
+                if (scope == null && isKnownHelperFunction(methodCallExpr.name.identifier)) {
+                    scope = createNameExpr("Helper");
+                }
+                
                 return createMethodCallExpr(scope, methodCallExpr.name.identifier, args);
             }
         } else if (expr instanceof BinaryExpr) {
@@ -184,6 +190,82 @@ public class AstHelper {
         }
         collectVarsToSnapshotRecursive((Expr) expr, result);
         return result;
+    }
+    
+    /**
+     * Finds if a parameter is referenced in post-state (with prime notation or _post suffix).
+     * Returns the first parameter name found that appears in post-state, or null if none found.
+     * This is used to determine if a method's return value should be assigned back to a parameter.
+     * 
+     * @param post The postcondition expression
+     * @param paramNames List of parameter names to check
+     * @return Parameter name if referenced in post-state, null otherwise
+     */
+    public static String findPostStateParameter(Object post, List<String> paramNames) {
+        if (post == null || !(post instanceof Expr)) {
+            return null;
+        }
+        return findPostStateParameterRecursive((Expr) post, paramNames);
+    }
+    
+    /**
+     * Recursive helper to find parameter referenced in post-state.
+     * Has direct access to AST classes since it's in the same package.
+     */
+    private static String findPostStateParameterRecursive(Expr expr, List<String> paramNames) {
+        if (expr == null) {
+            return null;
+        }
+        
+        if (expr instanceof MethodCallExpr) {
+            MethodCallExpr methodCallExpr = (MethodCallExpr) expr;
+            
+            // Check for prime operator: '(x)
+            if (methodCallExpr.name.identifier.equals("'") && !methodCallExpr.args.isEmpty()) {
+                // Prime operator found - extract variable name from first argument
+                Expr arg = methodCallExpr.args.get(0);
+                String varName = getNameFromExpr(arg);
+                if (varName != null && paramNames.contains(varName)) {
+                    return varName;
+                }
+            }
+            
+            // Recursively check arguments
+            for (Expr arg : methodCallExpr.args) {
+                String result = findPostStateParameterRecursive(arg, paramNames);
+                if (result != null) {
+                    return result;
+                }
+            }
+            
+            // Check scope if present
+            if (methodCallExpr.scope != null) {
+                return findPostStateParameterRecursive(methodCallExpr.scope, paramNames);
+            }
+        } else if (expr instanceof BinaryExpr) {
+            BinaryExpr binExpr = (BinaryExpr) expr;
+            String result = findPostStateParameterRecursive(binExpr.left, paramNames);
+            if (result != null) {
+                return result;
+            }
+            return findPostStateParameterRecursive(binExpr.right, paramNames);
+        } else if (expr instanceof NameExpr) {
+            NameExpr nameExpr = (NameExpr) expr;
+            String name = ((SimpleName) nameExpr.name).identifier;
+            
+            // Check for _post suffix
+            if (name.endsWith("_post")) {
+                String baseName = name.substring(0, name.length() - "_post".length());
+                if (paramNames.contains(baseName)) {
+                    return baseName;
+                }
+            }
+        } else if (expr instanceof UnaryExpr) {
+            UnaryExpr unaryExpr = (UnaryExpr) expr;
+            return findPostStateParameterRecursive(unaryExpr.expr, paramNames);
+        }
+        
+        return null;
     }
 
     private static void collectVarsToSnapshotRecursive(Expr expr, Set<String> result) {
@@ -275,9 +357,48 @@ public class AstHelper {
             } else if (op == BinaryExpr.Operator.OR) {
                 operator = " || ";
             } else if (op == BinaryExpr.Operator.EQUALS) {
-                operator = " == ";
+                // For EQUALS, use .equals() for object comparisons, == for primitives
+                if (isObjectExpression(binExpr.left) || isObjectExpression(binExpr.right)) {
+                    // Check if one side is a method call (which returns a new object)
+                    // For Map comparisons, we need to use .equals() directly, not Objects.equals()
+                    boolean leftIsMethodCall = binExpr.left instanceof MethodCallExpr;
+                    boolean rightIsMethodCall = binExpr.right instanceof MethodCallExpr;
+                    boolean mightBeMapComparison = isLikelyMapExpression(binExpr.left) || isLikelyMapExpression(binExpr.right);
+                    
+                    // If one side is a method call or this looks like a Map comparison,
+                    // generate code that uses .equals() with explicit null checks
+                    // This ensures Map.equals() is used for content comparison, not reference equality
+                    if (leftIsMethodCall || rightIsMethodCall || mightBeMapComparison) {
+                        // Generate: (left != null && right != null && left.equals(right))
+                        // Note: This assumes the method call is on the right side
+                        // For method calls on left, we'd need to handle it differently
+                        if (rightIsMethodCall) {
+                            // Method call on right: store result and compare
+                            // We can't easily store it here, so generate direct comparison with null checks
+                            return "(" + left + " != null && " + right + " != null && " + left + ".equals(" + right + "))";
+                        } else if (leftIsMethodCall) {
+                            // Method call on left: compare with right
+                            return "(" + left + " != null && " + right + " != null && " + left + ".equals(" + right + "))";
+                        } else {
+                            // Map comparison: use .equals() with null checks
+                            return "(" + left + " != null && " + right + " != null && " + left + ".equals(" + right + "))";
+                        }
+                    } else {
+                        // Use .equals() for object comparisons with null safety
+                        // Generate: (left != null && left.equals(right)) || (left == null && right == null)
+                        // Or simpler: java.util.Objects.equals(left, right)
+                        return "(java.util.Objects.equals(" + left + ", " + right + "))";
+                    }
+                } else {
+                    operator = " == ";
+                }
             } else if (op == BinaryExpr.Operator.NOT_EQUALS) {
-                operator = " != ";
+                // For NOT_EQUALS, use !.equals() for object comparisons, != for primitives
+                if (isObjectExpression(binExpr.left) || isObjectExpression(binExpr.right)) {
+                    return "(!java.util.Objects.equals(" + left + ", " + right + "))";
+                } else {
+                    operator = " != ";
+                }
             } else if (op == BinaryExpr.Operator.LESS_THAN) {
                 operator = " < ";
             } else if (op == BinaryExpr.Operator.LESS_THAN_OR_EQUAL) {
@@ -341,8 +462,25 @@ public class AstHelper {
             return operator + expression;
         } else if (e instanceof ObjectCreationExpr) {
             ObjectCreationExpr objCreationExpr = (ObjectCreationExpr) e;
+            String typeName = ((ClassOrInterfaceType) objCreationExpr.type).name.identifier;
+            
+            // Special handling for Set - cannot instantiate interface directly
+            if (typeName.equals("Set")) {
+                // Generate: new HashSet<>(Arrays.asList(...))
+                StringBuilder sb = new StringBuilder("new HashSet<>(Arrays.asList(");
+                for (int i = 0; i < objCreationExpr.args.size(); i++) {
+                    sb.append(exprToJavaCode(objCreationExpr.args.get(i)));
+                    if (i < objCreationExpr.args.size() - 1) {
+                        sb.append(", ");
+                    }
+                }
+                sb.append("))");
+                return sb.toString();
+            }
+            
+            // For other types, generate normally
             StringBuilder sb = new StringBuilder("new ");
-            sb.append(((ClassOrInterfaceType) objCreationExpr.type).name.identifier).append("(");
+            sb.append(typeName).append("(");
             for (int i = 0; i < objCreationExpr.args.size(); i++) {
                 sb.append(exprToJavaCode(objCreationExpr.args.get(i)));
                 if (i < objCreationExpr.args.size() - 1) {
@@ -391,6 +529,116 @@ public class AstHelper {
         return e.toString();
     }
     
+    /**
+     * Determines if an expression represents an object (vs a primitive).
+     * This is used to decide whether to use .equals() or == for comparisons.
+     * 
+     * @param expr The expression to check
+     * @return true if the expression likely represents an object, false if it's a primitive
+     */
+    private static boolean isObjectExpression(Expr expr) {
+        if (expr == null) {
+            return false;
+        }
+        
+        // Method calls always return objects (or could return objects)
+        if (expr instanceof MethodCallExpr) {
+            return true;
+        }
+        
+        // NameExpr (variables) - assume they're objects unless we know otherwise
+        // This is a heuristic: variables like "result", "data" are objects
+        if (expr instanceof NameExpr) {
+            NameExpr nameExpr = (NameExpr) expr;
+            String name = ((SimpleName) nameExpr.name).identifier;
+            // Primitives are usually single letters or common names
+            // Objects are usually longer names or collection types
+            // This is a heuristic - could be improved with type information
+            return !isPrimitiveVariableName(name);
+        }
+        
+        // Object creation expressions are objects
+        if (expr instanceof ObjectCreationExpr) {
+            return true;
+        }
+        
+        // SetExpr, MapExpr, TupleExpr are objects
+        if (expr instanceof SetExpr || expr instanceof MapExpr || expr instanceof TupleExpr) {
+            return true;
+        }
+        
+        // Binary expressions with arithmetic operations are usually primitives
+        // But if they involve method calls or object variables, they could be objects
+        if (expr instanceof BinaryExpr) {
+            BinaryExpr binExpr = (BinaryExpr) expr;
+            // If either side is an object, the result might be an object
+            return isObjectExpression(binExpr.left) || isObjectExpression(binExpr.right);
+        }
+        
+        // Literals (IntegerLiteralExpr, etc.) are primitives
+        // Field access could be either, but default to object for safety
+        return true; // Default to object for safety (use .equals())
+    }
+    
+    /**
+     * Checks if a variable name is likely a primitive variable.
+     * This is a heuristic - ideally we'd have type information.
+     */
+    private static boolean isPrimitiveVariableName(String name) {
+        // Common primitive variable names are short or follow patterns
+        if (name.length() <= 2) {
+            return true; // x, y, i, j, etc.
+        }
+        // Variables ending in common primitive suffixes
+        if (name.endsWith("_old") || name.endsWith("_size") || name.endsWith("_count") || 
+            name.endsWith("_val") || name.endsWith("_num")) {
+            return true;
+        }
+        // Common primitive names
+        return name.equals("x") || name.equals("y") || name.equals("z") ||
+               name.equals("i") || name.equals("j") || name.equals("k") ||
+               name.equals("count") || name.equals("size") || name.equals("value");
+    }
+    
+    /**
+     * Checks if an expression is likely a Map type.
+     * This is a heuristic based on variable names and method calls.
+     * 
+     * @param expr The expression to check
+     * @return true if the expression likely represents a Map
+     */
+    private static boolean isLikelyMapExpression(Expr expr) {
+        if (expr == null) {
+            return false;
+        }
+        
+        // MapExpr is definitely a Map
+        if (expr instanceof MapExpr) {
+            return true;
+        }
+        
+        // Check variable names that are commonly Maps
+        if (expr instanceof NameExpr) {
+            NameExpr nameExpr = (NameExpr) expr;
+            String name = ((SimpleName) nameExpr.name).identifier;
+            // Common Map variable names
+            return name.equals("result") || name.equals("map") || name.equals("data") ||
+                   name.startsWith("result") || name.startsWith("map") ||
+                   name.endsWith("Map") || name.endsWith("Result");
+        }
+        
+        // Method calls that might return Maps (e.g., Helper.update(...))
+        if (expr instanceof MethodCallExpr) {
+            MethodCallExpr methodCall = (MethodCallExpr) expr;
+            String methodName = methodCall.name.identifier;
+            // Common Map-returning method names
+            return methodName.equals("update") || methodName.equals("getMap") ||
+                   methodName.equals("createMap") || methodName.endsWith("Map");
+        }
+        
+        return false;
+    }
+    
     // ===================================
     // Factory methods for creating expressions
     // ===================================
@@ -418,6 +666,16 @@ public class AstHelper {
         );
     }
    
+    /**
+     * Checks if a method name is a known helper function that should be prefixed with Helper.
+     */
+    private static boolean isKnownHelperFunction(String methodName) {
+        // List of known helper functions that should be called as Helper.methodName()
+        return methodName.equals("update") || 
+               methodName.equals("increment") || 
+               methodName.equals("process");
+    }
+    
     /**
      * Create an ObjectCreationExpr.
      */

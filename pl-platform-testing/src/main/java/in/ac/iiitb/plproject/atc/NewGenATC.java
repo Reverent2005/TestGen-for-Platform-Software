@@ -28,7 +28,7 @@ public class NewGenATC implements GenATC {
         imports.add("java.util.Map");
         imports.add("java.util.HashSet");
         imports.add("java.util.HashMap");
-        imports.add("java.util.Arrays"); // Needed for SetExpr conversion to Java code
+        imports.add("java.util.Arrays"); // Needed for Arrays.asList() when creating HashSet from Set literals // Needed for SetExpr conversion to Java code
         // TODO: Add imports for user-defined classes (e.g., com.example.lms.Stack) - need a mechanism to collect these
 
         List<AtcTestMethod> actualTestMethods = new ArrayList<>(); // This will hold our unique helper methods
@@ -166,11 +166,24 @@ public class NewGenATC implements GenATC {
                 }
             }
             
-            // Old string generation logic commented out
-            // func.append("        ").append(varType).append(" ").append(oldVarName).append(" = ").append(varName).append("; // WARNING: Not a deep copy for objects\n");
-            
-            // New IR statement
-            statements.add(new AtcVarDecl(varType, oldVarName, AstHelper.createNameExpr(varName)));
+            // For Set and Map types, create proper copies instead of aliases
+            // Generate: Set<?> var_old = new HashSet<>(var); or Map<?,?> var_old = new HashMap<>(var);
+            // Note: Null-safety is handled in AtcIrCodeGenerator which will generate:
+            // var_old = (var != null) ? new HashSet<>(var) : new HashSet<>();
+            if (varType.equals("Set")) {
+                List<Object> constructorArgs = new ArrayList<>();
+                constructorArgs.add(AstHelper.createNameExpr(varName));
+                statements.add(new AtcVarDecl("Set<?>", oldVarName, 
+                    AstHelper.createObjectCreationExpr("HashSet", constructorArgs)));
+            } else if (varType.equals("Map")) {
+                List<Object> constructorArgs = new ArrayList<>();
+                constructorArgs.add(AstHelper.createNameExpr(varName));
+                statements.add(new AtcVarDecl("Map<?,?>", oldVarName, 
+                    AstHelper.createObjectCreationExpr("HashMap", constructorArgs)));
+            } else {
+                // For primitive types and other objects, use simple assignment
+                statements.add(new AtcVarDecl(varType, oldVarName, AstHelper.createNameExpr(varName)));
+            }
         }
         // --- 4. Translate Preconditions (Algorithm Step 3) ---
         // func.append("\n        // 3. Set JML preconditions\n");
@@ -193,9 +206,43 @@ public class NewGenATC implements GenATC {
         String functionName = signature.getName();
         String resultVarName = null;
         
-        // TODO: The target of the call is not specified in the spec.
-        // Assuming a static call to a helper class for now.
-        // String callString = "Helper." + functionName + "(" + String.join(", ", paramNames) + ");\n";
+        // Add null checks for collection parameters before method call
+        // This prevents NullPointerException during symbolic execution
+        for (Variable param : params) {
+            String paramType = param.getTypeName();
+            String paramName = param.getName();
+            // Check if parameter is a collection type
+            if (paramType.equals("Set") || paramType.equals("Map") || 
+                paramType.equals("Set<?>") || paramType.equals("Map<?,?>") ||
+                paramType.startsWith("Set<") || paramType.startsWith("Map<")) {
+                // Add assume statement to ensure collection is not null
+                // This helps JPF avoid exploring null paths that would cause NPE
+                statements.add(new AtcAssumeStmt(
+                    AstHelper.createBinaryExpr(
+                        AstHelper.createNameExpr(paramName),
+                        AstHelper.createNameExpr("null"),
+                        "NOT_EQUALS"
+                    )
+                ));
+            }
+        }
+        
+        // Check if postcondition references parameters with prime notation or _post suffix
+        // This determines whether to assign return value back to a parameter
+        String postStateParam = null;
+        if (post != null) {
+            // Use AstHelper which has direct access to AST classes (more reliable than reflection)
+            List<String> paramNameList = new ArrayList<>();
+            for (Variable p : params) {
+                paramNameList.add(p.getName());
+            }
+            postStateParam = AstHelper.findPostStateParameter(post, paramNameList);
+            
+            // Fallback: try string-based detection if AST-based fails
+            if (postStateParam == null) {
+                postStateParam = findPostStateParameter(post, params);
+            }
+        }
         
         // New IR: Create MethodCallExpr
         List<Object> callArgs = new ArrayList<>();
@@ -204,13 +251,25 @@ public class NewGenATC implements GenATC {
         }
         in.ac.iiitb.plproject.ast.MethodCallExpr callExpr = AstHelper.createMethodCallExpr(AstHelper.createNameExpr("Helper"), functionName, callArgs); // Use MethodCallExpr
 
-
-        if (returnType.equals("void")) {
-            // func.append("        ").append(callString);
+        // Determine how to handle the method call result
+        // If postcondition references a parameter in post-state, we should assign return value to that parameter
+        // This works for both void and non-void methods (void methods that actually return values via postcondition)
+        if (postStateParam != null && isPrimitiveType(getParamType(postStateParam, params))) {
+            // Postcondition references this parameter in post-state (e.g., x' > x or x_post > x)
+            // Assign return value back to the parameter: param = Helper.method(param);
+            // This handles both cases:
+            // 1. Method returns void but postcondition suggests it should return a value -> treat as returning that type
+            // 2. Method returns a value and postcondition references parameter -> assign to parameter
+            String paramType = getParamType(postStateParam, params);
+            statements.add(new AtcVarDecl(paramType, postStateParam, callExpr));
+            resultVarName = postStateParam; // Use the parameter name as result for postcondition transformation
+        } else if (returnType.equals("void")) {
+            // Regular void method call with no parameter mutation
             statements.add(new AtcMethodCallStmt(callExpr));
         } else {
-            resultVarName = "result"; // The variable name for the return value
-            // func.append("        ").append(returnType).append(" ").append(resultVarName).append(" = ").append(callString);
+            // Method returns a value and postcondition doesn't reference a parameter
+            // Standard return value handling: result = Helper.method(...);
+            resultVarName = "result";
             statements.add(new AtcVarDecl(returnType, resultVarName, callExpr));
         }
         
@@ -273,6 +332,273 @@ public class NewGenATC implements GenATC {
         // 2. If it sees "x_post" or "'(x)", and return is non-void, it replaces it with "result".
         // 3. If it sees "x" (and "x" is in oldStateMap), it replaces it with "x_old".
         return (Expr) AstHelper.transformPostCondition(expr, resultVarName, oldStateMap, params);
+    }
+    
+    /**
+     * Finds if a parameter is referenced in post-state (with prime notation or _post suffix).
+     * This is used to determine if return value should be assigned back to a parameter.
+     * 
+     * @param post The postcondition expression
+     * @param params List of function parameters
+     * @return Parameter name if referenced in post-state, null otherwise
+     */
+    private String findPostStateParameter(Expr post, List<Variable> params) {
+        if (post == null) {
+            return null;
+        }
+        
+        // Convert postcondition to string to check for patterns
+        // This is a more reliable approach than reflection
+        String postStr = AstHelper.exprToJavaCode(post);
+        
+        // Look for prime operator pattern: '([varName]) or varName_post
+        for (Variable param : params) {
+            String paramName = param.getName();
+            // Check for prime notation patterns (flexible matching):
+            // - '([x]) - with brackets and spaces
+            // - '(x) - without brackets
+            // - '([x]) - various bracket formats
+            // Use regex-like pattern matching for flexibility
+            String primePattern1 = "'([" + paramName + "])";  // '([x])
+            String primePattern2 = "'(" + paramName + ")";    // '(x)
+            String primePattern3 = "'(["+ paramName + "])";   // '([x]) no space
+            
+            if (postStr.contains(primePattern1) || 
+                postStr.contains(primePattern2) ||
+                postStr.contains(primePattern3) ||
+                postStr.matches(".*'\\s*\\(\\s*\\[\\s*" + paramName + "\\s*\\]\\s*\\).*") ||
+                postStr.matches(".*'\\s*\\(\\s*" + paramName + "\\s*\\).*")) {
+                return paramName;
+            }
+            // Check for _post suffix: x_post (must be whole word, not part of another name)
+            if (postStr.matches(".*\\b" + paramName + "_post\\b.*")) {
+                return paramName;
+            }
+        }
+        
+        // Fallback: use recursive reflection-based approach for more complex cases
+        return findPostStateParameterRecursive(post, params);
+    }
+    
+    /**
+     * Gets the type of a parameter by name.
+     */
+    private String getParamType(String paramName, List<Variable> params) {
+        for (Variable p : params) {
+            if (p.getName().equals(paramName)) {
+                return p.getTypeName();
+            }
+        }
+        return "int"; // default
+    }
+    
+    /**
+     * Recursive helper to find parameter referenced in post-state.
+     */
+    private String findPostStateParameterRecursive(Expr expr, List<Variable> params) {
+        if (expr == null) {
+            return null;
+        }
+        
+        String className = expr.getClass().getSimpleName();
+        
+        // Check if this is a method call with prime operator
+        if (className.equals("MethodCallExpr")) {
+            try {
+                java.lang.reflect.Field nameField = expr.getClass().getDeclaredField("name");
+                nameField.setAccessible(true);
+                Object nameObj = nameField.get(expr);
+                
+                java.lang.reflect.Field identifierField = nameObj.getClass().getDeclaredField("identifier");
+                identifierField.setAccessible(true);
+                String identifier = (String) identifierField.get(nameObj);
+                
+                java.lang.reflect.Field argsField = expr.getClass().getDeclaredField("args");
+                argsField.setAccessible(true);
+                @SuppressWarnings("unchecked")
+                List<Expr> args = (List<Expr>) argsField.get(expr);
+                
+                if ("'".equals(identifier) && !args.isEmpty()) {
+                    // Prime operator found - check if argument is a parameter
+                    Expr arg = args.get(0);
+                    String varName = AstHelper.getNameFromExpr(arg);
+                    if (varName != null) {
+                        // Check if this is a parameter
+                        for (Variable param : params) {
+                            if (param.getName().equals(varName)) {
+                                return varName;
+                            }
+                        }
+                    }
+                }
+                
+                // Recursively check arguments
+                for (Expr arg : args) {
+                    String result = findPostStateParameterRecursive(arg, params);
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            } catch (Exception e) {
+                // If reflection fails, return null
+                return null;
+            }
+        } else if (className.equals("BinaryExpr")) {
+            try {
+                java.lang.reflect.Field leftField = expr.getClass().getDeclaredField("left");
+                leftField.setAccessible(true);
+                Expr left = (Expr) leftField.get(expr);
+                
+                java.lang.reflect.Field rightField = expr.getClass().getDeclaredField("right");
+                rightField.setAccessible(true);
+                Expr right = (Expr) rightField.get(expr);
+                
+                String result = findPostStateParameterRecursive(left, params);
+                if (result != null) {
+                    return result;
+                }
+                return findPostStateParameterRecursive(right, params);
+            } catch (Exception e) {
+                return null;
+            }
+        } else if (className.equals("NameExpr")) {
+            // Check for _post suffix
+            try {
+                java.lang.reflect.Field nameField = expr.getClass().getDeclaredField("name");
+                nameField.setAccessible(true);
+                Object nameObj = nameField.get(expr);
+                
+                java.lang.reflect.Field identifierField = nameObj.getClass().getDeclaredField("identifier");
+                identifierField.setAccessible(true);
+                String identifier = (String) identifierField.get(nameObj);
+                
+                if (identifier != null && identifier.endsWith("_post")) {
+                    String baseName = identifier.substring(0, identifier.length() - "_post".length());
+                    // Check if this is a parameter
+                    for (Variable param : params) {
+                        if (param.getName().equals(baseName)) {
+                            return baseName;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Finds if a primitive parameter is mutated (referenced with prime notation in postcondition).
+     * Returns the parameter name if found, null otherwise.
+     * Kept for backward compatibility.
+     * 
+     * @param post The postcondition expression
+     * @param params List of function parameters
+     * @return Parameter name if a primitive is mutated, null otherwise
+     */
+    private String findMutatedPrimitiveParameter(Expr post, List<Variable> params) {
+        if (post == null) {
+            return null;
+        }
+        
+        // Check if postcondition contains prime operator on a primitive parameter
+        return findMutatedPrimitiveParameterRecursive(post, params);
+    }
+    
+    /**
+     * Recursive helper to find mutated primitive parameter.
+     * Uses reflection/string-based approach to avoid package-private visibility issues.
+     */
+    private String findMutatedPrimitiveParameterRecursive(Expr expr, List<Variable> params) {
+        if (expr == null) {
+            return null;
+        }
+        
+        String className = expr.getClass().getSimpleName();
+        
+        // Check if this is a method call with prime operator
+        if (className.equals("MethodCallExpr")) {
+            try {
+                java.lang.reflect.Field nameField = expr.getClass().getDeclaredField("name");
+                nameField.setAccessible(true);
+                Object nameObj = nameField.get(expr);
+                
+                java.lang.reflect.Field identifierField = nameObj.getClass().getDeclaredField("identifier");
+                identifierField.setAccessible(true);
+                String identifier = (String) identifierField.get(nameObj);
+                
+                java.lang.reflect.Field argsField = expr.getClass().getDeclaredField("args");
+                argsField.setAccessible(true);
+                @SuppressWarnings("unchecked")
+                List<Expr> args = (List<Expr>) argsField.get(expr);
+                
+                if ("'".equals(identifier) && !args.isEmpty()) {
+                    // Prime operator found - check if argument is a primitive parameter
+                    Expr arg = args.get(0);
+                    String varName = AstHelper.getNameFromExpr(arg);
+                    if (varName != null) {
+                        // Check if this is a primitive parameter
+                        for (Variable param : params) {
+                            if (param.getName().equals(varName)) {
+                                String paramType = param.getTypeName();
+                                // Check if it's a primitive type
+                                if (isPrimitiveType(paramType)) {
+                                    return varName;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // Recursively check arguments
+                for (Expr arg : args) {
+                    String result = findMutatedPrimitiveParameterRecursive(arg, params);
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            } catch (Exception e) {
+                // If reflection fails, return null
+                return null;
+            }
+        } else if (className.equals("BinaryExpr")) {
+            try {
+                java.lang.reflect.Field leftField = expr.getClass().getDeclaredField("left");
+                leftField.setAccessible(true);
+                Expr left = (Expr) leftField.get(expr);
+                
+                java.lang.reflect.Field rightField = expr.getClass().getDeclaredField("right");
+                rightField.setAccessible(true);
+                Expr right = (Expr) rightField.get(expr);
+                
+                String result = findMutatedPrimitiveParameterRecursive(left, params);
+                if (result != null) {
+                    return result;
+                }
+                return findMutatedPrimitiveParameterRecursive(right, params);
+            } catch (Exception e) {
+                // If reflection fails, return null
+                return null;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Checks if a type is a primitive type.
+     */
+    private boolean isPrimitiveType(String typeName) {
+        return typeName.equals("int") || typeName.equals("Integer") ||
+               typeName.equals("double") || typeName.equals("Double") ||
+               typeName.equals("float") || typeName.equals("Float") ||
+               typeName.equals("long") || typeName.equals("Long") ||
+               typeName.equals("short") || typeName.equals("Short") ||
+               typeName.equals("byte") || typeName.equals("Byte") ||
+               typeName.equals("boolean") || typeName.equals("Boolean") ||
+               typeName.equals("char") || typeName.equals("Character");
     }
 }
 

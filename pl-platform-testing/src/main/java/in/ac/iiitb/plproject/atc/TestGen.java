@@ -34,8 +34,8 @@ public class TestGen {
         JavaFile atcJavaFile = new JavaFile(javaCode);
         
         // 3. Run symbolic execution on that file
-        // This calls the SPF wrapper
-        List<ConcreteInput> testInputs = this.symexWrapper.run(atcJavaFile);
+        // This calls the SPF wrapper, passing both the JavaFile and AtcClass for file generation
+        List<ConcreteInput> testInputs = this.symexWrapper.run(atcJavaFile, atcClass);
         // 4. Plug back/return results
         return testInputs;
     }

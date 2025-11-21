@@ -86,7 +86,8 @@ public class SpfWrapper {
         }
         
         // Match: Type varName = (Type) Symbolic.input("varName");
-        Pattern pattern2 = Pattern.compile("(\\s+)(\\w+)\\s+(\\w+)\\s*=\\s*\\(([\\w.]+)\\)\\s*Symbolic\\.input\\(\"([^\"]+)\"\\);");
+        // Handle generic types like Set<?>, Map<?,?> etc.
+        Pattern pattern2 = Pattern.compile("(\\s+)([\\w.<?>,]+)\\s+(\\w+)\\s*=\\s*\\(([\\w.<?>,]+)\\)\\s*Symbolic\\.input\\(\"([^\"]+)\"\\);");
         Matcher matcher2 = pattern2.matcher(line);
         if (matcher2.find()) {
             String indent = matcher2.group(1);
@@ -95,12 +96,43 @@ public class SpfWrapper {
             String castType = matcher2.group(4);
             String varNameInQuotes = matcher2.group(5);
             
-            String debugCall = "(" + castType + ") Debug.makeSymbolicRef(\"" + varNameInQuotes + "\")";
-            return indent + type + " " + varName + " = " + debugCall + ";";
+            // Extract base type from generic type (e.g., "Set<?>" -> "Set")
+            String baseType = castType.split("[<>]")[0].trim();
+            
+            // Check if it's a collection type - if so, use symbolic initialization
+            if (TypeMapper.isCollectionType(baseType)) {
+                String genericType = TypeMapper.getGenericType(baseType);
+                String initCode = TypeMapper.getCollectionInitCode(baseType, varNameInQuotes);
+                return indent + genericType + " " + varName + " = " + initCode + ";";
+            } else {
+                // For custom classes, use makeSymbolicRef with null
+                // Collections are handled above, so this is safe for custom classes
+                String debugCall = TypeMapper.getMakeSymbolicRefCall(baseType, varNameInQuotes, false);
+                return indent + type + " " + varName + " = " + debugCall + ";";
+            }
         }
         
-        // Fallback: just replace Symbolic.input with Debug.makeSymbolicRef
-        return line.replace("Symbolic.input(", "Debug.makeSymbolicRef(");
+        // Fallback: check if it's a collection type before using makeSymbolicRef
+        if (line.contains("Symbolic.input(")) {
+            // Try to extract type and check if it's a collection
+            Pattern fallbackPattern = Pattern.compile("(\\s+)([\\w.<?>,]+)\\s+(\\w+)\\s*=\\s*.*Symbolic\\.input\\(\"([^\"]+)\"\\);");
+            Matcher fallbackMatcher = fallbackPattern.matcher(line);
+            if (fallbackMatcher.find()) {
+                String type = fallbackMatcher.group(2);
+                String baseType = type.split("[<>]")[0].trim();
+                if (TypeMapper.isCollectionType(baseType)) {
+                    String genericType = TypeMapper.getGenericType(baseType);
+                    String varName = fallbackMatcher.group(3);
+                    String varNameInQuotes = fallbackMatcher.group(4);
+                    String initCode = TypeMapper.getCollectionInitCode(baseType, varNameInQuotes);
+                    return fallbackMatcher.group(1) + genericType + " " + varName + " = " + initCode + ";";
+                }
+            }
+            // For non-collections, use makeSymbolicRef but try to avoid null
+            return line.replace("Symbolic.input(\"", "Debug.makeSymbolicRef(\"").replace("\")", "\", null)");
+        }
+        
+        return line;
     }
     
     /**
@@ -109,11 +141,12 @@ public class SpfWrapper {
      * - makeSymbolicString() for String
      * - makeSymbolicInteger() for int
      * - makeSymbolicDouble() for double
-     * - makeSymbolicRef() for objects
+     * - makeSymbolicRef() for objects (requires Object parameter)
+     * Uses TypeMapper to intelligently handle collections and custom classes.
      */
     private String getDebugMakeSymbolicCall(String type, String varName) {
         if (type.equalsIgnoreCase("int") || type.equals("Integer")) {
-            // SPF examples use makeSymbolicInteger (as seen in LibReturnBook.java line 413)
+            // SPF examples use makeSymbolicInteger
             return "Debug.makeSymbolicInteger(\"" + varName + "\")";
         } else if (type.equalsIgnoreCase("double") || type.equals("Double")) {
             return "Debug.makeSymbolicDouble(\"" + varName + "\")";
@@ -122,9 +155,14 @@ public class SpfWrapper {
         } else if (type.equalsIgnoreCase("boolean") || type.equals("Boolean")) {
             // JPF doesn't have makeSymbolicBoolean, so use int and convert
             return "Debug.makeSymbolicInteger(\"" + varName + "\") != 0";
+        } else if (TypeMapper.isCollectionType(type)) {
+            // Collections should use symbolic initialization with empty collection as default
+            // This shouldn't normally be called for collections, but handle it gracefully
+            return TypeMapper.getCollectionInitCode(type, varName);
         } else {
-            // For objects, use makeSymbolicRef with cast
-            return "(" + type + ") Debug.makeSymbolicRef(\"" + varName + "\")";
+            // For custom classes, use makeSymbolicRef with null
+            // Collections are handled above, so this is safe for custom classes
+            return TypeMapper.getMakeSymbolicRefCall(type, varName, false);
         }
     }
     
@@ -174,6 +212,114 @@ public class SpfWrapper {
     }
     
     /**
+     * Extracts the method signature (including parameters) from Java code.
+     * Returns the signature in JPF format: methodName(paramType1,paramType2,...)
+     * JPF uses Java-style type names, e.g., main(java.lang.String[])
+     * 
+     * @param javaCode The Java code
+     * @param methodName The method name to find
+     * @return Method signature in JPF format, or methodName() if not found or no parameters
+     */
+    private String extractMethodSignature(String javaCode, String methodName) {
+        // Pattern to match method declarations with parameters
+        // Handles: public static void main(String[] args) or public void methodName() etc.
+        // More flexible pattern to handle various method declarations
+        Pattern methodPattern = Pattern.compile(
+            "(?:public|private|protected)?\\s*(?:static)?\\s*(?:void|\\w+)\\s+" + 
+            Pattern.quote(methodName) + 
+            "\\s*\\(([^)]*)\\)"
+        );
+        Matcher matcher = methodPattern.matcher(javaCode);
+        
+        if (matcher.find()) {
+            String params = matcher.group(1).trim();
+            if (params.isEmpty()) {
+                return methodName + "()";
+            }
+            
+            // Parse parameters and convert to JPF format
+            // Split by comma, but be careful with generics
+            List<String> paramParts = new ArrayList<>();
+            int depth = 0;
+            StringBuilder currentParam = new StringBuilder();
+            
+            for (char c : params.toCharArray()) {
+                if (c == '<') depth++;
+                else if (c == '>') depth--;
+                else if (c == ',' && depth == 0) {
+                    paramParts.add(currentParam.toString().trim());
+                    currentParam = new StringBuilder();
+                    continue;
+                }
+                currentParam.append(c);
+            }
+            if (currentParam.length() > 0) {
+                paramParts.add(currentParam.toString().trim());
+            }
+            
+            StringBuilder signature = new StringBuilder(methodName + "(");
+            
+            for (int i = 0; i < paramParts.size(); i++) {
+                String param = paramParts.get(i);
+                if (param.isEmpty()) continue;
+                
+                // Extract type (handle arrays and generics)
+                // Remove parameter name, annotations, final keyword
+                param = param.replaceAll("^@\\w+\\s*", ""); // Remove annotations
+                param = param.replaceAll("^final\\s+", ""); // Remove final
+                // Remove parameter name - match word at end that's not part of type
+                param = param.replaceAll("\\s+[a-zA-Z_][a-zA-Z0-9_]*$", "");
+                param = param.trim();
+                
+                // Convert to fully qualified type names for JPF (Java-style, not JVM descriptor)
+                if (param.equals("String[]") || param.equals("String []")) {
+                    signature.append("java.lang.String[]");
+                } else if (param.equals("int[]") || param.equals("int []")) {
+                    signature.append("int[]");
+                } else if (param.equals("double[]") || param.equals("double []")) {
+                    signature.append("double[]");
+                } else if (param.equals("boolean[]") || param.equals("boolean []")) {
+                    signature.append("boolean[]");
+                } else if (param.equals("String")) {
+                    signature.append("java.lang.String");
+                } else if (param.equals("int")) {
+                    signature.append("int");
+                } else if (param.equals("double")) {
+                    signature.append("double");
+                } else if (param.equals("boolean")) {
+                    signature.append("boolean");
+                } else if (param.equals("long")) {
+                    signature.append("long");
+                } else if (param.equals("float")) {
+                    signature.append("float");
+                } else if (param.equals("char")) {
+                    signature.append("char");
+                } else if (param.equals("byte")) {
+                    signature.append("byte");
+                } else if (param.equals("short")) {
+                    signature.append("short");
+                } else if (param.contains("[]")) {
+                    // Array type - keep Java-style format
+                    signature.append(param);
+                } else {
+                    // For other types, use as-is (assume fully qualified or will be resolved)
+                    signature.append(param);
+                }
+                
+                if (i < paramParts.size() - 1) {
+                    signature.append(",");
+                }
+            }
+            
+            signature.append(")");
+            return signature.toString();
+        }
+        
+        // Fallback: return method name with empty parentheses
+        return methodName + "()";
+    }
+    
+    /**
      * Prints both the simple Java version, JPF-transformed version, and .jpf file content.
      * 
      * @param simpleJavaCode The simple Java code
@@ -210,7 +356,7 @@ public class SpfWrapper {
                 // Generate .jpf file for the first test method as example
                 String firstMethod = testMethods.get(0);
                 try {
-                    String jpfContent = generateJpfFile(fullClassName, firstMethod, null, null, null);
+                    String jpfContent = generateJpfFile(fullClassName, firstMethod, null, null, null, simpleJavaCode);
                     System.out.println("# Example .jpf file for: " + fullClassName + "." + firstMethod + "()");
                     System.out.println(jpfContent);
                     System.out.println();
@@ -233,11 +379,31 @@ public class SpfWrapper {
      * @return List of concrete test inputs found by SPF
      */
     public List<ConcreteInput> run(JavaFile atcJavaFile) {
+        // Legacy method - call the new overloaded version with null AtcClass
+        return run(atcJavaFile, null);
+    }
+    
+    /**
+     * Runs symbolic execution on the generated ATC file and saves output files.
+     * 
+     * @param atcJavaFile The generated test file (simple Java code)
+     * @param atcClass The AtcClass IR object (optional, used for file generation)
+     * @return List of concrete test inputs found by SPF
+     */
+    public List<ConcreteInput> run(JavaFile atcJavaFile, AtcClass atcClass) {
         // Print both versions
         printBothVersions(atcJavaFile.getContent());
         
         // Transform to JPF code (stored for future SPF invocation)
         String jpfCode = transformToJpfCode(atcJavaFile.getContent());
+        
+        // Save the JPF-transformed Java file and generate .jpf files
+        try {
+            saveOutputFiles(atcJavaFile.getContent(), jpfCode, atcClass);
+        } catch (IOException e) {
+            System.err.println("Error saving output files: " + e.getMessage());
+            e.printStackTrace();
+        }
         
         // TODO: Implement actual SPF invocation
         // 1. Write jpfCode to disk
@@ -251,6 +417,92 @@ public class SpfWrapper {
     }
     
     /**
+     * Saves the JPF-transformed Java file and generates .jpf files in the outputs directory.
+     * 
+     * @param simpleJavaCode The original simple Java code
+     * @param jpfCode The JPF-transformed Java code
+     * @param atcClass The AtcClass IR object (optional, if null extracts from code)
+     */
+    private void saveOutputFiles(String simpleJavaCode, String jpfCode, AtcClass atcClass) throws IOException {
+        System.out.println("\n=== Saving output files ===");
+        // Determine output directory
+        String outputDir = "outputs";
+        java.io.File outputDirFile = new java.io.File(outputDir);
+        if (!outputDirFile.exists()) {
+            boolean created = outputDirFile.mkdirs();
+            System.out.println("Created outputs directory: " + created + " (path: " + outputDirFile.getAbsolutePath() + ")");
+        } else {
+            System.out.println("Outputs directory already exists: " + outputDirFile.getAbsolutePath());
+        }
+        
+        // Extract class information
+        String packageName = null;
+        String className = null;
+        String fullClassName = null;
+        List<String> testMethods = new ArrayList<>();
+        
+        if (atcClass != null) {
+            // Use AtcClass if provided
+            packageName = atcClass.getPackageName();
+            className = atcClass.getClassName();
+            fullClassName = (packageName != null && !packageName.isEmpty()) 
+                ? packageName + "." + className 
+                : className;
+            
+            // Extract test method names from AtcClass
+            for (AtcTestMethod method : atcClass.getTestMethods()) {
+                if (method.isTestAnnotated() && !method.isMain()) {
+                    testMethods.add(method.getMethodName());
+                }
+            }
+        } else {
+            // Fallback: extract from Java code
+            String[] classInfo = extractClassInfo(simpleJavaCode);
+            if (classInfo != null) {
+                packageName = classInfo[0];
+                className = classInfo[1];
+                fullClassName = packageName + "." + className;
+                testMethods = extractTestMethods(simpleJavaCode);
+            } else {
+                // Default values if extraction fails
+                className = "GeneratedATCs";
+                fullClassName = className;
+                testMethods = extractTestMethods(simpleJavaCode);
+            }
+        }
+        
+        // Save the JPF-transformed Java file
+        String javaFileName = className + ".java";
+        String javaFilePath = Paths.get(outputDir, javaFileName).toString();
+        try (FileWriter writer = new FileWriter(javaFilePath)) {
+            writer.write(jpfCode);
+            System.out.println("Saved JPF-transformed Java file: " + javaFilePath);
+        }
+        
+        // Generate JPF file for main() method - this is the primary test that runs the full sequence
+        // The main method contains the actual test sequence from the test string
+        String mainJpfFileName = className + "_main.jpf";
+        String mainJpfFilePath = Paths.get(outputDir, mainJpfFileName).toString();
+        try {
+            generateJpfFile(fullClassName, "main", mainJpfFilePath, null, null, jpfCode);
+            System.out.println("Generated main .jpf file: " + mainJpfFilePath);
+        } catch (IOException e) {
+            System.err.println("Error generating main .jpf file: " + e.getMessage());
+        }
+        
+        // Optionally generate .jpf files for individual test methods (for debugging)
+        // But main() is the primary test that should be run
+        if (!testMethods.isEmpty() && fullClassName != null) {
+            List<String> jpfFiles = generateJpfFilesForMethods(fullClassName, testMethods, outputDir, null, null, jpfCode);
+            System.out.println("Generated " + jpfFiles.size() + " additional .jpf file(s) for individual test methods:");
+            for (String jpfFile : jpfFiles) {
+                System.out.println("  - " + jpfFile);
+            }
+            System.out.println("Note: Use " + mainJpfFileName + " to test the complete sequence from the test string.");
+        }
+    }
+    
+    /**
      * Gets the JPF-transformed code without printing.
      * 
      * @param simpleJavaCode The simple Java code
@@ -261,12 +513,12 @@ public class SpfWrapper {
     }
     
     /**
-     * Generates a .jpf configuration file for JPF execution.
-     * Based on the SPF example structure.
+     * Generates a .jpf configuration file for JPF execution (backward-compatible version).
+     * Uses methodName() as the signature (assumes no parameters).
      * 
-     * @param className Fully qualified class name (e.g., "in.ac.iiitb.plproject.atc.generated.GeneratedATCs")
-     * @param methodName Method name to test (e.g., "test_increment_0")
-     * @param outputPath Path where to save the .jpf file (e.g., "GeneratedATCs.jpf")
+     * @param className Fully qualified class name
+     * @param methodName Method name to test
+     * @param outputPath Path where to save the .jpf file
      * @param classpath JPF classpath (defaults to ${jpf-symbc}/build/examples if null)
      * @param sourcepath JPF sourcepath (defaults to ${jpf-symbc}/src/examples if null)
      * @return The generated .jpf file content as a string
@@ -274,6 +526,24 @@ public class SpfWrapper {
      */
     public String generateJpfFile(String className, String methodName, String outputPath, 
                                    String classpath, String sourcepath) throws IOException {
+        return generateJpfFile(className, methodName, outputPath, classpath, sourcepath, null);
+    }
+    
+    /**
+     * Generates a .jpf configuration file for JPF execution.
+     * Based on the SPF example structure.
+     * 
+     * @param className Fully qualified class name (e.g., "in.ac.iiitb.plproject.atc.generated.GeneratedATCs")
+     * @param methodName Method name to test (e.g., "test_increment_0" or "main")
+     * @param outputPath Path where to save the .jpf file (e.g., "GeneratedATCs.jpf")
+     * @param classpath JPF classpath (defaults to ${jpf-symbc}/build/examples if null)
+     * @param sourcepath JPF sourcepath (defaults to ${jpf-symbc}/src/examples if null)
+     * @param javaCode Optional Java code to extract method signature from. If null, uses methodName() as fallback.
+     * @return The generated .jpf file content as a string
+     * @throws IOException If file writing fails
+     */
+    public String generateJpfFile(String className, String methodName, String outputPath, 
+                                   String classpath, String sourcepath, String javaCode) throws IOException {
         StringBuilder jpfContent = new StringBuilder();
         
         // Target class
@@ -298,9 +568,17 @@ public class SpfWrapper {
         }
         jpfContent.append("\n");
         
-        // Symbolic method
+        // Symbolic method - extract signature from Java code if available
+        String methodSignature;
+        if (javaCode != null && !javaCode.isEmpty()) {
+            methodSignature = extractMethodSignature(javaCode, methodName);
+        } else {
+            // Fallback: assume no parameters
+            methodSignature = methodName + "()";
+        }
+        
         jpfContent.append("# Define symbolic variables in the method under test\n");
-        jpfContent.append("symbolic.method = ").append(className).append(".").append(methodName).append("()\n\n");
+        jpfContent.append("symbolic.method = ").append(className).append(".").append(methodSignature).append("\n\n");
         
         // Symbolic string decision procedures
         jpfContent.append("# Symbolic string variables created via Debug.makeSymbolicString\n");
@@ -312,8 +590,22 @@ public class SpfWrapper {
         jpfContent.append("symbolic.maxint = 100\n");
         jpfContent.append("symbolic.undefined = -1000\n\n");
         
-        // Coverage listener
-        jpfContent.append("# Coverage listener (optional but useful for insights)\n");
+        // Search bounds to prevent infinite exploration and path explosion
+        jpfContent.append("# Search bounds to prevent infinite exploration\n");
+        // More restrictive bounds for main() method which calls multiple test methods
+        if ("main".equals(methodName)) {
+            jpfContent.append("search.depth_limit = 200\n");
+            jpfContent.append("search.time_limit = 60\n"); // 1 minute timeout for main
+        } else {
+            jpfContent.append("search.depth_limit = 500\n");
+            jpfContent.append("search.time_limit = 120\n"); // 2 minutes timeout for individual methods
+        }
+        jpfContent.append("search.multiple_errors = true\n");
+        jpfContent.append("search.class = .search.heuristic.BFSHeuristic\n\n");
+        
+        // Listeners for test input extraction and coverage
+        jpfContent.append("# Listeners for test input extraction and coverage\n");
+        jpfContent.append("# SymbolicSequenceListener generates JUnit tests with concrete values\n");
         jpfContent.append("listener = gov.nasa.jpf.symbc.sequences.SymbolicSequenceListener,gov.nasa.jpf.listener.CoverageAnalyzer\n\n");
         
         // Coverage settings
@@ -321,7 +613,14 @@ public class SpfWrapper {
         jpfContent.append("# Show method coverage\n");
         jpfContent.append("coverage.include = *.").append(simpleClassName).append("\n");
         jpfContent.append("coverage.show_methods = true\n");
-        jpfContent.append("coverage.show_bodies = true\n");
+        jpfContent.append("coverage.show_bodies = true\n\n");
+        
+        // Instructions for extracting concrete test inputs
+        jpfContent.append("# To extract concrete test input values from JPF output:\n");
+        jpfContent.append("# 1. Look for 'pc X constraint # = Y' sections - these show path conditions\n");
+        jpfContent.append("# 2. Look for 'JUnit 4.0 test class' section - shows generated test cases\n");
+        jpfContent.append("# 3. The path conditions show constraints; JPF's solver finds values satisfying them\n");
+        jpfContent.append("# 4. For actual concrete values, check the constraint solver output or add Debug.printPC() calls\n");
         
         String content = jpfContent.toString();
         
@@ -343,11 +642,13 @@ public class SpfWrapper {
      * @param outputDir Directory where to save .jpf files (null = current directory)
      * @param classpath JPF classpath
      * @param sourcepath JPF sourcepath
+     * @param javaCode Optional Java code to extract method signatures from
      * @return List of generated .jpf file paths
      * @throws IOException If file writing fails
      */
     public List<String> generateJpfFilesForMethods(String className, List<String> methodNames, 
-                                                    String outputDir, String classpath, String sourcepath) 
+                                                    String outputDir, String classpath, String sourcepath,
+                                                    String javaCode) 
             throws IOException {
         List<String> generatedFiles = new ArrayList<>();
         String simpleClassName = className.substring(className.lastIndexOf('.') + 1);
@@ -358,7 +659,7 @@ public class SpfWrapper {
                 ? Paths.get(outputDir, jpfFileName).toString() 
                 : jpfFileName;
             
-            generateJpfFile(className, methodName, outputPath, classpath, sourcepath);
+            generateJpfFile(className, methodName, outputPath, classpath, sourcepath, javaCode);
             generatedFiles.add(outputPath);
         }
         
@@ -373,11 +674,12 @@ public class SpfWrapper {
      * @param outputDir Directory where to save .jpf files (null = current directory)
      * @param classpath JPF classpath (null = use default)
      * @param sourcepath JPF sourcepath (null = use default)
+     * @param javaCode Optional Java code to extract method signatures from
      * @return List of generated .jpf file paths
      * @throws IOException If file writing fails
      */
     public List<String> generateJpfFilesFromAtcClass(AtcClass atcClass, String outputDir, 
-                                                     String classpath, String sourcepath) 
+                                                     String classpath, String sourcepath, String javaCode) 
             throws IOException {
         String fullClassName = atcClass.getPackageName() + "." + atcClass.getClassName();
         List<String> methodNames = new ArrayList<>();
@@ -386,6 +688,6 @@ public class SpfWrapper {
             methodNames.add(method.getMethodName());
         }
         
-        return generateJpfFilesForMethods(fullClassName, methodNames, outputDir, classpath, sourcepath);
+        return generateJpfFilesForMethods(fullClassName, methodNames, outputDir, classpath, sourcepath, javaCode);
     }
 }
