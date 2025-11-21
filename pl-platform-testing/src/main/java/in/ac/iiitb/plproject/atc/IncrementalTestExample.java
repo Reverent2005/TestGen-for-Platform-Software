@@ -67,7 +67,11 @@ public class IncrementalTestExample {
             
             // Create test string: test increment function
             TestStringAst testStringAst = new TestStringAst(
+<<<<<<< HEAD
                 Arrays.asList("increment", "increment","process", "increment")
+=======
+                Arrays.asList("increment", "increment","process" ,"increment")
+>>>>>>> ebf98494e9c32ea72f1b9e14637a0e99b0f89ca2
             );
             
             // Print the JML Spec AST for debugging
@@ -179,9 +183,11 @@ public class IncrementalTestExample {
             "GREATER_THAN"
         );
         
-        // Post-condition: x_post > x (x_post represents x')
+        // Post-condition: '(x) > x (using prime operator notation)
+        List<Object> primeArgs = new ArrayList<>();
+        primeArgs.add(AstHelper.createNameExpr("x"));
         Object post = createBinaryExpr(
-            AstHelper.createNameExpr("x_post"),
+            createMethodCall(null, "'", primeArgs),
             AstHelper.createNameExpr("x"),
             "GREATER_THAN"
         );
@@ -217,12 +223,14 @@ public class IncrementalTestExample {
             Arrays.asList(createIntegerLiteral(2))
         );
         
-        // Post-condition: result_post == update(result, data)
+        // Post-condition: '(result) == update(result, data) (using prime operator notation)
+        List<Object> primeArgs = new ArrayList<>();
+        primeArgs.add(AstHelper.createNameExpr("result"));
         List<Object> updateArgs = new ArrayList<>();
         updateArgs.add(AstHelper.createNameExpr("result"));
         updateArgs.add(AstHelper.createNameExpr("data"));
         Object post = createBinaryExpr(
-            AstHelper.createNameExpr("result_post"),
+            createMethodCall(null, "'", primeArgs),
             createMethodCall(null, "update", updateArgs),
             "EQUALS"
         );
