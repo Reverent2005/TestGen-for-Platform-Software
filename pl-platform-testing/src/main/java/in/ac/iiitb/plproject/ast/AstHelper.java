@@ -33,6 +33,7 @@ public class AstHelper {
     /**
      * Transform post-condition expressions.
      * Handles post-state variables (x_post -> x, x -> x_old).
+     * Also handles prime operator notation ('(x) -> x or result).
      */
     public static Object transformPostCondition(Object expr, String resultVarName, Map<String, String> oldStateMap, List<Variable> params) {
         if (expr == null) {
@@ -41,10 +42,10 @@ public class AstHelper {
         if (!(expr instanceof Expr)) {
             return expr; // Return as is if not an AST expression
         }
-        return transformPostConditionRecursive((Expr) expr, resultVarName, oldStateMap, params);
+        return transformPostConditionRecursive((Expr) expr, resultVarName, oldStateMap, params, false);
     }
 
-    private static Expr transformPostConditionRecursive(Expr expr, String resultVarName, Map<String, String> oldStateMap, List<Variable> params) {
+    private static Expr transformPostConditionRecursive(Expr expr, String resultVarName, Map<String, String> oldStateMap, List<Variable> params, boolean insidePrime) {
         if (expr == null) {
             return null;
         }
@@ -53,12 +54,30 @@ public class AstHelper {
             NameExpr nameExpr = (NameExpr) expr;
             String name = ((SimpleName) nameExpr.name).identifier;
 
-            // Case 1: Variable needs to be replaced with its old state (e.g., x -> old_x)
+            // Case 1: We're inside a prime operator (insidePrime = true)
+            // The variable represents post-state
+            if (insidePrime) {
+                // If there's a return value, post-state variables map to resultVarName
+                // Otherwise, they represent in-place modification (keep the name as-is)
+                if (resultVarName != null) {
+                    // Check if this variable is a parameter (might be modified in-place or returned)
+                    // For simplicity, if resultVarName exists, map to result
+                    // This matches the behavior for _post suffix
+                    return createNameExpr(resultVarName);
+                } else {
+                    // Void function: variable represents in-place modification, keep name as-is
+                    return nameExpr;
+                }
+            }
+            
+            // Case 2: Variable needs to be replaced with its old state (e.g., x -> old_x)
+            // Only if we're NOT inside a prime operator
             if (oldStateMap.containsKey(name)) {
                 return createNameExpr(oldStateMap.get(name));
             }
-            // Case 2: Post-state variable (e.g., x_post)
-            else if (name.endsWith("_post")) {
+            
+            // Case 3: Post-state variable (e.g., x_post)
+            if (name.endsWith("_post")) {
                 String baseName = name.substring(0, name.length() - "_post".length());
                 // If there's a return value, x_post maps to resultVarName
                 if (resultVarName != null) {
@@ -70,34 +89,48 @@ public class AstHelper {
                     return createNameExpr(baseName);
                 }
             }
-            // Case 3: Other NameExpr - return as is
+            
+            // Case 4: Other NameExpr - return as is
             return nameExpr;
-        } else if (expr instanceof BinaryExpr) {
-            BinaryExpr binExpr = (BinaryExpr) expr;
-            Expr left = transformPostConditionRecursive(binExpr.left, resultVarName, oldStateMap, params);
-            Expr right = transformPostConditionRecursive(binExpr.right, resultVarName, oldStateMap, params);
-            return createBinaryExpr(left, right, binExpr.op.toString());
         } else if (expr instanceof MethodCallExpr) {
             MethodCallExpr methodCallExpr = (MethodCallExpr) expr;
-            Expr scope = transformPostConditionRecursive(methodCallExpr.scope, resultVarName, oldStateMap, params);
-            List<Object> args = new ArrayList<>();
-            for (Expr arg : methodCallExpr.args) {
-                args.add(transformPostConditionRecursive(arg, resultVarName, oldStateMap, params));
+            
+            // Handle prime operator: '(x) -> extract x and transform it
+            if (methodCallExpr.name.identifier.equals("'")) {
+                // Remove the prime operator wrapper and transform the inner expression
+                // The inner expression represents post-state, so we pass insidePrime=true
+                if (!methodCallExpr.args.isEmpty()) {
+                    return transformPostConditionRecursive(methodCallExpr.args.get(0), resultVarName, oldStateMap, params, true);
+                } else {
+                    return null; // Invalid prime operator call with no arguments
+                }
+            } else {
+                // Regular method call - transform scope and arguments
+                Expr scope = transformPostConditionRecursive(methodCallExpr.scope, resultVarName, oldStateMap, params, false);
+                List<Object> args = new ArrayList<>();
+                for (Expr arg : methodCallExpr.args) {
+                    args.add(transformPostConditionRecursive(arg, resultVarName, oldStateMap, params, false));
+                }
+                return createMethodCallExpr(scope, methodCallExpr.name.identifier, args);
             }
-            return createMethodCallExpr(scope, methodCallExpr.name.identifier, args);
+        } else if (expr instanceof BinaryExpr) {
+            BinaryExpr binExpr = (BinaryExpr) expr;
+            Expr left = transformPostConditionRecursive(binExpr.left, resultVarName, oldStateMap, params, false);
+            Expr right = transformPostConditionRecursive(binExpr.right, resultVarName, oldStateMap, params, false);
+            return createBinaryExpr(left, right, binExpr.op.toString());
         } else if (expr instanceof UnaryExpr) {
             UnaryExpr unaryExpr = (UnaryExpr) expr;
-            Expr innerExpr = transformPostConditionRecursive(unaryExpr.expr, resultVarName, oldStateMap, params);
+            Expr innerExpr = transformPostConditionRecursive(unaryExpr.expr, resultVarName, oldStateMap, params, false);
             return createUnaryExpr(innerExpr, unaryExpr.op.toString());
         } else if (expr instanceof FieldAccessExpr) {
             FieldAccessExpr fieldAccessExpr = (FieldAccessExpr) expr;
-            Expr scope = transformPostConditionRecursive(fieldAccessExpr.scope, resultVarName, oldStateMap, params);
+            Expr scope = transformPostConditionRecursive(fieldAccessExpr.scope, resultVarName, oldStateMap, params, false);
             return new FieldAccessExpr(scope, fieldAccessExpr.field);
         } else if (expr instanceof SetExpr) {
             SetExpr setExpr = (SetExpr) expr;
             List<Expr> elements = new ArrayList<>();
             for (Expr element : setExpr.elements) {
-                elements.add(transformPostConditionRecursive(element, resultVarName, oldStateMap, params));
+                elements.add(transformPostConditionRecursive(element, resultVarName, oldStateMap, params, false));
             }
             return new SetExpr(elements);
         } else if (expr instanceof MapExpr) {
@@ -105,8 +138,8 @@ public class AstHelper {
             List<Pair<NameExpr, Expr>> entries = new ArrayList<>();
             for (Pair<NameExpr, Expr> entry : mapExpr.entries) {
                 // Key is NameExpr, Value is Expr
-                NameExpr key = (NameExpr) transformPostConditionRecursive(entry.key, resultVarName, oldStateMap, params);
-                Expr value = transformPostConditionRecursive(entry.value, resultVarName, oldStateMap, params);
+                NameExpr key = (NameExpr) transformPostConditionRecursive(entry.key, resultVarName, oldStateMap, params, false);
+                Expr value = transformPostConditionRecursive(entry.value, resultVarName, oldStateMap, params, false);
                 entries.add(new Pair<>(key, value));
             }
             return new MapExpr(entries);
@@ -114,14 +147,14 @@ public class AstHelper {
             TupleExpr tupleExpr = (TupleExpr) expr;
             List<Expr> elements = new ArrayList<>();
             for (Expr element : tupleExpr.elements) {
-                elements.add(transformPostConditionRecursive(element, resultVarName, oldStateMap, params));
+                elements.add(transformPostConditionRecursive(element, resultVarName, oldStateMap, params, false));
             }
             return new TupleExpr(elements);
         } else if (expr instanceof ObjectCreationExpr) {
             ObjectCreationExpr objCreationExpr = (ObjectCreationExpr) expr;
             List<Object> args = new ArrayList<>();
             for (Expr arg : objCreationExpr.args) {
-                args.add(transformPostConditionRecursive(arg, resultVarName, oldStateMap, params));
+                args.add(transformPostConditionRecursive(arg, resultVarName, oldStateMap, params, false));
             }
             return createObjectCreationExpr(((ClassOrInterfaceType) objCreationExpr.type).name.identifier, args);
         }
@@ -131,18 +164,19 @@ public class AstHelper {
     
     /**
      * Collect variables that appear in post-state.
+     * This method collects variables that need old state saved.
+     * Handles both '_post' suffix notation and prime operator ('(x)) notation.
      */
     public static Set<String> collectPostStateVariables(Object expr) {
-        // TODO: Implement - collect variables that need old state saved
-        // Similar to addthedashexpr from Version1
-        Set<String> result = new HashSet<>();
-        if (expr instanceof Expr) {
-            // Expr e = (Expr) expr;
-            // Implement collection logic here
-        }
-        return result;
+        // This is now implemented via collectVarsToSnapshot
+        return collectVarsToSnapshot(expr);
     }
 
+    /**
+     * Collect variables that need to be snapshotted (saved as old state).
+     * Handles both '_post' suffix notation and prime operator ('(x)) notation.
+     * For post-condition "x_post > x" or "'(x) > x", this returns {"x"}.
+     */
     public static Set<String> collectVarsToSnapshot(Object expr) {
         Set<String> result = new HashSet<>();
         if (!(expr instanceof Expr)) {
@@ -162,18 +196,34 @@ public class AstHelper {
             if (!name.endsWith("_post")) {
                 result.add(name);
             }
+        } else if (expr instanceof MethodCallExpr) {
+            MethodCallExpr methodCallExpr = (MethodCallExpr) expr;
+            
+            // Handle prime operator: '(x) -> extract variable name from argument
+            if (methodCallExpr.name.identifier.equals("'")) {
+                // Collect the variable name from the first argument of the prime operator
+                if (!methodCallExpr.args.isEmpty()) {
+                    Expr arg0 = methodCallExpr.args.get(0);
+                    String varName = getNameFromExpr(arg0);
+                    if (varName != null) {
+                        result.add(varName);
+                    }
+                }
+                // Don't recurse into prime operator arguments - we've already handled it
+                return;
+            } else {
+                // Regular method call - recurse into scope and arguments
+                if (methodCallExpr.scope != null) {
+                    collectVarsToSnapshotRecursive(methodCallExpr.scope, result);
+                }
+                for (Expr arg : methodCallExpr.args) {
+                    collectVarsToSnapshotRecursive(arg, result);
+                }
+            }
         } else if (expr instanceof BinaryExpr) {
             BinaryExpr binExpr = (BinaryExpr) expr;
             collectVarsToSnapshotRecursive(binExpr.left, result);
             collectVarsToSnapshotRecursive(binExpr.right, result);
-        } else if (expr instanceof MethodCallExpr) {
-            MethodCallExpr methodCallExpr = (MethodCallExpr) expr;
-            if (methodCallExpr.scope != null) {
-                collectVarsToSnapshotRecursive(methodCallExpr.scope, result);
-            }
-            for (Expr arg : methodCallExpr.args) {
-                collectVarsToSnapshotRecursive(arg, result);
-            }
         } else if (expr instanceof UnaryExpr) {
             UnaryExpr unaryExpr = (UnaryExpr) expr;
             collectVarsToSnapshotRecursive(unaryExpr.expr, result);

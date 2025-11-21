@@ -151,10 +151,10 @@ public class NewGenATC implements GenATC {
         
         // This helper finds all "pre-state" vars in the post-condition
         Set<String> varsToSnapshot = collectVarsToSnapshot(post);
-        Map<String, String> oldStateMap = new HashMap<>(); // Maps "x" -> "old_x"
+        Map<String, String> oldStateMap = new HashMap<>(); // Maps "x" -> "x_old"
         
         for (String varName : varsToSnapshot) {
-            String oldVarName = "old_" + varName;
+            String oldVarName = varName + "_old";  // Use _old suffix to match Version1.java
             oldStateMap.put(varName, oldVarName);
             
             // Find the type of this var from the params list
@@ -245,29 +245,33 @@ public class NewGenATC implements GenATC {
     // }
     /**
      * Helper method to collect "pre-state" variables that need to be snapshotted.
-     * This finds all variables in the post-condition that *do not* end in "_post".
+     * This finds all variables in the post-condition that *do not* end in "_post" or appear inside prime operator ('(x)).
      * Delegates to AstHelper.
+     * Supports both '_post' suffix notation and prime operator ('(x)) notation.
      */
     private Set<String> collectVarsToSnapshot(Expr expr) {
         // For "x_post > x", this should return {"x"}
+        // For "'(x) > x", this should return {"x"} (x from prime operator)
         // For "result_post == update(result, data)", it returns {"result", "data"}
         return AstHelper.collectVarsToSnapshot(expr);
     }
     /**
      * Helper method to transform post-condition expressions.
-     * Handles replacing post-state (e.g., "x_post") and pre-state (e.g., "x") vars.
+     * Handles replacing post-state (e.g., "x_post" or "'(x)") and pre-state (e.g., "x") vars.
      * Delegates to AstHelper.
-     * * @param expr The post-condition AST (e.g., "x_post > x")
+     * Supports both '_post' suffix notation and prime operator ('(x)) notation.
+     * 
+     * @param expr The post-condition AST (e.g., "x_post > x" or "'(x) > x")
      * @param resultVarName The name of the variable holding the method's return value (e.g., "result"), or null if void.
-     * @param oldStateMap A map from pre-state var names to their snapshot names (e.g., "x" -> "old_x")
+     * @param oldStateMap A map from pre-state var names to their snapshot names (e.g., "x" -> "x_old")
      * @param params The list of function parameters (to find in-place modification targets)
      * @return A new, transformed AST
      */
     private Expr transformPostCondition(Expr expr, String resultVarName, Map<String, String> oldStateMap, List<Variable> params) {
-        // This helper must be smart.
-        // 1. If it sees "x_post", and return is void, it replaces it with "x".
-        // 2. If it sees "x_post", and return is non-void, it replaces it with "result".
-        // 3. If it sees "x" (and "x" is in oldStateMap), it replaces it with "old_x".
+        // This helper handles:
+        // 1. If it sees "x_post" or "'(x)", and return is void, it replaces it with "x".
+        // 2. If it sees "x_post" or "'(x)", and return is non-void, it replaces it with "result".
+        // 3. If it sees "x" (and "x" is in oldStateMap), it replaces it with "x_old".
         return (Expr) AstHelper.transformPostCondition(expr, resultVarName, oldStateMap, params);
     }
 }
