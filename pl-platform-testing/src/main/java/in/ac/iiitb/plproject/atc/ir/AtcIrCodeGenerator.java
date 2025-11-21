@@ -1,8 +1,6 @@
 package in.ac.iiitb.plproject.atc.ir;
 
 import in.ac.iiitb.plproject.ast.AstHelper;
-import in.ac.iiitb.plproject.ast.Expr;
-import in.ac.iiitb.plproject.ast.MethodCallExpr;
 
 /**
  * A visitor class that walks the AtcClass IR tree and generates the final Java code string.
@@ -81,10 +79,33 @@ public class AtcIrCodeGenerator {
     }
 
     private void visit(AtcSymbolicVarDecl stmt) {
-        stringBuilder.append(INDENT).append(INDENT)
-                     .append(stmt.getTypeName()).append(" ").append(stmt.getVarName())
-                     .append(" = Debug.makeSymbolic").append(capitalize(stmt.getTypeName()))
-                     .append("(\"").append(stmt.getVarName()).append("\");\n");
+        String typeName = stmt.getTypeName();
+        String varName = stmt.getVarName();
+        
+        // Generate simple Java code - JPF transformation will be done by SpfWrapper
+        // Use Symbolic.input() as a placeholder that SpfWrapper will replace
+        if (typeName.equalsIgnoreCase("int") || typeName.equals("Integer")) {
+            stringBuilder.append(INDENT).append(INDENT)
+                         .append("int ").append(varName)
+                         .append(" = Symbolic.input(\"").append(varName).append("\");\n");
+        } else if (typeName.equalsIgnoreCase("double") || typeName.equals("Double")) {
+            stringBuilder.append(INDENT).append(INDENT)
+                         .append("double ").append(varName)
+                         .append(" = Symbolic.input(\"").append(varName).append("\");\n");
+        } else if (typeName.equalsIgnoreCase("String")) {
+            stringBuilder.append(INDENT).append(INDENT)
+                         .append("String ").append(varName)
+                         .append(" = Symbolic.input(\"").append(varName).append("\");\n");
+        } else if (typeName.equalsIgnoreCase("boolean") || typeName.equals("Boolean")) {
+            stringBuilder.append(INDENT).append(INDENT)
+                         .append("boolean ").append(varName)
+                         .append(" = Symbolic.input(\"").append(varName).append("\");\n");
+        } else {
+            // For objects (Set, Map, custom classes), use Symbolic.input with cast
+            stringBuilder.append(INDENT).append(INDENT)
+                         .append(typeName).append(" ").append(varName)
+                         .append(" = (").append(typeName).append(") Symbolic.input(\"").append(varName).append("\");\n");
+        }
     }
 
     private void visit(AtcVarDecl stmt) {
@@ -96,8 +117,9 @@ public class AtcIrCodeGenerator {
 
     private void visit(AtcAssumeStmt stmt) {
         String condCode = AstHelper.exprToJavaCode(stmt.getCondition());
+        // Generate simple assume - SpfWrapper will convert to Debug.assume()
         stringBuilder.append(INDENT).append(INDENT)
-                     .append("Debug.assume(").append(condCode).append(");\n");
+                     .append("assume(").append(condCode).append(");\n");
     }
 
     private void visit(AtcMethodCallStmt stmt) {
@@ -112,13 +134,6 @@ public class AtcIrCodeGenerator {
                      .append("assert(").append(condCode).append(");\n");
     }
 
-    // Helper to capitalize the first letter for Debug.makeSymbolicX methods
-    private String capitalize(String str) {
-        if (str == null || str.isEmpty()) {
-            return str;
-        }
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
-    }
 
     private void generateMainMethod(AtcClass atc) {
         stringBuilder.append("\n");
@@ -128,8 +143,7 @@ public class AtcIrCodeGenerator {
         stringBuilder.append(INDENT).append(INDENT)
                      .append(atc.getClassName()).append(" instance = new ").append(atc.getClassName()).append("();\n");
 
-        // Initialize Capture object
-        stringBuilder.append(INDENT).append(INDENT).append("Capture C = new Capture();\n");
+        // Simple main method - no JPF-specific code
 
         for (AtcTestMethod method : atc.getTestMethods()) {
             stringBuilder.append(INDENT).append(INDENT)

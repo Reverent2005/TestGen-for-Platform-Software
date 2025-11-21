@@ -40,4 +40,19 @@ public class AtcClass {
     public String getRunWithAnnotationClass() {
         return runWithAnnotationClass;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("AtcClass(");
+        sb.append("package: ").append(packageName).append(", ");
+        sb.append("class: ").append(className).append(", ");
+        sb.append("imports: ").append(imports).append(", ");
+        sb.append("testMethods: ").append(testMethods.size()).append(" methods, ");
+        if (runWithAnnotationClass != null && !runWithAnnotationClass.isEmpty()) {
+            sb.append("@RunWith: ").append(runWithAnnotationClass);
+        }
+        sb.append(")");
+        return sb.toString();
+    }
 }

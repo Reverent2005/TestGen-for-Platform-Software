@@ -6,23 +6,13 @@ import java.util.*;
 // Base Node and Utilities
 // ===================================
 
-abstract class Node { }
-
-abstract class Expr extends Node { }
+// Node is now public and moved to Node.java for access from other packages
+// Expr is now public and moved to Expr.java for access from other packages
 
 abstract class Stmt extends Node { }
 
 // Type is now in Type.java
-
-class Name extends Node {
-    final String identifier;
-    public Name(String identifier) { this.identifier = identifier; }
-    @Override public String toString() { return identifier; }
-}
-
-class SimpleName extends Name {
-    public SimpleName(String identifier) { super(identifier); }
-}
+// Name and SimpleName are now public and moved to separate files
 
 // ===================================
 // Literals
@@ -44,6 +34,12 @@ class StringLiteralExpr extends Expr {
     final String value;
     public StringLiteralExpr(String value) { this.value = value; }
     @Override public String toString() { return "\"" + value + "\""; }
+}
+
+class BooleanLiteralExpr extends Expr {
+    final boolean value;
+    public BooleanLiteralExpr(boolean value) { this.value = value; }
+    @Override public String toString() { return Boolean.toString(value); }
 }
 
 // ===================================
@@ -115,17 +111,7 @@ class ObjectCreationExpr extends Expr {
     @Override public String toString() { return "new " + type + "(" + args + ")"; }
 }
 
-class MethodCallExpr extends Expr {
-    final Expr scope;
-    final SimpleName name;
-    final List<Expr> args;
-    public MethodCallExpr(Expr scope, SimpleName name, List<Expr> args) {
-        this.scope = scope;
-        this.name = name;
-        this.args = args;
-    }
-    @Override public String toString() { return (scope != null ? scope + "." : "") + name + "(" + args + ")"; }
-}
+// MethodCallExpr is now public and moved to MethodCallExpr.java for access from other packages
 
 class UnaryExpr extends Expr {
     public enum Operator {

@@ -2,8 +2,18 @@ package in.ac.iiitb.plproject.atc;
 
 import in.ac.iiitb.plproject.parser.ast.*;
 import in.ac.iiitb.plproject.ast.AstHelper;
+import in.ac.iiitb.plproject.atc.ir.AtcClass;
+import in.ac.iiitb.plproject.atc.ir.AtcTestMethod;
+import in.ac.iiitb.plproject.atc.ir.AtcStatement;
+import in.ac.iiitb.plproject.atc.ir.AtcSymbolicVarDecl;
+import in.ac.iiitb.plproject.atc.ir.AtcVarDecl;
+import in.ac.iiitb.plproject.atc.ir.AtcAssumeStmt;
+import in.ac.iiitb.plproject.atc.ir.AtcMethodCallStmt;
+import in.ac.iiitb.plproject.atc.ir.AtcAssertStmt;
+import in.ac.iiitb.plproject.symex.SpfWrapper;
 
 import java.util.*;
+import java.util.Arrays;
 
 /**
  * Incremental Test Example for NewGenATC Algorithm
@@ -71,11 +81,21 @@ public class IncrementalTestExample {
             System.out.println();
             
             GenATC genAtc = new NewGenATC();
-            JavaFile result = genAtc.generateAtcFile(jmlSpecAst, testStringAst);
+            AtcClass atcClass = genAtc.generateAtcFile(jmlSpecAst, testStringAst);
             
-            System.out.println("Generated Java Test Code:");
-            System.out.println(result.getContent());
+            // Print the generated IR structure for verification
+            System.out.println("Generated ATC IR Structure:");
+            printAtcClassIr(atcClass);
+            System.out.println("Complete ATC IR Structure:");
+            System.out.println(atcClass);
             System.out.println();
+            
+            // Convert IR to Java code string for display using prettyPrint
+            String javaCode = genAtc.prettyPrint(atcClass);
+            
+            // Demonstrate SpfWrapper transformation (prints both simple and JPF versions)
+            SpfWrapper spfWrapper = new SpfWrapper();
+            spfWrapper.printBothVersions(javaCode);
             
         } catch (Exception e) {
             System.err.println("Error in simple example: " + e.getMessage());
@@ -113,11 +133,21 @@ public class IncrementalTestExample {
             System.out.println();
             
             GenATC genAtc = new NewGenATC();
-            JavaFile result = genAtc.generateAtcFile(jmlSpecAst, testStringAst);
+            AtcClass atcClass = genAtc.generateAtcFile(jmlSpecAst, testStringAst);
             
-            System.out.println("Generated Java Test Code:");
-            System.out.println(result.getContent());
+            // Print the generated IR structure for verification
+            System.out.println("Generated ATC IR Structure:");
+            printAtcClassIr(atcClass);
+            System.out.println("Complete ATC IR Structure:");
+            System.out.println(atcClass);
             System.out.println();
+            
+            // Convert IR to Java code string for display using prettyPrint
+            String javaCode = genAtc.prettyPrint(atcClass);
+            
+            // Demonstrate SpfWrapper transformation (prints both simple and JPF versions)
+            SpfWrapper spfWrapper = new SpfWrapper();
+            spfWrapper.printBothVersions(javaCode);
             
         } catch (Exception e) {
             System.err.println("Error in complex example: " + e.getMessage());
@@ -184,16 +214,12 @@ public class IncrementalTestExample {
         );
         
         // Post-condition: result_post == update(result, data)
+        List<Object> updateArgs = new ArrayList<>();
+        updateArgs.add(AstHelper.createNameExpr("result"));
+        updateArgs.add(AstHelper.createNameExpr("data"));
         Object post = createBinaryExpr(
             AstHelper.createNameExpr("result_post"),
-            createMethodCall(
-                null,
-                "update",
-                Arrays.asList(
-                    AstHelper.createNameExpr("result"),
-                    AstHelper.createNameExpr("data")
-                )
-            ),
+            createMethodCall(null, "update", updateArgs),
             "EQUALS"
         );
         
@@ -235,6 +261,70 @@ public class IncrementalTestExample {
     // ===================================
     // Debug printing methods
     // ===================================
+    
+    /**
+     * Print the ATC IR structure in a readable format for verification.
+     */
+    private static void printAtcClassIr(AtcClass atcClass) {
+        System.out.println("  Package: " + atcClass.getPackageName());
+        System.out.println("  Class Name: " + atcClass.getClassName());
+        
+        if (atcClass.getRunWithAnnotationClass() != null && !atcClass.getRunWithAnnotationClass().isEmpty()) {
+            System.out.println("  @RunWith: " + atcClass.getRunWithAnnotationClass());
+        }
+        
+        System.out.println("  Imports (" + atcClass.getImports().size() + "):");
+        for (String imp : atcClass.getImports()) {
+            System.out.println("    - " + imp);
+        }
+        
+        System.out.println("  Test Methods (" + atcClass.getTestMethods().size() + "):");
+        for (int i = 0; i < atcClass.getTestMethods().size(); i++) {
+            printAtcTestMethod(atcClass.getTestMethods().get(i), i + 1);
+        }
+    }
+    
+    /**
+     * Print a single test method IR structure.
+     */
+    private static void printAtcTestMethod(AtcTestMethod method, int index) {
+        System.out.println("    Method " + index + ":");
+        System.out.println("      Name: " + method.getMethodName());
+        System.out.println("      @Test: " + method.isTestAnnotated());
+        System.out.println("      Statements (" + method.getStatements().size() + "):");
+        
+        for (int i = 0; i < method.getStatements().size(); i++) {
+            AtcStatement stmt = method.getStatements().get(i);
+            System.out.print("        " + (i + 1) + ". ");
+            printAtcStatement(stmt);
+        }
+    }
+    
+    /**
+     * Print a single statement IR structure.
+     * Uses AstHelper.exprToJavaCode() to show Java/JML-equivalent syntax.
+     */
+    private static void printAtcStatement(AtcStatement stmt) {
+        if (stmt instanceof AtcSymbolicVarDecl) {
+            AtcSymbolicVarDecl varDecl = (AtcSymbolicVarDecl) stmt;
+            System.out.println("AtcSymbolicVarDecl: " + varDecl.getTypeName() + " " + varDecl.getVarName());
+        } else if (stmt instanceof AtcVarDecl) {
+            AtcVarDecl varDecl = (AtcVarDecl) stmt;
+            System.out.print("AtcVarDecl: " + varDecl.getTypeName() + " " + varDecl.getVarName() + " = ");
+            System.out.println(AstHelper.exprToJavaCode(varDecl.getInitExpr()));
+        } else if (stmt instanceof AtcAssumeStmt) {
+            AtcAssumeStmt assume = (AtcAssumeStmt) stmt;
+            System.out.println("AtcAssumeStmt: " + AstHelper.exprToJavaCode(assume.getCondition()));
+        } else if (stmt instanceof AtcMethodCallStmt) {
+            AtcMethodCallStmt call = (AtcMethodCallStmt) stmt;
+            System.out.println("AtcMethodCallStmt: " + AstHelper.exprToJavaCode(call.getCallExpr()));
+        } else if (stmt instanceof AtcAssertStmt) {
+            AtcAssertStmt assertStmt = (AtcAssertStmt) stmt;
+            System.out.println("AtcAssertStmt: " + AstHelper.exprToJavaCode(assertStmt.getCondition()));
+        } else {
+            System.out.println("Unknown AtcStatement type: " + stmt.getClass().getSimpleName());
+        }
+    }
     
     /**
      * Print the JML Spec AST in a readable format for debugging.

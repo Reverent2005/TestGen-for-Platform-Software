@@ -2,7 +2,6 @@ package in.ac.iiitb.plproject.atc;
 
 import in.ac.iiitb.plproject.parser.ast.*; // JmlFunctionSpec, JmlSpecAst, TestStringAst, Variable, FunctionSignature
 import in.ac.iiitb.plproject.ast.AstHelper;
-import in.ac.iiitb.plproject.ast.NewGrammar; // Import NewGrammar
 import java.util.*;
 import in.ac.iiitb.plproject.atc.ir.*; // Import all IR classes
 
@@ -17,17 +16,18 @@ import in.ac.iiitb.plproject.atc.ir.*; // Import all IR classes
 public class NewGenATC implements GenATC {
 
     @Override
-    public AtcClass generateAtcFile(JmlSpecAst jmlSpecAst, TestStringAst testStringAst) { // Change return type to AtcClass
+    public AtcClass generateAtcFile(JmlSpecAst jmlSpecAst, TestStringAst testStringAst) {
         // StringBuilder atcFileContent = new StringBuilder(); // Comment out old StringBuilder
 
         // --- New IR Building Logic ---
+        // Simple Java imports (no JPF-specific imports - those will be added by SpfWrapper)
         List<String> imports = new ArrayList<>();
-        imports.add("gov.nasa.jpf.symbc.Debug");
         imports.add("org.junit.Test");
         imports.add("java.util.Set");
         imports.add("java.util.Map");
         imports.add("java.util.HashSet");
         imports.add("java.util.HashMap");
+        imports.add("java.util.Arrays"); // Needed for SetExpr conversion to Java code
         // TODO: Add imports for user-defined classes (e.g., com.example.lms.Stack) - need a mechanism to collect these
 
         List<AtcTestMethod> testMethods = new ArrayList<>();
@@ -56,7 +56,7 @@ public class NewGenATC implements GenATC {
         return new AtcClass(packageName, className, imports, testMethods, runWithAnnotation);
     }
   
-    private AtcTestMethod generateTestFunction(JmlFunctionSpec spec, int index) { // Change return type to AtcTestMethod
+    private AtcTestMethod generateTestFunction(JmlFunctionSpec spec, int index) {
         // StringBuilder func = new StringBuilder(); // Comment out old StringBuilder
         List<AtcStatement> statements = new ArrayList<>(); // New list to hold IR statements
         FunctionSignature signature = spec.getSignature();
@@ -149,7 +149,7 @@ public class NewGenATC implements GenATC {
         // String callString = "Helper." + functionName + "(" + String.join(", ", paramNames) + ");\n";
         
         // New IR: Create MethodCallExpr
-        List<in.ac.iiitb.plproject.ast.Expr> callArgs = new ArrayList<>();
+        List<Object> callArgs = new ArrayList<>();
         for (String pName : paramNames) {
             callArgs.add(AstHelper.createNameExpr(pName));
         }
