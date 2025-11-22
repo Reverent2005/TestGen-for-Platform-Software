@@ -2,6 +2,7 @@ package in.ac.iiitb.plproject.atc;
 
 import in.ac.iiitb.plproject.parser.ast.*;
 import in.ac.iiitb.plproject.ast.AstHelper;
+import in.ac.iiitb.plproject.ast.Expr;
 import in.ac.iiitb.plproject.atc.ir.AtcClass;
 import in.ac.iiitb.plproject.atc.ir.AtcTestMethod;
 import in.ac.iiitb.plproject.atc.ir.AtcStatement;
@@ -51,23 +52,22 @@ public class IncrementalTestExample {
     }
 
     /**
-     * Simple test case: increment function
+     * Simple test case: appendExclamation function - simple example without arrays
      */
     private static void testSimpleExample() {
-        System.out.println("--- Test Case 1: Simple Increment ---");
+        System.out.println("--- Test Case 1: Simple AppendExclamation ---");
         
         try {
             // Create a mock JML function spec
             // In real implementation, this would come from the JML parser
-            JmlFunctionSpec spec = createMockIncrementSpec();
-            JmlFunctionSpec spec2 = createMockProcessSpec();
+            JmlFunctionSpec spec = createMockAppendExclamationSpec();
             
-            List<JmlFunctionSpec> specs = Arrays.asList(spec, spec2);
+            List<JmlFunctionSpec> specs = Arrays.asList(spec);
             JmlSpecAst jmlSpecAst = new JmlSpecAst(specs);
             
-            // Create test string: test increment function
+            // Create test string: test appendExclamation function
             TestStringAst testStringAst = new TestStringAst(
-                Arrays.asList("increment", "increment", "process", "increment")
+                Arrays.asList("appendExclamation", "appendExclamation")
             );
             
             // Print the JML Spec AST for debugging
@@ -161,6 +161,37 @@ public class IncrementalTestExample {
 
 
     /**
+     * Helper method to create a mock JML spec for appendExclamation function.
+     * Simple example: appends "!" to a string (no arrays, just a simple String parameter).
+     * In real implementation, this would come from the JML parser.
+     */
+    private static JmlFunctionSpec createMockAppendExclamationSpec() {
+        // Create function signature: appendExclamation(s: String) -> void
+        Variable param = new Variable("s", "String");
+        FunctionSignature signature = new FunctionSignature(
+            "appendExclamation",
+            Arrays.asList(param),
+            "void"
+        );
+        
+        // Pre-condition: s != null (string must not be null)
+        Expr pre = createBinaryExpr(
+            AstHelper.createNameExpr("s"),
+            AstHelper.createNameExpr("null"),
+            "NOT_EQUALS"
+        );
+        
+        // Post-condition: s != null (string is still not null after modification)
+        Expr post = createBinaryExpr(
+            AstHelper.createNameExpr("s"),
+            AstHelper.createNameExpr("null"),
+            "NOT_EQUALS"
+        );
+        
+        return new JmlFunctionSpec("appendExclamation", signature, pre, post);
+    }
+
+    /**
      * Helper method to create a mock JML spec for increment function.
      * In real implementation, this would come from the JML parser.
      */
@@ -173,27 +204,26 @@ public class IncrementalTestExample {
             "void"
         );
         
-        // Pre-condition: x > 0
+        // Pre-condition: x[0] > 0
         // Using AstHelper to create expressions (since Expr classes are package-private)
-        Object pre = createBinaryExpr(
-            AstHelper.createNameExpr("x"),
+        Expr pre = createBinaryExpr(
+            AstHelper.createNameExpr("x[0]"),
             createIntegerLiteral(0),
             "GREATER_THAN"
         );
         
-        // Post-condition: '(x) > x (using prime operator notation)
-        List<Object> primeArgs = new ArrayList<>();
-        primeArgs.add(AstHelper.createNameExpr("x"));
-        Object post = createBinaryExpr(
-            createMethodCall(null, "'", primeArgs),
-            AstHelper.createNameExpr("x"),
+        // Post-condition: x[0] > '([x[0]]) (new value > old value, using prime operator notation)
+        List<Expr> primeArgs = new ArrayList<>();
+        primeArgs.add(AstHelper.createNameExpr("x[0]"));
+        // Convert List<Expr> to List<Object> for the helper method
+        List<Object> primeArgsObj = new ArrayList<>(primeArgs);
+        Expr post = createBinaryExpr(
+            AstHelper.createNameExpr("x[0]"),
+            createMethodCall(null, "'", primeArgsObj),
             "GREATER_THAN"
         );
         
-        // Cast Object to Expr for constructor
-        return new JmlFunctionSpec("increment", signature, 
-            (in.ac.iiitb.plproject.ast.Expr)pre, 
-            (in.ac.iiitb.plproject.ast.Expr)post);
+        return new JmlFunctionSpec("increment", signature, pre, post);
     }
 
     /**
@@ -211,29 +241,32 @@ public class IncrementalTestExample {
         
         // Pre-condition: new Set([1,2,3]).contains(2)
         // Using helper methods to create expressions
-        Object pre = createMethodCall(
-            createObjectCreation("Set", Arrays.asList(
-                createIntegerLiteral(1),
-                createIntegerLiteral(2),
-                createIntegerLiteral(3)
-            )),
+        List<Expr> setArgs = Arrays.asList(
+            createIntegerLiteral(1),
+            createIntegerLiteral(2),
+            createIntegerLiteral(3)
+        );
+        List<Expr> containsArgs = Arrays.asList(createIntegerLiteral(2));
+        // Convert List<Expr> to List<Object> for the helper method
+        List<Object> containsArgsObj = new ArrayList<>(containsArgs);
+        Expr pre = createMethodCall(
+            createObjectCreation("Set", setArgs),
             "contains",
-            Arrays.asList(createIntegerLiteral(2))
+            containsArgsObj
         );
         
         // Post-condition: '(result) != null (simplified - just check result is not null after process)
-        List<Object> primeArgs = new ArrayList<>();
+        List<Expr> primeArgs = new ArrayList<>();
         primeArgs.add(AstHelper.createNameExpr("result"));
-        Object post = createBinaryExpr(
-            createMethodCall(null, "'", primeArgs),
+        // Convert List<Expr> to List<Object> for the helper method
+        List<Object> primeArgsObj = new ArrayList<>(primeArgs);
+        Expr post = createBinaryExpr(
+            createMethodCall(null, "'", primeArgsObj),
             AstHelper.createNameExpr("null"),
             "NOT_EQUALS"
         );
         
-        // Cast Object to Expr for constructor
-        return new JmlFunctionSpec("process", signature, 
-            (in.ac.iiitb.plproject.ast.Expr)pre, 
-            (in.ac.iiitb.plproject.ast.Expr)post);
+        return new JmlFunctionSpec("process", signature, pre, post);
     }
     
     // ===================================
@@ -243,29 +276,34 @@ public class IncrementalTestExample {
     /**
      * Helper to create BinaryExpr using AstHelper.
      */
-    private static Object createBinaryExpr(Object left, Object right, String operator) {
+    private static Expr createBinaryExpr(Expr left, Expr right, String operator) {
         return AstHelper.createBinaryExpr(left, right, operator);
     }
     
     /**
      * Helper to create MethodCallExpr using AstHelper.
      */
-    private static Object createMethodCall(Object scope, String methodName, List<Object> args) {
-        return AstHelper.createMethodCallExpr(scope, methodName, args);
+    private static Expr createMethodCall(Expr scope, String methodName, List<Object> args) {
+        // Convert List<Object> to List<Expr> for AstHelper
+        List<Expr> argsExpr = new ArrayList<>();
+        for (Object arg : args) {
+            argsExpr.add((Expr) arg);
+        }
+        return AstHelper.createMethodCallExpr(scope, methodName, argsExpr);
     }
     
     /**
      * Helper to create ObjectCreationExpr using AstHelper.
      */
-    private static Object createObjectCreation(String typeName, List<Object> args) {
+    private static Expr createObjectCreation(String typeName, List<Expr> args) {
         return AstHelper.createObjectCreationExpr(typeName, args);
     }
     
     /**
      * Helper to create IntegerLiteralExpr using AstHelper.
      */
-    private static Object createIntegerLiteral(int value) {
-        return AstHelper.createIntegerLiteralExpr(value);
+    private static Expr createIntegerLiteral(int value) {
+        return (Expr) AstHelper.createIntegerLiteralExpr(value);
     }
     
     // ===================================

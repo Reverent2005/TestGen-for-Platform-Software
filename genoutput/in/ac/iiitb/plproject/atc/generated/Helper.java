@@ -6,6 +6,13 @@ import java.util.HashSet;
 import java.util.HashMap;
 
 public class Helper {
+    public static void appendExclamation(String s) {
+        if (s != null) {
+            // Note: In real implementation, this would use StringBuilder or modify via wrapper
+            // For test generation purposes, we just verify s != null
+        }
+    }
+
     public static void increment(int[] x) {
         if (x != null && x.length > 0) {
             x[0] = x[0] + 1;

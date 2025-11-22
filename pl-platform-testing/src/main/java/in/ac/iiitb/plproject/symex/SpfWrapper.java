@@ -58,6 +58,20 @@ public class SpfWrapper {
             return indent + type + " " + varName + " = " + debugCall + ";";
         }
         
+        // Pattern to match array initialization: "int[] x = new int[]{Symbolic.input("x")};"
+        Pattern arrayPattern = Pattern.compile("(\\s+)(int|double|String|boolean|Integer|Double|Boolean)\\[\\]\\s+(\\w+)\\s*=\\s*new\\s+(int|double|String|boolean|Integer|Double|Boolean)\\[\\]\\{Symbolic\\.input\\(\"([^\"]+)\"\\)\\};");
+        Matcher arrayMatcher = arrayPattern.matcher(line);
+        if (arrayMatcher.find()) {
+            String indent = arrayMatcher.group(1);
+            String arrayType = arrayMatcher.group(2);
+            String varName = arrayMatcher.group(3);
+            String elementType = arrayMatcher.group(4);
+            String varNameInQuotes = arrayMatcher.group(5);
+            
+            String debugCall = getDebugMakeSymbolicCall(elementType, varNameInQuotes);
+            return indent + arrayType + "[] " + varName + " = new " + elementType + "[]{" + debugCall + "};";
+        }
+        
         // Pattern to match: "Type<...> var = (Type<...>) Symbolic.input("var");"
         // Handles spaces in generic types like "Map<Integer, Integer>"
         Pattern pattern2 = Pattern.compile("(\\s+)([\\w.]+(?:<[\\w.\\s,]+>)?)\\s+(\\w+)\\s*=\\s*\\(([\\w.]+(?:<[\\w.\\s,]+>)?)\\)\\s*Symbolic\\.input\\(\"([^\"]+)\"\\);");
@@ -381,6 +395,12 @@ public class SpfWrapper {
             writer.write("import java.util.HashSet;\n");
             writer.write("import java.util.HashMap;\n\n");
             writer.write("public class Helper {\n");
+            writer.write("    public static void appendExclamation(String s) {\n");
+            writer.write("        if (s != null) {\n");
+            writer.write("            // Note: In real implementation, this would use StringBuilder or modify via wrapper\n");
+            writer.write("            // For test generation purposes, we just verify s != null\n");
+            writer.write("        }\n");
+            writer.write("    }\n\n");
             writer.write("    public static void increment(int[] x) {\n");
             writer.write("        if (x != null && x.length > 0) {\n");
             writer.write("            x[0] = x[0] + 1;\n");

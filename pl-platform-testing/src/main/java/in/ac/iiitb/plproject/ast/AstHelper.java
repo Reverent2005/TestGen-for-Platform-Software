@@ -13,7 +13,7 @@ public class AstHelper {
     /**
      * Extract variable name from a NameExpr.
      */
-    public static String getNameFromExpr(Object expr) {
+    public static String getNameFromExpr(Expr expr) {
         if (expr instanceof NameExpr) {
             NameExpr nameExpr = (NameExpr) expr;
             if (nameExpr.name instanceof SimpleName) {
@@ -107,7 +107,7 @@ public class AstHelper {
             } else {
                 // Regular method call - transform scope and arguments
                 Expr scope = transformPostConditionRecursive(methodCallExpr.scope, resultVarName, oldStateMap, params, false);
-                List<Object> args = new ArrayList<>();
+                List<Expr> args = new ArrayList<>();
                 for (Expr arg : methodCallExpr.args) {
                     args.add(transformPostConditionRecursive(arg, resultVarName, oldStateMap, params, false));
                 }
@@ -158,7 +158,7 @@ public class AstHelper {
             return new TupleExpr(elements);
         } else if (expr instanceof ObjectCreationExpr) {
             ObjectCreationExpr objCreationExpr = (ObjectCreationExpr) expr;
-            List<Object> args = new ArrayList<>();
+            List<Expr> args = new ArrayList<>();
             for (Expr arg : objCreationExpr.args) {
                 args.add(transformPostConditionRecursive(arg, resultVarName, oldStateMap, params, false));
             }
@@ -679,23 +679,19 @@ public class AstHelper {
     /**
      * Create a BinaryExpr.
      */
-    public static BinaryExpr createBinaryExpr(Object left, Object right, String operatorName) {
+    public static BinaryExpr createBinaryExpr(Expr left, Expr right, String operatorName) {
         BinaryExpr.Operator op = BinaryExpr.Operator.valueOf(operatorName);
-        return new BinaryExpr((Expr) left, (Expr) right, op);
+        return new BinaryExpr(left, right, op);
     }
     
     /**
      * Create a MethodCallExpr.
      */
-    public static MethodCallExpr createMethodCallExpr(Object scope, String methodName, List<Object> args) {
-        List<Expr> exprArgs = new ArrayList<>();
-        for (Object arg : args) {
-            exprArgs.add((Expr) arg);
-        }
+    public static MethodCallExpr createMethodCallExpr(Expr scope, String methodName, List<Expr> args) {
         return new MethodCallExpr(
-            scope != null ? (Expr) scope : null,
+            scope,
             new SimpleName(methodName),
-            exprArgs
+            args
         );
     }
    
@@ -712,14 +708,10 @@ public class AstHelper {
     /**
      * Create an ObjectCreationExpr.
      */
-    public static ObjectCreationExpr createObjectCreationExpr(String typeName, List<Object> args) {
-        List<Expr> exprArgs = new ArrayList<>();
-        for (Object arg : args) {
-            exprArgs.add((Expr) arg);
-        }
+    public static ObjectCreationExpr createObjectCreationExpr(String typeName, List<Expr> args) {
         return new ObjectCreationExpr(
             new ClassOrInterfaceType(new SimpleName(typeName)),
-            exprArgs
+            args
         );
     }
    
@@ -740,9 +732,9 @@ public class AstHelper {
     /**
      * Create a UnaryExpr.
      */
-    public static UnaryExpr createUnaryExpr(Object expr, String operatorName) {
+    public static UnaryExpr createUnaryExpr(Expr expr, String operatorName) {
         UnaryExpr.Operator op = UnaryExpr.Operator.valueOf(operatorName);
-        return new UnaryExpr((Expr) expr, op);
+        return new UnaryExpr(expr, op);
     }
 
     /**
@@ -756,7 +748,7 @@ public class AstHelper {
      * Combine multiple expressions with AND operator.
      * Useful for combining multiple requires/ensures clauses.
      */
-    public static Object combineExpressionsWithAnd(List<Object> expressions) {
+    public static Expr combineExpressionsWithAnd(List<Expr> expressions) {
         if (expressions == null || expressions.isEmpty()) {
             return null;
         }
@@ -764,7 +756,7 @@ public class AstHelper {
             return expressions.get(0);
         }
         // Combine all expressions with AND: expr1 && expr2 && expr3 ...
-        Object result = expressions.get(0);
+        Expr result = expressions.get(0);
         for (int i = 1; i < expressions.size(); i++) {
             result = createBinaryExpr(result, expressions.get(i), "AND");
         }
@@ -774,7 +766,7 @@ public class AstHelper {
     /**
      * Combine two expressions with AND operator.
      */
-    public static Object combineWithAnd(Object left, Object right) {
+    public static Expr combineWithAnd(Expr left, Expr right) {
         if (left == null) return right;
         if (right == null) return left;
         return createBinaryExpr(left, right, "AND");

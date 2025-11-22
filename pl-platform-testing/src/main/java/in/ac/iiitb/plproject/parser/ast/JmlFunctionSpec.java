@@ -66,7 +66,7 @@ public class JmlFunctionSpec {
         // Combine all expressions with AND: expr1 && expr2 && expr3 ...
         Expr result = expressions.get(0);
         for (int i = 1; i < expressions.size(); i++) {
-            result = (Expr) in.ac.iiitb.plproject.ast.AstHelper.createBinaryExpr(result, expressions.get(i), "AND");
+            result = in.ac.iiitb.plproject.ast.AstHelper.createBinaryExpr(result, expressions.get(i), "AND");
         }
         return result;
     }

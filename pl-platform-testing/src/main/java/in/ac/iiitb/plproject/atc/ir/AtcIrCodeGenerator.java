@@ -261,12 +261,13 @@ public class AtcIrCodeGenerator {
         String typeName = stmt.getTypeName();
         String varName = stmt.getVarName();
         
-        if (typeName.endsWith("[]") && initCode.startsWith("new ")) {
+        // Only transform if it's array type with parentheses syntax (new int[](arg))
+        // If it's already in brace syntax (new int[]{arg}), leave it as is
+        if (typeName.endsWith("[]") && initCode.startsWith("new ") && 
+            initCode.contains("(") && initCode.contains(")") && !initCode.contains("{")) {
             String baseType = typeName.substring(0, typeName.length() - 2);
-            if (initCode.contains("(") && initCode.contains(")")) {
-                String args = initCode.substring(initCode.indexOf("(") + 1, initCode.indexOf(")"));
-                initCode = "new " + baseType + "[]{" + args + "}";
-            }
+            String args = initCode.substring(initCode.indexOf("(") + 1, initCode.indexOf(")"));
+            initCode = "new " + baseType + "[]{" + args + "}";
         }
         
         stringBuilder.append(INDENT).append(INDENT)
@@ -419,7 +420,7 @@ public class AtcIrCodeGenerator {
                 if (argMatcher.find()) {
                     String argsStr = argMatcher.group(1);
                     String[] args = argsStr.split(",");
-                    List<Object> argExprs = new ArrayList<>();
+                    List<Expr> argExprs = new ArrayList<>();
                     for (String arg : args) {
                         argExprs.add(AstHelper.createNameExpr(arg.trim()));
                     }

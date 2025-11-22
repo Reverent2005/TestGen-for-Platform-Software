@@ -61,16 +61,36 @@ public class NewGenATC implements GenATC {
         
         List<Variable> params = signature.getParameters();
         List<String> paramNames = new ArrayList<>();
-        for (Variable param : params) {
-            String name = param.getName();
-            String type = param.getTypeName();
-            paramNames.add(name);
-            statements.add(new AtcSymbolicVarDecl(type, name));
-        }
         
         // Store precondition and postcondition
         Expr pre = spec.getPrecondition();
         Expr post = spec.getPostcondition();
+        
+        // Detect parameters that are accessed as arrays (e.g., x[0] in pre/post conditions)
+        Set<String> arrayParams = detectArrayParameters(pre, post, params);
+        
+        for (Variable param : params) {
+            String name = param.getName();
+            String type = param.getTypeName();
+            paramNames.add(name);
+            
+            // If parameter is accessed as array, declare it as array type
+            if (arrayParams.contains(name) && isPrimitiveType(type)) {
+                // Declare as array: int[] x = new int[]{Symbolic.input("x")}
+                // Create Symbolic.input("x") as a method call
+                List<Expr> symbolicInputArgs = new ArrayList<>();
+                symbolicInputArgs.add(AstHelper.createStringLiteralExpr(name));
+                Expr symbolicInputCall = AstHelper.createMethodCallExpr(
+                    AstHelper.createNameExpr("Symbolic"), "input", symbolicInputArgs);
+                
+                List<Expr> arrayInitArgs = new ArrayList<>();
+                arrayInitArgs.add(symbolicInputCall);
+                Expr arrayInit = AstHelper.createObjectCreationExpr(type + "[]", arrayInitArgs);
+                statements.add(new AtcVarDecl(type + "[]", name, arrayInit));
+            } else {
+                statements.add(new AtcSymbolicVarDecl(type, name));
+            }
+        }
         
         // Check if we have collection parameters
         List<String> collectionParams = new ArrayList<>();
@@ -107,18 +127,28 @@ public class NewGenATC implements GenATC {
                 }
             }
             
+            // Check if this variable is accessed as an array
+            boolean isArrayParam = arrayParams.contains(varName);
+            
             // Only snapshot primitive types
             if (isPrimitiveType(varType)) {
                 String oldVarName = varName + "_old";
+                if (isArrayParam) {
+                    // For array parameters, snapshot the array element: x_old = x[0]
+                    Expr arrayAccess = AstHelper.createNameExpr(varName + "[0]");
+                    statements.add(new AtcVarDecl(varType, oldVarName, arrayAccess));
+                } else {
+                    // For regular primitives, snapshot the variable: x_old = x
+                    statements.add(new AtcVarDecl(varType, oldVarName, AstHelper.createNameExpr(varName)));
+                }
                 oldStateMap.put(varName, oldVarName);
-                statements.add(new AtcVarDecl(varType, oldVarName, AstHelper.createNameExpr(varName)));
             }
         }
         
         // Add null check return statement if we have collection params
         // Create: if (data == null || result == null) { return; }
         if (!collectionParams.isEmpty()) {
-            List<Object> nullCheckConditions = new ArrayList<>();
+            List<Expr> nullCheckConditions = new ArrayList<>();
             for (String pName : collectionParams) {
                 nullCheckConditions.add(AstHelper.createBinaryExpr(
                     AstHelper.createNameExpr(pName),
@@ -126,11 +156,11 @@ public class NewGenATC implements GenATC {
                     "EQUALS"
                 ));
             }
-            Expr nullCheckCondition = (Expr) nullCheckConditions.get(0);
+            Expr nullCheckCondition = nullCheckConditions.get(0);
             for (int i = 1; i < nullCheckConditions.size(); i++) {
                 nullCheckCondition = AstHelper.createBinaryExpr(
                     nullCheckCondition,
-                    (Expr) nullCheckConditions.get(i),
+                    nullCheckConditions.get(i),
                     "OR"
                 );
             }
@@ -165,7 +195,7 @@ public class NewGenATC implements GenATC {
             if (TypeMapper.isCollectionType(baseType) && !printedCollection) {
                 // Print actual variable value, not string literal
                 // Only print the first collection parameter (typically the input, not output)
-                Object printlnArg = AstHelper.createBinaryExpr(
+                Expr printlnArg = AstHelper.createBinaryExpr(
                     AstHelper.createStringLiteralExpr("Test Input: " + pName + " = "),
                     AstHelper.createNameExpr(pName),
                     "PLUS"
@@ -177,7 +207,7 @@ public class NewGenATC implements GenATC {
                 statements.add(new AtcMethodCallStmt(printlnCall));
                 printedCollection = true;
             } else if (isPrimitiveType(paramType) || paramType.equals("String")) {
-                Object printlnArg = AstHelper.createBinaryExpr(
+                Expr printlnArg = AstHelper.createBinaryExpr(
                     AstHelper.createStringLiteralExpr("Test Input: " + pName + " = "),
                     AstHelper.createNameExpr(pName),
                     "PLUS"
@@ -208,25 +238,39 @@ public class NewGenATC implements GenATC {
         
         if (postStateParam != null && isPrimitiveType(getParamType(postStateParam, params))) {
             String paramType = getParamType(postStateParam, params);
-            String refVarName = postStateParam + "Ref";
             
-            List<Object> arrayInitArgs = new ArrayList<>();
-            arrayInitArgs.add(AstHelper.createNameExpr(postStateParam));
-            Expr arrayInit = (Expr) AstHelper.createObjectCreationExpr(paramType + "[]", arrayInitArgs);
-            statements.add(new AtcVarDecl(paramType + "[]", refVarName, arrayInit));
-            
-            List<Object> callArgs = new ArrayList<>();
-            callArgs.add(AstHelper.createNameExpr(refVarName));
-            in.ac.iiitb.plproject.ast.MethodCallExpr callExpr = AstHelper.createMethodCallExpr(
-                AstHelper.createNameExpr("Helper"), functionName, callArgs);
-            statements.add(new AtcMethodCallStmt(callExpr));
-            
-            Expr arrayAccessExpr = AstHelper.createNameExpr(refVarName + "[0]");
-            statements.add(new AtcAssignStmt(postStateParam, arrayAccessExpr));
-            
-            resultVarName = postStateParam;
+            // Check if parameter is already declared as array
+            if (arrayParams.contains(postStateParam)) {
+                // Parameter is already an array, use it directly
+                List<Expr> callArgs = new ArrayList<>();
+                callArgs.add(AstHelper.createNameExpr(postStateParam));
+                in.ac.iiitb.plproject.ast.MethodCallExpr callExpr = AstHelper.createMethodCallExpr(
+                    AstHelper.createNameExpr("Helper"), functionName, callArgs);
+                statements.add(new AtcMethodCallStmt(callExpr));
+                
+                resultVarName = postStateParam;
+            } else {
+                // Create array wrapper for primitive parameter
+                String refVarName = postStateParam + "Ref";
+                
+                List<Expr> arrayInitArgs = new ArrayList<>();
+                arrayInitArgs.add(AstHelper.createNameExpr(postStateParam));
+                Expr arrayInit = AstHelper.createObjectCreationExpr(paramType + "[]", arrayInitArgs);
+                statements.add(new AtcVarDecl(paramType + "[]", refVarName, arrayInit));
+                
+                List<Expr> callArgs = new ArrayList<>();
+                callArgs.add(AstHelper.createNameExpr(refVarName));
+                in.ac.iiitb.plproject.ast.MethodCallExpr callExpr = AstHelper.createMethodCallExpr(
+                    AstHelper.createNameExpr("Helper"), functionName, callArgs);
+                statements.add(new AtcMethodCallStmt(callExpr));
+                
+                Expr arrayAccessExpr = AstHelper.createNameExpr(refVarName + "[0]");
+                statements.add(new AtcAssignStmt(postStateParam, arrayAccessExpr));
+                
+                resultVarName = postStateParam;
+            }
         } else {
-            List<Object> callArgs = new ArrayList<>();
+            List<Expr> callArgs = new ArrayList<>();
             for (String pName : paramNames) {
                 callArgs.add(AstHelper.createNameExpr(pName));
             }
@@ -235,7 +279,7 @@ public class NewGenATC implements GenATC {
             
             // Wrap method call and assertion in if statement for collection parameters
             if (!collectionParams.isEmpty()) {
-                List<Object> notNullConditions = new ArrayList<>();
+                List<Expr> notNullConditions = new ArrayList<>();
                 for (String pName : collectionParams) {
                     notNullConditions.add(AstHelper.createBinaryExpr(
                         AstHelper.createNameExpr(pName),
@@ -243,11 +287,11 @@ public class NewGenATC implements GenATC {
                         "NOT_EQUALS"
                     ));
                 }
-                Expr notNullCondition = (Expr) notNullConditions.get(0);
+                Expr notNullCondition = notNullConditions.get(0);
                 for (int i = 1; i < notNullConditions.size(); i++) {
                     notNullCondition = AstHelper.createBinaryExpr(
                         notNullCondition,
-                        (Expr) notNullConditions.get(i),
+                        notNullConditions.get(i),
                         "AND"
                     );
                 }
@@ -258,7 +302,7 @@ public class NewGenATC implements GenATC {
                 statements.add(new AtcIfStmt(notNullCondition, ifBody, false));
                 
                 // Add print and assertion outside if block for collection params
-                Object printlnArg = AstHelper.createStringLiteralExpr("Test Input: Helper." + functionName + " completed");
+                Expr printlnArg = AstHelper.createStringLiteralExpr("Test Input: Helper." + functionName + " completed");
                 in.ac.iiitb.plproject.ast.MethodCallExpr printlnCall = AstHelper.createMethodCallExpr(
                     AstHelper.createNameExpr("System.out"), "println", 
                     Arrays.asList(printlnArg)
@@ -428,6 +472,115 @@ public class NewGenATC implements GenATC {
                typeName.equals("byte") || typeName.equals("Byte") ||
                typeName.equals("boolean") || typeName.equals("Boolean") ||
                typeName.equals("char") || typeName.equals("Character");
+    }
+    
+    /**
+     * Detect parameters that are accessed as arrays in pre/post conditions.
+     * Returns set of parameter names that should be declared as arrays.
+     */
+    private Set<String> detectArrayParameters(Expr pre, Expr post, List<Variable> params) {
+        Set<String> arrayParams = new HashSet<>();
+        Set<String> paramNames = new HashSet<>();
+        for (Variable param : params) {
+            paramNames.add(param.getName());
+        }
+        
+        // Check pre-condition
+        if (pre != null) {
+            detectArrayAccessRecursive(pre, paramNames, arrayParams);
+        }
+        
+        // Check post-condition
+        if (post != null) {
+            detectArrayAccessRecursive(post, paramNames, arrayParams);
+        }
+        
+        return arrayParams;
+    }
+    
+    /**
+     * Recursively detect array access patterns like x[0] in expressions.
+     */
+    private void detectArrayAccessRecursive(Expr expr, Set<String> paramNames, Set<String> arrayParams) {
+        if (expr == null) {
+            return;
+        }
+        
+        String className = expr.getClass().getSimpleName();
+        
+        if (className.equals("NameExpr")) {
+            // Use reflection to access NameExpr fields since it's package-private
+            try {
+                java.lang.reflect.Field nameField = expr.getClass().getDeclaredField("name");
+                nameField.setAccessible(true);
+                Object nameObj = nameField.get(expr);
+                
+                java.lang.reflect.Field identifierField = nameObj.getClass().getDeclaredField("identifier");
+                identifierField.setAccessible(true);
+                String identifier = (String) identifierField.get(nameObj);
+                
+                // Check if identifier matches pattern paramName[0] or paramName[index]
+                for (String paramName : paramNames) {
+                    if (identifier.startsWith(paramName + "[") && identifier.contains("]")) {
+                        arrayParams.add(paramName);
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                // If reflection fails, try using AstHelper
+                String identifier = AstHelper.getNameFromExpr(expr);
+                if (identifier != null) {
+                    for (String paramName : paramNames) {
+                        if (identifier.startsWith(paramName + "[") && identifier.contains("]")) {
+                            arrayParams.add(paramName);
+                            break;
+                        }
+                    }
+                }
+            }
+        } else if (className.equals("MethodCallExpr")) {
+            try {
+                java.lang.reflect.Field scopeField = expr.getClass().getDeclaredField("scope");
+                scopeField.setAccessible(true);
+                Expr scope = (Expr) scopeField.get(expr);
+                if (scope != null) {
+                    detectArrayAccessRecursive(scope, paramNames, arrayParams);
+                }
+                
+                java.lang.reflect.Field argsField = expr.getClass().getDeclaredField("args");
+                argsField.setAccessible(true);
+                @SuppressWarnings("unchecked")
+                List<Expr> args = (List<Expr>) argsField.get(expr);
+                for (Expr arg : args) {
+                    detectArrayAccessRecursive(arg, paramNames, arrayParams);
+                }
+            } catch (Exception e) {
+                // Ignore reflection errors
+            }
+        } else if (className.equals("BinaryExpr")) {
+            try {
+                java.lang.reflect.Field leftField = expr.getClass().getDeclaredField("left");
+                leftField.setAccessible(true);
+                Expr left = (Expr) leftField.get(expr);
+                detectArrayAccessRecursive(left, paramNames, arrayParams);
+                
+                java.lang.reflect.Field rightField = expr.getClass().getDeclaredField("right");
+                rightField.setAccessible(true);
+                Expr right = (Expr) rightField.get(expr);
+                detectArrayAccessRecursive(right, paramNames, arrayParams);
+            } catch (Exception e) {
+                // Ignore reflection errors
+            }
+        } else if (className.equals("UnaryExpr")) {
+            try {
+                java.lang.reflect.Field exprField = expr.getClass().getDeclaredField("expr");
+                exprField.setAccessible(true);
+                Expr innerExpr = (Expr) exprField.get(expr);
+                detectArrayAccessRecursive(innerExpr, paramNames, arrayParams);
+            } catch (Exception e) {
+                // Ignore reflection errors
+            }
+        }
     }
 }
 
