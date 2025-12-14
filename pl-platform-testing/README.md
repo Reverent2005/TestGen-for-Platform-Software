@@ -45,21 +45,21 @@
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                      Parsing Layer                                │
+│                      Parsing Layer                              │
 ├─────────────────────────────────────────────────────────────────┤
 │  JmlSpecParser  →  JmlSpecAst                                   │
-│  TestStringParser → TestStringAst                                │
+│  TestStringParser → TestStringAst                               │
 └───────────────────────┬─────────────────────────────────────────┘
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                   ATC Generation Layer                           │
+│                   ATC Generation Layer                          │
 ├─────────────────────────────────────────────────────────────────┤
 │  GenATC Interface                                               │
-│  └── NewGenATC (Implementation)                                  │
+│  └── NewGenATC (Implementation)                                 │
 │      ├── generateAtcFile()                                      │
-│      └── generateHelperFunction()                              │
-│                                                                  │
+│      └── generateHelperFunction()                               │
+│                                                                 │
 │  Output: AtcClass (IR Structure)                                │
 │  ├── Package/Class metadata                                     │
 │  ├── Test Methods (helper functions)                            │
