@@ -37,9 +37,9 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        Input Layer                                │
+│                        Input Layer                              │
 ├─────────────────────────────────────────────────────────────────┤
-│  JML Specifications  │  Test Sequence Strings                  │
+│  JML Specifications  │  Test Sequence Strings                   │
 │  (Pre/Post Conditions)│  (Function Call Sequences)              │
 └───────────────────────┴─────────────────────────────────────────┘
                             │
@@ -68,7 +68,7 @@
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│              Symbolic Execution Transformation Layer             │
+│              Symbolic Execution Transformation Layer            │
 ├─────────────────────────────────────────────────────────────────┤
 │  AtcIrToSymbolicIrTransformer                                   │
 │  ├── transform() - Converts ATC IR to Symbolic IR               │
@@ -79,7 +79,7 @@
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    Code Generation Layer                         │
+│                    Code Generation Layer                        │
 ├─────────────────────────────────────────────────────────────────┤
 │  AtcIrCodeGenerator                                             │
 │  ├── generateJavaFile() - Standard Java code                    │
@@ -88,7 +88,7 @@
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                  Symbolic Execution Wrapper                      │
+│                  Symbolic Execution Wrapper                     │
 ├─────────────────────────────────────────────────────────────────┤
 │  SpfWrapper                                                     │
 │  ├── run() - Main entry point                                   │
@@ -99,10 +99,10 @@
                         │
                         ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                      Output Files                                 │
+│                      Output Files                               │
 ├─────────────────────────────────────────────────────────────────┤
 │  GeneratedATCs.java - Test class with symbolic variables        │
-│  GeneratedATCs_*.jpf - JPF configuration files                   │
+│  GeneratedATCs_*.jpf - JPF configuration files                  │
 │  Helper.java - Mock helper class for testing                    │
 └─────────────────────────────────────────────────────────────────┘
 ```
