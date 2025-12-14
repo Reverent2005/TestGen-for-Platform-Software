@@ -3,15 +3,27 @@ package in.ac.iiitb.plproject.atc;
 import in.ac.iiitb.plproject.parser.ast.JmlFunctionSpec;
 import in.ac.iiitb.plproject.parser.ast.JmlSpecAst;
 import in.ac.iiitb.plproject.parser.ast.TestStringAst;
-import org.junit.Test;
-import gov.nasa.jpf.symbc.Debug;
+import in.ac.iiitb.plproject.ast.AstHelper;
+import in.ac.iiitb.plproject.ast.Expr;
+import in.ac.iiitb.plproject.atc.ir.AtcClass;
+import in.ac.iiitb.plproject.atc.ir.AtcIrCodeGenerator;
+import in.ac.iiitb.plproject.atc.ir.AtcTestMethod;
+import in.ac.iiitb.plproject.atc.ir.AtcStatement;
+// Note: org.junit.Test and gov.nasa.jpf.symbc.Debug are external dependencies
+// They are only used in generated code strings, not in this compilation unit
+// import org.junit.Test;
+// import gov.nasa.jpf.symbc.Debug;
 import java.lang.StringBuilder;
+import java.util.ArrayList;
+import java.util.List;
 // Skeleton for LibTestGenATC (based on img2.jpeg)
 public class LibTestGenATC implements GenATC {
 
     @Override
-    public JavaFile generateAtcFile(JmlSpecAst jmlSpecAst, TestStringAst testStringAst) {
+    public AtcClass generateAtcFile(JmlSpecAst jmlSpecAst, TestStringAst testStringAst) {
         
+        // Convert to IR-based approach - for now, generate string and convert to IR
+        // This is a compatibility layer - ideally this should be rewritten to generate IR directly
         StringBuilder atcFileContent = new StringBuilder();
         
         // Add necessary imports for SPF and the code-under-test
@@ -37,7 +49,18 @@ public class LibTestGenATC implements GenATC {
         }
         
         atcFileContent.append("}\n");
-        return new JavaFile(atcFileContent.toString());
+        
+        // Convert string to IR - this is a temporary compatibility solution
+        // In a proper implementation, LibTestGenATC should generate IR directly
+        String javaCode = atcFileContent.toString();
+        AtcIrCodeGenerator codeGenerator = new AtcIrCodeGenerator();
+        // Note: This is a workaround - we can't easily parse Java code back to IR
+        // For now, return a minimal AtcClass structure
+        // TODO: Refactor LibTestGenATC to generate IR directly
+        List<String> imports = new ArrayList<>();
+        imports.add("gov.nasa.jpf.symbc.Debug");
+        imports.add("your.project.Stack");
+        return new AtcClass("", "GeneratedATCs", imports, new ArrayList<AtcTestMethod>(), new ArrayList<AtcStatement>(), null);
     }
 
     /**
@@ -64,7 +87,9 @@ public class LibTestGenATC implements GenATC {
         // Step B: Translate Preconditions (@requires) to 'assume'
         // This aligns with Phase 4 
         func.append("\n        // 2. Set JML preconditions\n");
-        String preCondition = spec.getPrecondition().toJavaCode(); // e.g., "true"
+        // Note: getPrecondition() returns Expr, convert to string representation using AstHelper
+        Expr preConditionExpr = spec.getPrecondition();
+        String preCondition = (preConditionExpr != null) ? AstHelper.exprToJavaCode(preConditionExpr) : "true";
         func.append("        Debug.assume(").append(preCondition).append(");\n");
         
         // Step C: Snapshot "Old" State (Handling Primed Vars)

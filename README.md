@@ -46,7 +46,7 @@ The flow, as shown in the diagram above, is:
 <!-- 
 #### Prerequisites
 
-* Java JDK 11 (or newer)
+* Java 8 (or newer)
 * Apache Maven
 * Java PathFinder (JPF) and Symbolic PathFinder (SPF)
 

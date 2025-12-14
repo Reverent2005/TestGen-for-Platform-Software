@@ -1,3 +1,9 @@
+package in.ac.iiitb.plproject.atc;
+
+import in.ac.iiitb.plproject.parser.ast.JmlSpecAst;
+import in.ac.iiitb.plproject.parser.ast.TestStringAst;
+import in.ac.iiitb.plproject.symex.SpfWrapper;
+import in.ac.iiitb.plproject.atc.ir.AtcClass;
 import java.util.List;
 
 // Skeleton for TestGen class (based on img2.jpeg)
@@ -20,13 +26,13 @@ public class TestGen {
      */
     public List<ConcreteInput> generateTest(JmlSpecAst jmlSpecAst, TestStringAst testStringAst) {
         
-        // 1. Generate the ATC Java code
-        // This is your Task 4
-        JavaFile atcJavaFile = this.genAtcAlgorithm.generateAtcFile(jmlSpecAst, testStringAst);
-        // 2. Run symbolic execution on that file
-        // This calls the SPF wrapper
-        List<ConcreteInput> testInputs = this.symexWrapper.run(atcJavaFile);
-        // 3. Plug back/return results
+        // 1. Generate the ATC IR structure
+        AtcClass atcClass = this.genAtcAlgorithm.generateAtcFile(jmlSpecAst, testStringAst);
+        
+        // 2. Run symbolic execution using IR directly (no string conversion needed)
+        // This uses the formal IR-based approach for transformation
+        List<ConcreteInput> testInputs = this.symexWrapper.run(atcClass);
+        // 4. Plug back/return results
         return testInputs;
     }
 }
