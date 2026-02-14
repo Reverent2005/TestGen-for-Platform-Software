@@ -211,8 +211,10 @@ public class SpfWrapper {
             }
         }
         
-        String javaFileName = className + ".java";
-        String javaFilePath = Paths.get(outputDir, javaFileName).toString();
+        String packagePath = packageName.replace('.', java.io.File.separatorChar);
+        java.io.File packageDir = new java.io.File(outputDir, packagePath);
+        packageDir.mkdirs();
+        String javaFilePath = Paths.get(packageDir.getAbsolutePath(), className + ".java").toString();
         try (FileWriter writer = new FileWriter(javaFilePath)) {
             writer.write(jpfCode);
             System.out.println("Saved JPF-transformed Java file: " + javaFilePath);
@@ -221,14 +223,14 @@ public class SpfWrapper {
         String mainJpfFileName = className + "_main.jpf";
         String mainJpfFilePath = Paths.get(outputDir, mainJpfFileName).toString();
         try {
-            generateJpfFile(fullClassName, "main", mainJpfFilePath, null, null, jpfCode);
+            generateJpfFile(fullClassName, "main", mainJpfFilePath, "./bin", null, jpfCode);
             System.out.println("Generated main .jpf file: " + mainJpfFilePath);
         } catch (IOException e) {
             System.err.println("Error generating main .jpf file: " + e.getMessage());
         }
         
         if (!testMethods.isEmpty() && fullClassName != null) {
-            List<String> jpfFiles = generateJpfFilesForMethods(fullClassName, testMethods, outputDir, null, null, jpfCode);
+            List<String> jpfFiles = generateJpfFilesForMethods(fullClassName, testMethods, outputDir, "./bin", null, jpfCode);
             System.out.println("Generated " + jpfFiles.size() + " additional .jpf file(s) for individual test methods:");
             for (String jpfFile : jpfFiles) {
                 System.out.println("  - " + jpfFile);
@@ -293,6 +295,9 @@ public class SpfWrapper {
                                    String classpath, String sourcepath, String javaCode) throws IOException {
         StringBuilder jpfContent = new StringBuilder();
         
+        // 1. Always load the jpf-symbc extension at the top
+        jpfContent.append("@using = jpf-symbc\n\n");
+
         jpfContent.append("# Target class\n");
         jpfContent.append("target = ").append(className).append("\n\n");
         
@@ -300,6 +305,7 @@ public class SpfWrapper {
         if (classpath != null && !classpath.isEmpty()) {
             jpfContent.append("classpath = ").append(classpath).append("\n");
         } else {
+            // Recommendation: Change this default to "./bin" or where your wrapper saves classes
             jpfContent.append("classpath = ${jpf-symbc}/build/examples\n");
         }
         jpfContent.append("\n");
@@ -311,6 +317,13 @@ public class SpfWrapper {
             jpfContent.append("sourcepath = ${jpf-symbc}/src/examples\n");
         }
         jpfContent.append("\n");
+
+        // 2. GLOBAL SYMBOLIC CONFIGURATION (Required for all files)
+        jpfContent.append("# Required engine settings for symbolic execution\n");
+        jpfContent.append("vm.insn_factory.class = gov.nasa.jpf.symbc.SymbolicInstructionFactory\n");
+        jpfContent.append("symbolic.dp = z3\n");
+        jpfContent.append("symbolic.string_dp = true\n");
+        jpfContent.append("symbolic.arrays = true\n\n");
         
         if (!"main".equals(methodName)) {
             String methodSignature;
@@ -324,23 +337,7 @@ public class SpfWrapper {
             jpfContent.append("symbolic.method = ").append(className).append(".").append(methodSignature).append("\n\n");
         }
         
-        if ("main".equals(methodName)) {
-            jpfContent.append("# Constraint solver - required for symbolic execution\n");
-            jpfContent.append("symbolic.dp = z3\n\n");
-        }
-        
-        jpfContent.append("# Symbolic string variables created via Debug.makeSymbolicString\n");
-        jpfContent.append("symbolic.string_dp = true\n");
-        
-        if ("main".equals(methodName)) {
-            jpfContent.append("\n");
-            jpfContent.append("# Add instruction factory for symbolic execution\n");
-            jpfContent.append("vm.insn_factory.class = gov.nasa.jpf.symbc.SymbolicInstructionFactory\n\n");
-            jpfContent.append("# Enable symbolic array handling (needed for array operations)\n");
-            jpfContent.append("symbolic.arrays = true\n\n");
-        }
-        
-        jpfContent.append("\n# Integer ranges\n");
+        jpfContent.append("# Integer ranges\n");
         jpfContent.append("symbolic.minint = -100\n");
         jpfContent.append("symbolic.maxint = 100\n");
         jpfContent.append("symbolic.undefined = -1000\n\n");
@@ -358,28 +355,18 @@ public class SpfWrapper {
         
         if ("main".equals(methodName)) {
             jpfContent.append("# Show path conditions and symbolic execution results\n");
-            jpfContent.append("# SymbolicPathListener displays path conditions (constraints like \"x > CONST_0\")\n");
             jpfContent.append("jpf.report.console.finished = gov.nasa.jpf.symbc.SymbolicPathListener\n\n");
-            jpfContent.append("# Disable verbose debug output - we only want test inputs, not search process\n");
-            jpfContent.append("# symbolic.debug = true\n\n");
-            jpfContent.append("# Enable output so System.out.println shows test input values\n");
             jpfContent.append("vm.output = true\n");
         } else {
             jpfContent.append("# Listeners for test input extraction and coverage\n");
-            jpfContent.append("# SymbolicSequenceListener generates JUnit tests with concrete values\n");
-            jpfContent.append("listener = gov.nasa.jpf.symbc.sequences.SymbolicSequenceListener,gov.nasa.jpf.listener.CoverageAnalyzer\n\n");
+            // Adding SymbolicPathListener here too so you can see constraints in helper runs
+            jpfContent.append("listener = gov.nasa.jpf.symbc.sequences.SymbolicSequenceListener,gov.nasa.jpf.symbc.SymbolicPathListener,gov.nasa.jpf.listener.CoverageAnalyzer\n\n");
             
             String simpleClassName = className.substring(className.lastIndexOf('.') + 1);
             jpfContent.append("# Show method coverage\n");
             jpfContent.append("coverage.include = *.").append(simpleClassName).append("\n");
             jpfContent.append("coverage.show_methods = true\n");
             jpfContent.append("coverage.show_bodies = true\n\n");
-            
-            jpfContent.append("# To extract concrete test input values from JPF output:\n");
-            jpfContent.append("# 1. Look for 'pc X constraint # = Y' sections - these show path conditions\n");
-            jpfContent.append("# 2. Look for 'JUnit 4.0 test class' section - shows generated test cases\n");
-            jpfContent.append("# 3. The path conditions show constraints; JPF's solver finds values satisfying them\n");
-            jpfContent.append("# 4. For actual concrete values, check the constraint solver output or add Debug.printPC() calls\n");
         }
         
         String content = jpfContent.toString();

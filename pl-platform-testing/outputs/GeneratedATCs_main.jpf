@@ -1,24 +1,19 @@
+@using = jpf-symbc
+
 # Target class
 target = in.ac.iiitb.plproject.atc.generated.GeneratedATCs
 
 # Set the classpath to point to your compiled classes
-classpath = ${jpf-symbc}/build/examples
+classpath = ./bin
 
 # Path to source code
 sourcepath = ${jpf-symbc}/src/examples
 
-# Constraint solver - required for symbolic execution
-symbolic.dp = z3
-
-# Symbolic string variables created via Debug.makeSymbolicString
-symbolic.string_dp = true
-
-# Add instruction factory for symbolic execution
+# Required engine settings for symbolic execution
 vm.insn_factory.class = gov.nasa.jpf.symbc.SymbolicInstructionFactory
-
-# Enable symbolic array handling (needed for array operations)
+symbolic.dp = z3
+symbolic.string_dp = true
 symbolic.arrays = true
-
 
 # Integer ranges
 symbolic.minint = -100
@@ -32,11 +27,6 @@ search.multiple_errors = true
 search.class = .search.heuristic.BFSHeuristic
 
 # Show path conditions and symbolic execution results
-# SymbolicPathListener displays path conditions (constraints like "x > CONST_0")
 jpf.report.console.finished = gov.nasa.jpf.symbc.SymbolicPathListener
 
-# Disable verbose debug output - we only want test inputs, not search process
-# symbolic.debug = true
-
-# Enable output so System.out.println shows test input values
 vm.output = true
