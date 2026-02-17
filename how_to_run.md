@@ -85,9 +85,7 @@ Run JPF using the `RunJPF.jar` bootstrapper. Ensure your `.jpf` file points to t
 ```properties
 target = in.ac.iiitb.plproject.atc.generated.GeneratedATCs
 classpath = ./bin
-shell = gov.nasa.jpf.symbc.SymbolicInstructionFactory
-symbolic.method = in.ac.iiitb.plproject.atc.generated.GeneratedATCs.main(sym)
-listener = gov.nasa.jpf.symbc.SymbolicListener
+vm.insn_factory.class = gov.nasa.jpf.symbc.SymbolicInstructionFactory
 ```
 
 Now while inside the `outputs` directory run:
