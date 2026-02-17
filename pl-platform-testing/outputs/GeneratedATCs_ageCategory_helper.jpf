@@ -1,0 +1,31 @@
+@using = jpf-symbc
+
+# Target class
+target = in.ac.iiitb.plproject.atc.generated.GeneratedATCs
+
+# Set the classpath
+classpath = ./bin
+sourcepath = ${jpf-symbc}/src/examples
+
+# Symbolic engine
+vm.insn_factory.class = gov.nasa.jpf.symbc.SymbolicInstructionFactory
+symbolic.dp = z3
+symbolic.arrays = true
+symbolic.string_dp = true
+symbolic.debug = true
+# Tell SPF which method to treat symbolically
+symbolic.method = in.ac.iiitb.plproject.atc.generated.GeneratedATCs.ageCategory_helper()
+
+# Integer ranges for symbolic ints
+symbolic.minint = 0
+symbolic.maxint = 120
+
+# Search limits
+search.depth_limit = 200
+search.time_limit = 60
+search.multiple_errors = true
+search.class = .search.heuristic.BFSHeuristic
+
+# Show path conditions / symbolic results
+jpf.report.console.finished = gov.nasa.jpf.symbc.SymbolicPathListener
+vm.output = true
