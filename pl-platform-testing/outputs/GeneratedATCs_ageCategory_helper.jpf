@@ -13,8 +13,6 @@ symbolic.dp = z3
 symbolic.arrays = true
 symbolic.string_dp = true
 symbolic.debug = true
-# Tell SPF which method to treat symbolically
-symbolic.method = in.ac.iiitb.plproject.atc.generated.GeneratedATCs.ageCategory_helper()
 
 # Integer ranges for symbolic ints
 symbolic.minint = 0

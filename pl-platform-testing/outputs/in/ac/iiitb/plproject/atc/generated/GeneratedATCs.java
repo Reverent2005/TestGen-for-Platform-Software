@@ -4,6 +4,8 @@ import gov.nasa.jpf.symbc.Debug;
 
 public class GeneratedATCs {
 
+    static int age;
+
     // Existing string helper
     public void appendExclamation_helper() {
         String s = Debug.makeSymbolicString("s");
@@ -15,7 +17,7 @@ public class GeneratedATCs {
 
     // New age helper for symbolic execution
     public void ageCategory_helper() {
-        int age = Debug.makeSymbolicInteger("age");
+        age = Debug.makeSymbolicInteger("age");
         // Example precondition: age must be non-negative and not absurdly high
         Debug.assume(age >= 0 && age <= 120);
 
@@ -29,5 +31,6 @@ public class GeneratedATCs {
     public static void main(String[] args) {
         GeneratedATCs instance = new GeneratedATCs();
         instance.ageCategory_helper();
+        Debug.printPC("=== TEST CASE ===");
     }
 }
