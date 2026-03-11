@@ -39,21 +39,21 @@ public class Helper {
     }
 
     // New void function for age branching
-    public static void ageCategoryPrint(int age) {
+    public static String ageCategoryPrint(int age) {
         if (age < 0) {
-            System.out.println("Invalid age");
+            return "Invalid age";
         } else if (age <= 5) {
-            System.out.println("Toddler");
+            return "Toddler";
         } else if (age <= 12) {
-            System.out.println("Kid");
+            return "Kid";
         } else if (age <= 20) {
-            System.out.println("Teenager");
+            return "Teenager";
         } else if (age <= 45) {
-            System.out.println("Adult");
+            return "Adult";
         } else if (age <= 65) {
-            System.out.println("Midlife");
+            return "Midlife";
         } else {
-            System.out.println("Senior citizen");
+            return "Senior citizen";
         }
     }
 }
