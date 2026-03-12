@@ -1,9 +1,8 @@
 from z3 import *
 from parse_spf import paths
 
-def solve_paths(paths):
 
-    results = []
+def solve_one(paths):
 
     for path in paths:
 
@@ -31,23 +30,21 @@ def solve_paths(paths):
                 solver.add(v != val)
 
         if solver.check() == sat:
-            model = solver.model()
 
+            model = solver.model()
             result = {}
 
             for var in variables:
                 result[var] = model[variables[var]].as_long()
 
-            results.append(result)
+            return result
 
-    return results
+    return None
 
 
 if __name__ == "__main__":
 
-    solutions = solve_paths(paths)
+    sol = solve_one(paths)
 
-    print("Generated Inputs:")
-
-    for s in solutions:
-        print(s)
+    print("Generated Input:")
+    print(sol)

@@ -1,43 +1,46 @@
 import subprocess
+from solver import solve_one
 from parse_spf import paths
-from solver import solve_paths
 
-inputs = solve_paths(paths)
+inp = solve_one(paths)
 
-tests = []
+if inp is None:
+    print("No satisfying input found")
+    exit()
 
-for inp in inputs:
+age = inp["age"]
 
-    age = inp["age"]
+proc = subprocess.run(
+    ["java","in.ac.iiitb.plproject.atc.generated.Executor",str(age)],
+    capture_output=True,
+    text=True
+)
 
-    proc = subprocess.run(
-        ["java","in.ac.iiitb.plproject.atc.generated.Executor",str(age)],
-        capture_output=True,
-        text=True
-    )
+output = proc.stdout.strip()
 
-    output = proc.stdout.strip()
-
-    tests.append((age,output))
+print(age, output)
 
 
-with open("GeneratedTests.java","w") as f:
+with open("GeneratedTest.java","w") as f:
 
     f.write("""
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import in.ac.iiitb.plproject.atc.generated.Helper;
 
-public class GeneratedTests {
+public class GeneratedTest {
+
+    @Test
+    void generated_test() {
 """)
 
-    for i,(age,out) in enumerate(tests):
-
-        f.write(f"""
-@Test
-void test_{i}() {{
-    assertEquals("{out}", Helper.ageCategoryPrint({age}));
-}}
+    f.write(f"""
+        assertEquals("{output}", Helper.ageCategoryPrint({age}));
 """)
 
-    f.write("\n}")
+    f.write("""
+    }
+}
+""")
+
+print("JUnit test written to GeneratedTest.java")
