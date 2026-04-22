@@ -13,7 +13,7 @@ public class NewGenATC implements GenATC {
     public AtcClass generateAtcFile(JmlSpecAst jmlSpecAst, TestStringAst testStringAst) {
         List<String> imports = new ArrayList<>();
         imports.add("java.util.*");
-
+        imports.add("gov.nasa.jpf.symbc.Debug");
         List<AtcTestMethod> actualTestMethods = new ArrayList<>();
         List<String> calls = testStringAst.getCalls();
         

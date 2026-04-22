@@ -15,6 +15,7 @@ public class AtcIrCodeGenerator {
 
     private StringBuilder stringBuilder;
     private static final String INDENT = "    ";
+    private String lastReturnVariable = null;
 
     public AtcIrCodeGenerator() {
         this.stringBuilder = new StringBuilder();
@@ -45,6 +46,7 @@ public class AtcIrCodeGenerator {
         stringBuilder.append("public class ").append(atc.getClassName()).append(" {\n");
 
         for (AtcTestMethod method : atc.getTestMethods()) {
+            lastReturnVariable = null;
             visit(method);
         }
 
@@ -78,7 +80,7 @@ public class AtcIrCodeGenerator {
             } else if (stmt instanceof AtcAssumeStmt) {
                 visit((AtcAssumeStmt) stmt);
             } else if (stmt instanceof AtcMethodCallStmt) {
-                visit((AtcMethodCallStmt) stmt);
+                lastReturnVariable = visit((AtcMethodCallStmt) stmt);
             } else if (stmt instanceof AtcAssertStmt) {
                 visit((AtcAssertStmt) stmt);
             } else if (stmt instanceof AtcIfStmt) {
@@ -98,7 +100,6 @@ public class AtcIrCodeGenerator {
             stringBuilder.append(INDENT).append(INDENT).append(INDENT)
                          .append("return;\n");
         } else {
-            // Use 3 levels of indentation for statements inside if block
             for (AtcStatement thenStmt : stmt.getThenStatements()) {
                 if (thenStmt instanceof AtcSymbolicVarDecl) {
                     visitWithIndent((AtcSymbolicVarDecl) thenStmt, 3);
@@ -116,7 +117,7 @@ public class AtcIrCodeGenerator {
                 } else if (thenStmt instanceof AtcAssumeStmt) {
                     visitWithIndent((AtcAssumeStmt) thenStmt, 3);
                 } else if (thenStmt instanceof AtcMethodCallStmt) {
-                    visitWithIndent((AtcMethodCallStmt) thenStmt, 3);
+                    lastReturnVariable = visitWithIndent((AtcMethodCallStmt) thenStmt, 3);
                 } else if (thenStmt instanceof AtcAssertStmt) {
                     visitWithIndent((AtcAssertStmt) thenStmt, 3);
                 }
@@ -126,12 +127,25 @@ public class AtcIrCodeGenerator {
         stringBuilder.append(INDENT).append(INDENT).append("}\n");
     }
     
-    private void visitWithIndent(AtcMethodCallStmt stmt, int indentLevel) {
-        String callCode = AstHelper.exprToJavaCode(stmt.getCallExpr());
+    private String visitWithIndent(AtcMethodCallStmt stmt, int indentLevel) {
+        MethodCallExpr callExpr = stmt.getCallExpr();
+        String callCode = AstHelper.exprToJavaCode(callExpr);
+        String methodName = callExpr.name.identifier;
+        String returnType = getHelperMethodReturnType(methodName);
+        
         for (int i = 0; i < indentLevel; i++) {
             stringBuilder.append(INDENT);
         }
-        stringBuilder.append(callCode).append(";\n");
+        
+        if (returnType != null && !returnType.equals("void")) {
+            String resultVar = "result_ " + methodName;  // ← CHANGED: unique name per method
+            stringBuilder.append(returnType).append(" ").append(resultVar)
+                         .append(" = ").append(callCode).append(";\n");
+            return resultVar;
+        } else {
+            stringBuilder.append(callCode).append(";\n");
+            return null;
+        }
     }
     
     private void visitWithIndent(AtcVarDecl stmt, int indentLevel) {
@@ -185,12 +199,10 @@ public class AtcIrCodeGenerator {
         for (int i = 0; i < indentLevel; i++) {
             stringBuilder.append(INDENT);
         }
-        stringBuilder.append("assume(").append(condCode).append(");\n");
+        stringBuilder.append("Debug.assume(").append(condCode).append(");\n");
     }
     
     private void visitWithIndent(AtcAssertStmt stmt, int indentLevel) {
-        // This is complex, so just use the regular visit and adjust indentation
-        // For now, assert statements shouldn't appear in if blocks, but handle it anyway
         Expr condition = stmt.getCondition();
         Map<String, MethodCallExpr> methodCallMap = new HashMap<>();
         Expr processedCondition = extractMethodCallsFromAssertion(condition, methodCallMap);
@@ -209,6 +221,10 @@ public class AtcIrCodeGenerator {
         }
         
         String condCode = AstHelper.exprToJavaCode(processedCondition);
+        // Replace \result with the actual return variable
+        if (lastReturnVariable != null && condCode.contains("\\result")) {
+            condCode = condCode.replace("\\result", lastReturnVariable);
+        }
         // Strip outer parentheses only for null checks
         if (condCode.startsWith("(") && condCode.endsWith(")") && condCode.length() > 2) {
             String inner = condCode.substring(1, condCode.length() - 1);
@@ -229,63 +245,70 @@ public class AtcIrCodeGenerator {
         
         String typeName = stmt.getTypeName();
         String varName = stmt.getVarName();
-        
-        if (TypeMapper.isCollectionType(typeName)) {
-            String genericType = TypeMapper.getGenericType(typeName);
-            stringBuilder.append(genericType).append(" ").append(varName)
-                         .append(" = (").append(genericType).append(") Symbolic.input(\"").append(varName).append("\");\n");
-        } else if (typeName.equalsIgnoreCase("int") || typeName.equals("Integer")) {
-            stringBuilder.append("int ").append(varName)
-                         .append(" = Symbolic.input(\"").append(varName).append("\");\n");
-        } else if (typeName.equalsIgnoreCase("double") || typeName.equals("Double")) {
-            stringBuilder.append("double ").append(varName)
-                         .append(" = Symbolic.input(\"").append(varName).append("\");\n");
-        } else if (typeName.equalsIgnoreCase("String")) {
-            stringBuilder.append("String ").append(varName)
-                         .append(" = Symbolic.input(\"").append(varName).append("\");\n");
-        } else if (typeName.equalsIgnoreCase("boolean") || typeName.equals("Boolean")) {
-            stringBuilder.append("boolean ").append(varName)
-                         .append(" = Symbolic.input(\"").append(varName).append("\");\n");
-        } else {
-            String genericType = TypeMapper.getGenericType(typeName);
-            stringBuilder.append(genericType).append(" ").append(varName)
-                         .append(" = (").append(genericType).append(") Symbolic.input(\"").append(varName).append("\");\n");
-        }
+        String debugCall = getDebugMakeSymbolicCall(typeName, varName);
+        stringBuilder.append(debugCall).append(";\n");
     }
 
+    private String visit(AtcMethodCallStmt stmt) {
+        MethodCallExpr callExpr = stmt.getCallExpr();
+        String callCode = AstHelper.exprToJavaCode(callExpr);
+        String methodName = callExpr.name.identifier;
+        String returnType = getHelperMethodReturnType(methodName);
+        
+        if (callCode.contains("System.out.println") && callCode.contains("Test Input:")) {
+            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("System\\.out\\.println\\(\\(([^)]+)\\)\\)");
+            java.util.regex.Matcher matcher = pattern.matcher(callCode);
+            if (matcher.find()) {
+                String inner = matcher.group(1);
+                java.util.regex.Pattern varPattern = java.util.regex.Pattern.compile("\"Test Input: [^=]+= \" \\+ ([a-zA-Z_][a-zA-Z0-9_]*)");
+                java.util.regex.Matcher varMatcher = varPattern.matcher(inner);
+                if (varMatcher.find()) {
+                    String varName = varMatcher.group(1);
+                    if (varName.matches("(data|result|map|set|list|collection|queue|deque)")) {
+                        callCode = "System.out.println(" + inner + ")";
+                    }
+                }
+            }
+        }
+        
+        stringBuilder.append(INDENT).append(INDENT);
+        
+        if (returnType != null && !returnType.equals("void")) {
+            String resultVar = "result_" + methodName;  // ← CHANGED: unique name per method
+            stringBuilder.append(returnType).append(" ").append(resultVar)
+                        .append(" = ").append(callCode).append(";\n");
+            return resultVar;
+        } else {
+            stringBuilder.append(callCode).append(";\n");
+            return null;
+        }
+    }
     private void visit(AtcSymbolicVarDecl stmt) {
         String typeName = stmt.getTypeName();
         String varName = stmt.getVarName();
         
-        if (TypeMapper.isCollectionType(typeName)) {
-            String genericType = TypeMapper.getGenericType(typeName);
-            stringBuilder.append(INDENT).append(INDENT)
-                         .append(genericType).append(" ").append(varName)
-                         .append(" = (").append(genericType).append(") Symbolic.input(\"").append(varName).append("\");\n");
-        } else if (typeName.equalsIgnoreCase("int") || typeName.equals("Integer")) {
-            stringBuilder.append(INDENT).append(INDENT)
-                         .append("int ").append(varName)
-                         .append(" = Symbolic.input(\"").append(varName).append("\");\n");
-        } else if (typeName.equalsIgnoreCase("double") || typeName.equals("Double")) {
-            stringBuilder.append(INDENT).append(INDENT)
-                         .append("double ").append(varName)
-                         .append(" = Symbolic.input(\"").append(varName).append("\");\n");
-        } else if (typeName.equalsIgnoreCase("String")) {
-            stringBuilder.append(INDENT).append(INDENT)
-                         .append("String ").append(varName)
-                         .append(" = Symbolic.input(\"").append(varName).append("\");\n");
-        } else if (typeName.equalsIgnoreCase("boolean") || typeName.equals("Boolean")) {
-            stringBuilder.append(INDENT).append(INDENT)
-                         .append("boolean ").append(varName)
-                         .append(" = Symbolic.input(\"").append(varName).append("\");\n");
-        } else {
-            String genericType = TypeMapper.getGenericType(typeName);
-            stringBuilder.append(INDENT).append(INDENT)
-                         .append(genericType).append(" ").append(varName)
-                         .append(" = (").append(genericType).append(") Symbolic.input(\"").append(varName).append("\");\n");
-        }
+        stringBuilder.append(INDENT).append(INDENT);
+        String debugCall = getDebugMakeSymbolicCall(typeName, varName);
+        stringBuilder.append(debugCall).append(";\n");
     }
 
+    private String getDebugMakeSymbolicCall(String typeName, String varName) {
+        if (TypeMapper.isCollectionType(typeName)) {
+            String genericType = TypeMapper.getGenericType(typeName);
+            return genericType + " " + varName + " = (" + genericType + ") Debug.makeSymbolicObject(\"" + varName + "\")";
+        } else if (typeName.equalsIgnoreCase("int") || typeName.equals("Integer")) {
+            return "int " + varName + " = Debug.makeSymbolicInteger(\"" + varName + "\")";
+        } else if (typeName.equalsIgnoreCase("double") || typeName.equals("Double")) {
+            return "double " + varName + " = Debug.makeSymbolicReal(\"" + varName + "\")";
+        } else if (typeName.equalsIgnoreCase("String")) {
+            return "String " + varName + " = Debug.makeSymbolicString(\"" + varName + "\")";
+        } else if (typeName.equalsIgnoreCase("boolean") || typeName.equals("Boolean")) {
+            return "boolean " + varName + " = Debug.makeSymbolicBoolean(\"" + varName + "\")";
+        } else {
+            String genericType = TypeMapper.getGenericType(typeName);
+            return genericType + " " + varName + " = (" + genericType + ") Debug.makeSymbolicObject(\"" + varName + "\")";
+        }
+    }
     private void visit(AtcVarDecl stmt) {
         String initCode = AstHelper.exprToJavaCode(stmt.getInitExpr());
         String typeName = stmt.getTypeName();
@@ -328,29 +351,43 @@ public class AtcIrCodeGenerator {
             }
         }
         stringBuilder.append(INDENT).append(INDENT)
-                     .append("assume(").append(condCode).append(");\n");
+                     .append("Debug.assume(").append(condCode).append(");\n");
     }
 
-    private void visit(AtcMethodCallStmt stmt) {
-        String callCode = AstHelper.exprToJavaCode(stmt.getCallExpr());
-        if (callCode.contains("System.out.println") && callCode.contains("Test Input:")) {
-            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("System\\.out\\.println\\(\\(([^)]+)\\)\\)");
-            java.util.regex.Matcher matcher = pattern.matcher(callCode);
-            if (matcher.find()) {
-                String inner = matcher.group(1);
-                java.util.regex.Pattern varPattern = java.util.regex.Pattern.compile("\"Test Input: [^=]+= \" \\+ ([a-zA-Z_][a-zA-Z0-9_]*)");
-                java.util.regex.Matcher varMatcher = varPattern.matcher(inner);
-                if (varMatcher.find()) {
-                    String varName = varMatcher.group(1);
-                    if (varName.matches("(data|result|map|set|list|collection|queue|deque)")) {
-                        callCode = "System.out.println(" + inner + ")";
-                    }
-                }
-            }
-        }
-        stringBuilder.append(INDENT).append(INDENT)
-                     .append(callCode).append(";\n");
-    }
+    // private String visit(AtcMethodCallStmt stmt) {
+    //     MethodCallExpr callExpr = stmt.getCallExpr();
+    //     String callCode = AstHelper.exprToJavaCode(callExpr);
+    //     String methodName = callExpr.name.identifier;
+    //     String returnType = getHelperMethodReturnType(methodName);
+        
+    //     if (callCode.contains("System.out.println") && callCode.contains("Test Input:")) {
+    //         java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("System\\.out\\.println\\(\\(([^)]+)\\)\\)");
+    //         java.util.regex.Matcher matcher = pattern.matcher(callCode);
+    //         if (matcher.find()) {
+    //             String inner = matcher.group(1);
+    //             java.util.regex.Pattern varPattern = java.util.regex.Pattern.compile("\"Test Input: [^=]+= \" \\+ ([a-zA-Z_][a-zA-Z0-9_]*)");
+    //             java.util.regex.Matcher varMatcher = varPattern.matcher(inner);
+    //             if (varMatcher.find()) {
+    //                 String varName = varMatcher.group(1);
+    //                 if (varName.matches("(data|result|map|set|list|collection|queue|deque)")) {
+    //                     callCode = "System.out.println(" + inner + ")";
+    //                 }
+    //             }
+    //         }
+    //     }
+        
+    //     stringBuilder.append(INDENT).append(INDENT);
+        
+    //     if (returnType != null && !returnType.equals("void")) {
+    //         String resultVar = "result";
+    //         stringBuilder.append(returnType).append(" ").append(resultVar)
+    //                      .append(" = ").append(callCode).append(";\n");
+    //         return resultVar;
+    //     } else {
+    //         stringBuilder.append(callCode).append(";\n");
+    //         return null;
+    //     }
+    // }
 
     private void visit(AtcAssertStmt stmt) {
         Expr condition = stmt.getCondition();
@@ -400,6 +437,11 @@ public class AtcIrCodeGenerator {
         }
         
         String condCode = AstHelper.exprToJavaCode(processedCondition);
+        // Replace \result with the actual return variable
+        if (lastReturnVariable != null && condCode.contains("\\result")) {
+            condCode = condCode.replace("\\result", lastReturnVariable);
+        }
+        // Strip outer parentheses only for null checks
         if (condCode.startsWith("(") && condCode.endsWith(")") && condCode.length() > 2) {
             String inner = condCode.substring(1, condCode.length() - 1);
             if (inner.contains("null") && !inner.contains("(")) {
@@ -408,6 +450,25 @@ public class AtcIrCodeGenerator {
         }
         stringBuilder.append(INDENT).append(INDENT)
                      .append("assert(").append(condCode).append(");\n");
+    }
+    
+    private String getHelperMethodReturnType(String methodName) {
+        switch (methodName.toLowerCase()) {
+            case "sqrt":
+            case "divide":
+                return "double";
+            case "abs":
+            case "increment":
+                return "int";
+            case "appendexclamation":
+                return "String";
+            case "process":
+                return "boolean";
+            case "update":
+                return "Map<?,?>";
+            default:
+                return null;
+        }
     }
     
     private int countOccurrences(String str, String substr) {
