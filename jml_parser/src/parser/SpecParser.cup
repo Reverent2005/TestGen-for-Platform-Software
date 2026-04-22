@@ -1,0 +1,239 @@
+package parser;
+
+import java_cup.runtime.*;
+import ast.*;
+import java.util.*;
+
+/* ── Imports and setup ─────────────────────────────────────── */
+action code {:
+    // Helper: build a qualified name from dot-access chain
+    private String dotted(String base, String field) {
+        return base + "." + field;
+    }
+:};
+
+parser code {:
+    public void report_error(String message, Object info) {
+        StringBuilder sb = new StringBuilder("Parse error: " + message);
+        if (info instanceof Symbol) {
+            Symbol s = (Symbol) info;
+            sb.append(" near line ").append(s.left).append(", col ").append(s.right);
+        }
+        System.err.println(sb);
+    }
+    public void report_fatal_error(String message, Object info) throws Exception {
+        report_error(message, info);
+        throw new Exception("Fatal parse error");
+    }
+:};
+
+init with {: /* nothing */ :};
+scan with {: return ((lexer.SpecLexer)scanner).next_token(); :};
+/* ── Terminal declarations ─────────────────────────────────── */
+terminal            SPEC, SIGNATURE, REQUIRES, ENSURES;
+terminal            LBRACE, RBRACE, LPAREN, RPAREN, LBRACKET, RBRACKET;
+terminal            SEMI, COLON, COMMA, DOT;
+terminal            TRUE, FALSE, NULL, RESULT, OLD;
+terminal            VOID, INT, DOUBLE, BOOLEAN, FLOAT, LONG, CHAR, BYTE, SHORT, STRING_TYPE;
+terminal            EQ, NEQ, LT, GT, LEQ, GEQ;
+terminal            AND, OR, NOT;
+terminal            PLUS, MINUS, TIMES, DIVIDE, ASSIGN, UMINUS;
+terminal String     IDENT;
+terminal Integer    INT_LIT;
+terminal Double     DOUBLE_LIT;
+terminal String     STRING_LIT;
+
+/* ── Non-terminal declarations ────────────────────────────── */
+non terminal SpecFile           spec_file;
+non terminal List               spec_list;
+non terminal SpecDecl           spec_decl;
+non terminal Signature          sig_clause;
+non terminal Condition          req_clause;
+non terminal Condition          ens_clause;
+non terminal Signature          signature;
+non terminal List               param_list;
+non terminal List               param_list_ne;
+non terminal Parameter          param;
+non terminal String             type;
+non terminal String             base_type;
+non terminal Condition          condition;
+non terminal Condition          and_expr;
+non terminal Condition          not_expr;
+non terminal Condition          comparison;
+non terminal String             rel_op;
+non terminal Expr               expr;
+non terminal Expr               term;
+non terminal Expr               factor;
+non terminal Expr               primary;
+non terminal Expr               access_expr;
+
+/* ── Operator precedence (lowest → highest) ───────────────── */
+precedence left OR;
+precedence left AND;
+precedence right NOT;
+precedence left EQ, NEQ, LT, GT, LEQ, GEQ;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE;
+precedence right UMINUS;
+precedence left DOT, LBRACKET;
+
+/* ── Start symbol ─────────────────────────────────────────── */
+start with spec_file;
+
+/* ══════════════════════════════════════════════════════════════
+   GRAMMAR RULES
+   ══════════════════════════════════════════════════════════════ */
+
+spec_file ::= spec_list:sl
+              {: RESULT = new SpecFile(sl); :}
+            ;
+
+spec_list ::= spec_list:sl spec_decl:sd
+              {: sl.add(sd); RESULT = sl; :}
+            | /* empty */
+              {: RESULT = new ArrayList(); :}
+            ;
+
+spec_decl ::= SPEC IDENT:name LBRACE
+                  sig_clause:sig
+                  req_clause:req
+                  ens_clause:ens
+              RBRACE
+              {: RESULT = new SpecDecl(name, sig, req, ens); :}
+            ;
+
+/* ── Clauses ──────────────────────────────────────────────── */
+sig_clause ::= SIGNATURE COLON signature:s SEMI
+               {: RESULT = s; :}
+             ;
+
+req_clause ::= REQUIRES COLON condition:c SEMI
+               {: RESULT = c; :}
+             ;
+
+ens_clause ::= ENSURES COLON condition:c SEMI
+               {: RESULT = c; :}
+             ;
+
+/* ── Signature ────────────────────────────────────────────── */
+signature  ::= type:t IDENT:name LPAREN param_list:pl RPAREN
+               {: RESULT = new Signature(t, name, pl); :}
+             ;
+
+param_list ::= param_list_ne:pl
+               {: RESULT = pl; :}
+             | /* empty */
+               {: RESULT = new ArrayList(); :}
+             ;
+
+param_list_ne ::= param:p
+                  {: List l = new ArrayList(); l.add(p); RESULT = l; :}
+                | param_list_ne:pl COMMA param:p
+                  {: pl.add(p); RESULT = pl; :}
+                ;
+
+param      ::= type:t IDENT:name
+               {: RESULT = new Parameter(t, name); :}
+             ;
+
+/* ── Types ────────────────────────────────────────────────── */
+type       ::= base_type:t LBRACKET RBRACKET
+               {: RESULT = t + "[]"; :}
+             | base_type:t
+               {: RESULT = t; :}
+             ;
+
+base_type  ::= INT           {: RESULT = "int"; :}
+             | DOUBLE        {: RESULT = "double"; :}
+             | BOOLEAN       {: RESULT = "boolean"; :}
+             | FLOAT         {: RESULT = "float"; :}
+             | LONG          {: RESULT = "long"; :}
+             | CHAR          {: RESULT = "char"; :}
+             | BYTE          {: RESULT = "byte"; :}
+             | SHORT         {: RESULT = "short"; :}
+             | VOID          {: RESULT = "void"; :}
+             | STRING_TYPE   {: RESULT = "String"; :}
+             | IDENT:t       {: RESULT = t; :}
+             ;
+
+/* ── Conditions (boolean layer) ───────────────────────────── */
+condition  ::= condition:l OR and_expr:r
+               {: RESULT = new BinaryCondition(l, "||", r); :}
+             | and_expr:a
+               {: RESULT = a; :}
+             ;
+
+and_expr   ::= and_expr:l AND not_expr:r
+               {: RESULT = new BinaryCondition(l, "&&", r); :}
+             | not_expr:n
+               {: RESULT = n; :}
+             ;
+
+not_expr   ::= NOT not_expr:n
+               {: RESULT = new NotCondition(n); :}
+             | LPAREN condition:c RPAREN
+               {: RESULT = new ParenCondition(c); :}
+             | comparison:c
+               {: RESULT = c; :}
+             ;
+
+comparison ::= expr:l rel_op:op expr:r
+               {: RESULT = new ComparisonCondition(l, op, r); :}
+             | expr:e
+               {: RESULT = new ExprCondition(e); :}
+             ;
+
+rel_op     ::= EQ   {: RESULT = "=="; :}
+             | NEQ  {: RESULT = "!="; :}
+             | LT   {: RESULT = "<";  :}
+             | GT   {: RESULT = ">";  :}
+             | LEQ  {: RESULT = "<="; :}
+             | GEQ  {: RESULT = ">="; :}
+             ;
+
+/* ── Expressions (arithmetic layer) ──────────────────────── */
+expr       ::= expr:l PLUS term:r
+               {: RESULT = new BinaryExpr(l, "+", r); :}
+             | expr:l MINUS term:r
+               {: RESULT = new BinaryExpr(l, "-", r); :}
+             | term:t
+               {: RESULT = t; :}
+             ;
+
+term       ::= term:l TIMES factor:r
+               {: RESULT = new BinaryExpr(l, "*", r); :}
+             | term:l DIVIDE factor:r
+               {: RESULT = new BinaryExpr(l, "/", r); :}
+             | factor:f
+               {: RESULT = f; :}
+             ;
+
+factor ::= MINUS factor %prec UMINUS
+           {: RESULT = new UnaryExpr("-", $2); :}
+         | primary:p
+           {: RESULT = p; :}
+         ;
+
+primary    ::= INT_LIT:v         {: RESULT = new IntLiteral(v); :}
+             | DOUBLE_LIT:v      {: RESULT = new DoubleLiteral(v); :}
+             | STRING_LIT:v      {: RESULT = new StringLiteral(v); :}
+             | TRUE              {: RESULT = new BoolLiteral(true); :}
+             | FALSE             {: RESULT = new BoolLiteral(false); :}
+             | NULL              {: RESULT = new NullLiteral(); :}
+             | RESULT            {: RESULT = new ResultExpr(); :}
+             | OLD LPAREN expr:e RPAREN
+               {: RESULT = new OldExpr(e); :}
+             | LPAREN expr:e RPAREN
+               {: RESULT = new ParenExpr(e); :}
+             | access_expr:a     {: RESULT = a; :}
+             ;
+
+access_expr ::= IDENT:name
+                {: RESULT = new VarExpr(name); :}
+              | access_expr:base DOT IDENT:field
+                {: RESULT = new FieldExpr(base, field); :}
+              | access_expr:base DOT IDENT:method LPAREN RPAREN
+                {: RESULT = new MethodCallExpr(base, method); :}
+              | access_expr:base LBRACKET expr:idx RBRACKET
+                {: RESULT = new ArrayAccessExpr(base, idx); :}
+              ;
