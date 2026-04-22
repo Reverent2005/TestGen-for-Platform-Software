@@ -29,6 +29,23 @@ class DoubleLiteralExpr extends Expr {
     public DoubleLiteralExpr(double value) { this.value = value; }
     @Override public String toString() { return Double.toString(value); }
 }
+// class ResultExpr extends Expr {
+//     @Override 
+//     public String toString() { 
+//         return "\\result"; 
+//     }
+// }
+
+// class OldExpr extends Expr {
+//     final Expr inner;
+//     public OldExpr(Expr e) { 
+//         this.inner = e; 
+//     }
+//     @Override 
+//     public String toString() { 
+//         return "\\old(" + inner + ")"; 
+//     }
+// }
 
 class StringLiteralExpr extends Expr {
     final String value;

@@ -45,6 +45,10 @@ public class AstHelper {
         return transformPostConditionRecursive((Expr) expr, resultVarName, oldStateMap, params, false);
     }
 
+    public static DoubleLiteralExpr createDoubleLiteralExpr(double value) {
+        return new DoubleLiteralExpr(value);
+    }
+
     private static Expr transformPostConditionRecursive(Expr expr, String resultVarName, Map<String, String> oldStateMap, List<Variable> params, boolean insidePrime) {
         if (expr == null) {
             return null;
