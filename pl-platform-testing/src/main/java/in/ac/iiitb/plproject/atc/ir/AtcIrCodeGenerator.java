@@ -3,6 +3,7 @@ package in.ac.iiitb.plproject.atc.ir;
 import in.ac.iiitb.plproject.ast.AstHelper;
 import in.ac.iiitb.plproject.ast.Expr;
 import in.ac.iiitb.plproject.ast.MethodCallExpr;
+import in.ac.iiitb.plproject.parser.ast.Variable;
 import in.ac.iiitb.plproject.symex.TypeMapper;
 import java.util.Set;
 import java.util.HashSet;
@@ -17,6 +18,24 @@ public class AtcIrCodeGenerator {
     private static final String INDENT = "    ";
     private String lastReturnVariable = null;
 
+    /**
+     * Which of the two Step D flavours is being emitted.
+     *
+     * Both are produced from the same method-signature model and the same
+     * assertions; only the mechanism for obtaining a SERVER_OUTPUT differs
+     * (Section 5, invariant 5):
+     *
+     * <ul>
+     *   <li>{@code SPF}   — symbolic placeholder + direct {@code Helper.m(...)} call</li>
+     *   <li>{@code JUNIT} — placeholder discarded; {@code executeApiCall(...)} then
+     *       {@code extractFromResponse(...)} binds the REAL value at runtime</li>
+     * </ul>
+     */
+    public enum Flavour { SPF, JUNIT }
+
+    private Flavour flavour = Flavour.SPF;
+    private String classNameOverride = null;
+
     public AtcIrCodeGenerator() {
         this.stringBuilder = new StringBuilder();
     }
@@ -29,13 +48,42 @@ public class AtcIrCodeGenerator {
         return generateJavaFileInternal(atc);
     }
 
+    /**
+     * Emits the JUnit flavour, with DYNAMIC BINDING for every SERVER_OUTPUT.
+     *
+     * <p>Feed it the ATC IR (not the symbolic IR): the capture nodes must still be
+     * intact so the generator can replace them with response extraction instead of
+     * with a symbolic placeholder, and {@code assume} must still be an assume so it
+     * can become {@code assumeTrue} rather than {@code Debug.assume}.
+     *
+     * <p>Method signatures and assertions are byte-identical to the SPF flavour.
+     */
+    public String generateJUnitFile(AtcClass atc) {
+        try {
+            flavour = Flavour.JUNIT;
+            classNameOverride = atc.getClassName() + "_JUnit";
+            return generateJavaFileInternal(atc);
+        } finally {
+            flavour = Flavour.SPF;
+            classNameOverride = null;
+        }
+    }
+
     private String generateJavaFileInternal(AtcClass atc) {
         stringBuilder = new StringBuilder();
 
         stringBuilder.append("package ").append(atc.getPackageName()).append(";\n\n");
 
-        for (String anImport : atc.getImports()) {
-            stringBuilder.append("import ").append(anImport).append(";\n");
+        if (flavour == Flavour.JUNIT) {
+            // The symbolic placeholders are gone in this flavour, so Debug is not
+            // needed; JUnit's assumeTrue takes over the role of Debug.assume.
+            stringBuilder.append("import java.util.*;\n");
+            stringBuilder.append("import org.junit.Test;\n");
+            stringBuilder.append("import static org.junit.Assume.assumeTrue;\n");
+        } else {
+            for (String anImport : atc.getImports()) {
+                stringBuilder.append("import ").append(anImport).append(";\n");
+            }
         }
         stringBuilder.append("\n");
 
@@ -43,7 +91,8 @@ public class AtcIrCodeGenerator {
             stringBuilder.append("@RunWith(").append(atc.getRunWithAnnotationClass()).append(")\n");
         }
         
-        stringBuilder.append("public class ").append(atc.getClassName()).append(" {\n");
+        String className = (classNameOverride != null) ? classNameOverride : atc.getClassName();
+        stringBuilder.append("public class ").append(className).append(" {\n");
 
         for (AtcTestMethod method : atc.getTestMethods()) {
             lastReturnVariable = null;
@@ -52,6 +101,10 @@ public class AtcIrCodeGenerator {
 
         generateMainMethod(atc);
 
+        if (flavour == Flavour.JUNIT) {
+            generateJUnitRuntimeSupport();
+        }
+
         stringBuilder.append("}\n");
 
         return stringBuilder.toString();
@@ -59,9 +112,20 @@ public class AtcIrCodeGenerator {
 
     private void visit(AtcTestMethod method) {
         stringBuilder.append("\n");
-        stringBuilder.append(INDENT).append("public void ").append(method.getMethodName()).append("() {\n");
+        stringBuilder.append(INDENT).append("public ").append(method.getReturnType()).append(" ")
+                     .append(method.getMethodName()).append("(");
+        List<Variable> parameters = method.getParameters();
+        for (int i = 0; i < parameters.size(); i++) {
+            if (i > 0) stringBuilder.append(", ");
+            stringBuilder.append(parameters.get(i).getTypeName()).append(" ")
+                         .append(parameters.get(i).getName());
+        }
+        stringBuilder.append(") {\n");
 
         Set<String> declaredVars = new HashSet<>();
+        for (Variable parameter : parameters) {
+            declaredVars.add(parameter.getName()); // formal params are already in scope
+        }
         
         for (AtcStatement stmt : method.getStatements()) {
             if (stmt instanceof AtcSymbolicVarDecl) {
@@ -85,6 +149,13 @@ public class AtcIrCodeGenerator {
                 visit((AtcAssertStmt) stmt);
             } else if (stmt instanceof AtcIfStmt) {
                 visit((AtcIfStmt) stmt, declaredVars);
+            } else if (stmt instanceof AtcReturnCaptureStmt) {
+                lastReturnVariable = visit((AtcReturnCaptureStmt) stmt);
+                declaredVars.add(((AtcReturnCaptureStmt) stmt).getOutputVar());
+            } else if (stmt instanceof AtcPropagatedInputStmt) {
+                visit((AtcPropagatedInputStmt) stmt);
+            } else if (stmt instanceof AtcReturnStmt) {
+                visit((AtcReturnStmt) stmt);
             }
         }
 
@@ -199,7 +270,7 @@ public class AtcIrCodeGenerator {
         for (int i = 0; i < indentLevel; i++) {
             stringBuilder.append(INDENT);
         }
-        stringBuilder.append("Debug.assume(").append(condCode).append(");\n");
+        stringBuilder.append(assumeCall(condCode)).append(";\n");
     }
     
     private void visitWithIndent(AtcAssertStmt stmt, int indentLevel) {
@@ -283,6 +354,112 @@ public class AtcIrCodeGenerator {
             return null;
         }
     }
+    /**
+     * STEP D, producing block.
+     *
+     * <p>SPF flavour — capture the value the library generated:
+     * <pre>String poppedElem = Helper.pop();</pre>
+     * (in the symbolic IR the transformer has already split this into a
+     * placeholder declaration plus an assignment).
+     *
+     * <p>JUnit flavour — DYNAMIC BINDING: no placeholder at all, the real value is
+     * pulled out of the response at runtime:
+     * <pre>Response poppedElemResponse = executeApiCall(Helper.pop());
+     *String poppedElem = extractFromResponse(poppedElemResponse, "poppedElem");</pre>
+     *
+     * Nothing is asserted about the captured value here — a nullable SERVER_OUTPUT
+     * such as HashMap.put's previous value must not pick up a non-null assertion
+     * the spec never asked for (Section 5, invariant 2).
+     */
+    private String visit(AtcReturnCaptureStmt stmt) {
+        String callCode = AstHelper.exprToJavaCode(stmt.getCallExpr());
+        String type = stmt.getTypeName();
+        String var = stmt.getOutputVar();
+
+        if (flavour == Flavour.JUNIT) {
+            stringBuilder.append(INDENT).append(INDENT)
+                         .append("Response ").append(var).append("Response = executeApiCall(")
+                         .append(callCode).append(");\n");
+            stringBuilder.append(INDENT).append(INDENT)
+                         .append(type).append(" ").append(var)
+                         .append(" = extractFromResponse(").append(var).append("Response, \"")
+                         .append(var).append("\");\n");
+        } else {
+            stringBuilder.append(INDENT).append(INDENT)
+                         .append(type).append(" ").append(var)
+                         .append(" = ").append(callCode).append(";\n");
+        }
+        return var;
+    }
+
+    /**
+     * STEP D, consuming block.  The propagated value is already a formal parameter
+     * of this helper, so the SPF flavour only re-binds it to a fresh symbolic value
+     * (that rebinding lives in the symbolic IR as an assignment); the JUnit flavour
+     * uses the real argument the caller threaded in and emits nothing but a note.
+     */
+    private void visit(AtcPropagatedInputStmt stmt) {
+        if (flavour == Flavour.JUNIT) {
+            stringBuilder.append(INDENT).append(INDENT)
+                         .append("// ").append(stmt.getVarName())
+                         .append(" is bound dynamically: it arrives as the SERVER_OUTPUT captured by ")
+                         .append(stmt.getSourceFunction()).append(" (block ")
+                         .append(stmt.getSourceBlockIndex()).append(")\n");
+        } else {
+            // An ASSIGNMENT, never a declaration: the name is already a formal
+            // parameter of this helper, so re-declaring it would not compile.
+            String factory = TypeMapper.symbolicFactoryFor(stmt.getTypeName());
+            stringBuilder.append(INDENT).append(INDENT).append(stmt.getVarName()).append(" = ");
+            if (factory != null) {
+                stringBuilder.append("Debug.").append(factory)
+                             .append("(\"").append(stmt.getVarName()).append("\");\n");
+            } else {
+                // Section 6, limitation #2: no primitive factory for this type.
+                stringBuilder.append("(").append(stmt.getTypeName())
+                             .append(") Debug.makeSymbolicRef(\"")
+                             .append(stmt.getVarName()).append("\", null);\n");
+            }
+        }
+    }
+
+    /** Emits {@code return poppedElem;} so main() can chain the value forward. */
+    private void visit(AtcReturnStmt stmt) {
+        stringBuilder.append(INDENT).append(INDENT).append("return");
+        if (stmt.getVarName() != null) {
+            stringBuilder.append(" ").append(stmt.getVarName());
+        }
+        stringBuilder.append(";\n");
+    }
+
+    /**
+     * The handful of helpers the JUnit flavour needs so that dynamic binding is
+     * self-contained: a response wrapper, the call executor, and the extractor.
+     * In a REST setting these would be the HTTP client and a JSON path read; for a
+     * library target the "response" is simply the value the call returned.
+     */
+    private void generateJUnitRuntimeSupport() {
+        stringBuilder.append("\n");
+        stringBuilder.append(INDENT).append("// ── Dynamic data binding support ──────────────────────────────────\n");
+        stringBuilder.append(INDENT).append("// SERVER_OUTPUT values are read back from the call at RUNTIME rather\n");
+        stringBuilder.append(INDENT).append("// than solved for, which is what separates this flavour from the SPF one.\n");
+        stringBuilder.append(INDENT).append("static class Response {\n");
+        stringBuilder.append(INDENT).append(INDENT).append("private final Object payload;\n");
+        stringBuilder.append(INDENT).append(INDENT).append("Response(Object payload) { this.payload = payload; }\n");
+        stringBuilder.append(INDENT).append(INDENT).append("Object payload() { return payload; }\n");
+        stringBuilder.append(INDENT).append("}\n\n");
+        stringBuilder.append(INDENT).append("static Response executeApiCall(Object returnedValue) {\n");
+        stringBuilder.append(INDENT).append(INDENT).append("return new Response(returnedValue);\n");
+        stringBuilder.append(INDENT).append("}\n\n");
+        stringBuilder.append(INDENT).append("@SuppressWarnings(\"unchecked\")\n");
+        stringBuilder.append(INDENT).append("static <T> T extractFromResponse(Response response, String name) {\n");
+        stringBuilder.append(INDENT).append(INDENT).append("return (T) response.payload();\n");
+        stringBuilder.append(INDENT).append("}\n\n");
+        stringBuilder.append(INDENT).append("@Test\n");
+        stringBuilder.append(INDENT).append("public void testSequence() {\n");
+        stringBuilder.append(INDENT).append(INDENT).append("main(new String[0]);\n");
+        stringBuilder.append(INDENT).append("}\n");
+    }
+
     private void visit(AtcSymbolicVarDecl stmt) {
         String typeName = stmt.getTypeName();
         String varName = stmt.getVarName();
@@ -293,20 +470,47 @@ public class AtcIrCodeGenerator {
     }
 
     private String getDebugMakeSymbolicCall(String typeName, String varName) {
+        // In the JUnit flavour there is no solver, so a CLIENT_INPUT becomes a
+        // concrete literal — the slot where the value SPF solved for is hardened
+        // into the test (dry-run PDF §10).
+        if (flavour == Flavour.JUNIT) {
+            return typeName + " " + varName + " = " + clientInputLiteral(typeName, varName)
+                 + " /* CLIENT_INPUT: replace with the literal SPF solves for \"" + varName + "\" */";
+        }
         if (TypeMapper.isCollectionType(typeName)) {
             String genericType = TypeMapper.getGenericType(typeName);
             return genericType + " " + varName + " = (" + genericType + ") Debug.makeSymbolicObject(\"" + varName + "\")";
-        } else if (typeName.equalsIgnoreCase("int") || typeName.equals("Integer")) {
-            return "int " + varName + " = Debug.makeSymbolicInteger(\"" + varName + "\")";
-        } else if (typeName.equalsIgnoreCase("double") || typeName.equals("Double")) {
-            return "double " + varName + " = Debug.makeSymbolicReal(\"" + varName + "\")";
-        } else if (typeName.equalsIgnoreCase("String")) {
-            return "String " + varName + " = Debug.makeSymbolicString(\"" + varName + "\")";
-        } else if (typeName.equalsIgnoreCase("boolean") || typeName.equals("Boolean")) {
-            return "boolean " + varName + " = Debug.makeSymbolicBoolean(\"" + varName + "\")";
-        } else {
-            String genericType = TypeMapper.getGenericType(typeName);
-            return genericType + " " + varName + " = (" + genericType + ") Debug.makeSymbolicObject(\"" + varName + "\")";
+        }
+        // Note the declared type is preserved: a boxed Integer stays an Integer so
+        // that null remains representable, while still routing to the primitive
+        // factory rather than makeSymbolicRef (Section 5, invariant 7).
+        String factory = TypeMapper.symbolicFactoryFor(typeName);
+        if (factory != null) {
+            return typeName + " " + varName + " = Debug." + factory + "(\"" + varName + "\")";
+        }
+        // Section 6, limitation #2: a custom type falls back to the generic object
+        // path, which may under-constrain its individual fields.
+        String genericType = TypeMapper.getGenericType(typeName);
+        return genericType + " " + varName + " = (" + genericType + ") Debug.makeSymbolicObject(\"" + varName + "\")";
+    }
+
+    /** A deterministic stand-in value for a CLIENT_INPUT in the JUnit flavour. */
+    private String clientInputLiteral(String typeName, String varName) {
+        if (typeName == null) return "null";
+        switch (typeName) {
+            case "String": case "java.lang.String":
+                return "\"" + varName + "\"";
+            case "int": case "Integer": case "long": case "Long":
+            case "short": case "Short": case "byte": case "Byte":
+                return "0";
+            case "double": case "Double": case "float": case "Float":
+                return "0.0";
+            case "boolean": case "Boolean":
+                return "true";
+            case "char": case "Character":
+                return "'a'";
+            default:
+                return "null";
         }
     }
     private void visit(AtcVarDecl stmt) {
@@ -351,7 +555,7 @@ public class AtcIrCodeGenerator {
             }
         }
         stringBuilder.append(INDENT).append(INDENT)
-                     .append("Debug.assume(").append(condCode).append(");\n");
+                     .append(assumeCall(condCode)).append(";\n");
     }
 
     // private String visit(AtcMethodCallStmt stmt) {
@@ -452,6 +656,23 @@ public class AtcIrCodeGenerator {
                      .append("assert(").append(condCode).append(");\n");
     }
     
+    /**
+     * A precondition is a Debug.assume for SPF and JUnit's assumeTrue for the
+     * runtime flavour — the same "skip inputs the spec does not admit" semantics.
+     */
+    /**
+     * main() instantiates the generated class itself, so the JUnit flavour has to
+     * name ITS class rather than the SPF one.
+     */
+    private String retargetClassName(String code, AtcClass atc) {
+        if (classNameOverride == null || code == null) return code;
+        return code.replace(atc.getClassName(), classNameOverride);
+    }
+
+    private String assumeCall(String condCode) {
+        return (flavour == Flavour.JUNIT ? "assumeTrue(" : "Debug.assume(") + condCode + ")";
+    }
+
     private String getHelperMethodReturnType(String methodName) {
         switch (methodName.toLowerCase()) {
             case "sqrt":
@@ -578,9 +799,10 @@ public class AtcIrCodeGenerator {
             } else if (statement instanceof AtcVarDecl) {
                 String initCode = AstHelper.exprToJavaCode(((AtcVarDecl) statement).getInitExpr());
                 stringBuilder.append(INDENT).append(INDENT)
-                             .append(((AtcVarDecl) statement).getTypeName()).append(" ")
+                             .append(retargetClassName(((AtcVarDecl) statement).getTypeName(), atc))
+                             .append(" ")
                              .append(((AtcVarDecl) statement).getVarName()).append(" = ")
-                             .append(initCode).append(";\n");
+                             .append(retargetClassName(initCode, atc)).append(";\n");
             }
         }
         stringBuilder.append(INDENT).append("}\n");

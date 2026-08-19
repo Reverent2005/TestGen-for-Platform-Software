@@ -74,6 +74,14 @@ public class SpfWrapper {
                     signature.append("boolean[]");
                 } else if (param.equals("String")) {
                     signature.append("java.lang.String");
+                } else if (param.equals("Integer") || param.equals("Long")
+                        || param.equals("Short") || param.equals("Byte")
+                        || param.equals("Double") || param.equals("Float")
+                        || param.equals("Boolean") || param.equals("Character")
+                        || param.equals("Object")) {
+                    // Boxed types must be fully qualified so JPF can tell overloads
+                    // apart, e.g. getResult_helper(java.lang.Integer).
+                    signature.append("java.lang.").append(param);
                 } else if (param.equals("int")) {
                     signature.append("int");
                 } else if (param.equals("double")) {
@@ -282,6 +290,106 @@ public class SpfWrapper {
         }
     }
     
+    // ═════════════════════════════════════════════════════════════════════════
+    // LIBRARY DRY RUNS — writes BOTH generated flavours plus the library source
+    // ═════════════════════════════════════════════════════════════════════════
+
+    /** What a library dry run produced, so a caller can inspect or assert on it. */
+    public static class LibraryRunResult {
+        private final String spfCode;
+        private final String junitCode;
+        private final String outputDir;
+
+        LibraryRunResult(String spfCode, String junitCode, String outputDir) {
+            this.spfCode = spfCode;
+            this.junitCode = junitCode;
+            this.outputDir = outputDir;
+        }
+
+        /** GeneratedATCs.java — symbolic placeholders, for Symbolic PathFinder. */
+        public String getSpfCode() { return spfCode; }
+        /** GeneratedATCs_JUnit.java — dynamic binding, for a real JUnit run. */
+        public String getJunitCode() { return junitCode; }
+        public String getOutputDir() { return outputDir; }
+    }
+
+    /**
+     * Runs one library example end to end and writes everything it needs to be
+     * compiled and executed:
+     *
+     * <ul>
+     *   <li>{@code GeneratedATCs.java}       — SPF flavour, from the Symbolic IR</li>
+     *   <li>{@code GeneratedATCs_JUnit.java} — JUnit flavour, from the ATC IR, so the
+     *       capture and assume nodes are still intact and can become dynamic binding
+     *       and {@code assumeTrue}</li>
+     *   <li>{@code Helper.java}              — the library under test, copied in</li>
+     *   <li>{@code *.jpf}                    — JPF run configurations</li>
+     * </ul>
+     *
+     * Both flavours come from the same {@link AtcClass}, so their method signatures
+     * and assertions are identical by construction (Section 5, invariant 5).
+     */
+    public LibraryRunResult runLibraryExample(AtcClass atcClass, String outputDir,
+                                              String helperSourcePath) throws IOException {
+        return runLibraryExample(atcClass, outputDir, helperSourcePath, null);
+    }
+
+    /**
+     * @param singularCaseCode optional SingularCase.java source — one concrete run of
+     *        the test string, checking every pre/postcondition against the real library
+     */
+    public LibraryRunResult runLibraryExample(AtcClass atcClass, String outputDir,
+                                              String helperSourcePath,
+                                              String singularCaseCode) throws IOException {
+        AtcClass symbolicIr = transformer.transform(atcClass);
+        String spfCode = codeGenerator.generateSymbolicJavaFile(symbolicIr);
+        String junitCode = codeGenerator.generateJUnitFile(atcClass);
+
+        String packagePath = atcClass.getPackageName().replace('.', java.io.File.separatorChar);
+        java.io.File packageDir = new java.io.File(outputDir, packagePath);
+        packageDir.mkdirs();
+
+        writeFile(new java.io.File(packageDir, atcClass.getClassName() + ".java"), spfCode);
+        writeFile(new java.io.File(packageDir, atcClass.getClassName() + "_JUnit.java"), junitCode);
+        if (singularCaseCode != null) {
+            writeFile(new java.io.File(packageDir, "SingularCase.java"), singularCaseCode);
+        }
+
+        if (helperSourcePath != null) {
+            java.io.File helperSource = new java.io.File(helperSourcePath);
+            if (!helperSource.isFile()) {
+                throw new IOException("library source not found: " + helperSource.getAbsolutePath());
+            }
+            java.nio.file.Files.copy(helperSource.toPath(),
+                    new java.io.File(packageDir, "Helper.java").toPath(),
+                    java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        writeJpfConfigs(atcClass, outputDir, spfCode);
+        return new LibraryRunResult(spfCode, junitCode, outputDir);
+    }
+
+    private void writeJpfConfigs(AtcClass atcClass, String outputDir, String spfCode)
+            throws IOException {
+        String fullClassName = atcClass.getPackageName() + "." + atcClass.getClassName();
+
+        generateJpfFile(fullClassName, "main",
+                Paths.get(outputDir, atcClass.getClassName() + "_main.jpf").toString(),
+                "./bin", null, spfCode);
+
+        List<String> helperMethods = new ArrayList<>();
+        for (AtcTestMethod method : atcClass.getTestMethods()) {
+            if (!method.isMain()) helperMethods.add(method.getMethodName());
+        }
+        generateJpfFilesForMethods(fullClassName, helperMethods, outputDir, "./bin", null, spfCode);
+    }
+
+    private void writeFile(java.io.File file, String content) throws IOException {
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(content);
+        }
+    }
+
     public String getJpfCode(AtcClass atcClass) {
         return transformIrToJpfCode(atcClass);
     }

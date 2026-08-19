@@ -9,8 +9,38 @@ import in.ac.iiitb.plproject.symex.TypeMapper;
 
 public class NewGenATC implements GenATC {
 
+    /** Package the generated ATC file lives in. */
+    public static final String GENERATED_PACKAGE = "in.ac.iiitb.plproject.atc.generated";
+    /** Class name of the generated ATC file. */
+    public static final String GENERATED_CLASS = "GeneratedATCs";
+
+    /** Propagation scan produced by the most recent generateAtcFile() call. */
+    private PropagationScan lastScan;
+
+    /**
+     * The Step A trace for the test string most recently generated.  Exposed so a
+     * driver (or a regression test) can check the scan against the expected trace.
+     */
+    public PropagationScan getLastPropagationScan() {
+        return lastScan;
+    }
+
     @Override
     public AtcClass generateAtcFile(JmlSpecAst jmlSpecAst, TestStringAst testStringAst) {
+        // ── STEP A: propagation scan ─────────────────────────────────────────
+        lastScan = PropagationScan.scan(jmlSpecAst, testStringAst);
+        for (String warning : lastScan.getWarnings()) {
+            System.out.println("[WARN] " + warning);
+        }
+
+        // Library dry runs (a test string that produces or consumes SERVER_OUTPUT
+        // values) need return-value handling: captures, propagated parameters and
+        // value threading through main().  Purely functional specs — no \result
+        // binding anywhere — keep the original single-block generation path.
+        if (lastScan.hasReturnValueHandling()) {
+            return generateLibraryAtcFile(jmlSpecAst, testStringAst, lastScan);
+        }
+
         List<String> imports = new ArrayList<>();
         imports.add("java.util.*");
         imports.add("gov.nasa.jpf.symbc.Debug");
@@ -581,5 +611,231 @@ public class NewGenATC implements GenATC {
             }
         }
     }
-}
 
+    // ═════════════════════════════════════════════════════════════════════════
+    // LIBRARY DRY RUNS WITH RETURN VALUE HANDLING
+    // ─────────────────────────────────────────────────────────────────────────
+    // Steps A and B for a test string whose blocks produce and consume
+    // SERVER_OUTPUT values (Stack push/pop/peek, HashMap put/getOldValue/remove,
+    // TaskQueue submit/getResult/cancelTask).
+    //
+    //     <type> <input vars> := input()      // CLIENT_INPUT, only if NOT propagated
+    //     assume(<preconditions>)
+    //     <snapshot old-state vars>           // size_old := size, ...
+    //     [<outputVar> := execute(<call>)]    // only when \result is bound
+    //     [<call>(<propagated + input args>)] // otherwise
+    //     assert(<postconditions>)
+    //     [return <outputVar>;]
+    // ═════════════════════════════════════════════════════════════════════════
+
+    private AtcClass generateLibraryAtcFile(JmlSpecAst jmlSpecAst,
+                                            TestStringAst testStringAst,
+                                            PropagationScan scan) {
+        List<String> imports = new ArrayList<>();
+        imports.add("java.util.*");
+        imports.add("gov.nasa.jpf.symbc.Debug");
+
+        Set<String> stateVars = new LinkedHashSet<>(jmlSpecAst.getStateVars().keySet());
+
+        // One helper per distinct function in the test string, in first-use order.
+        Map<String, JmlFunctionSpec> uniqueSpecs = new LinkedHashMap<>();
+        for (String functionName : testStringAst.getCalls()) {
+            JmlFunctionSpec spec = jmlSpecAst.findSpecFor(functionName);
+            if (spec != null) uniqueSpecs.putIfAbsent(functionName, spec);
+        }
+
+        List<AtcTestMethod> helpers = new ArrayList<>();
+        Map<String, AtcTestMethod> helpersByFunction = new LinkedHashMap<>();
+        for (Map.Entry<String, JmlFunctionSpec> entry : uniqueSpecs.entrySet()) {
+            AtcTestMethod helper = generateLibraryHelper(
+                    entry.getValue(), scan, jmlSpecAst, stateVars);
+            helpers.add(helper);
+            helpersByFunction.put(entry.getKey(), helper);
+        }
+
+        List<AtcStatement> mainStatements =
+                generateLibraryMain(jmlSpecAst, testStringAst, scan, helpersByFunction);
+
+        return new AtcClass(GENERATED_PACKAGE, GENERATED_CLASS, imports,
+                            helpers, mainStatements, null);
+    }
+
+    /** STEP B for one block of the test string. */
+    private AtcTestMethod generateLibraryHelper(JmlFunctionSpec spec,
+                                                PropagationScan scan,
+                                                JmlSpecAst jmlSpecAst,
+                                                Set<String> stateVars) {
+        FunctionSignature signature = spec.getSignature();
+        List<Variable> params = (signature != null && signature.getParameters() != null)
+                ? signature.getParameters() : new ArrayList<Variable>();
+        Set<String> propagated = scan.propagatedParamsOf(spec.getName());
+
+        List<AtcStatement> statements = new ArrayList<>();
+        List<Variable> formalParams = new ArrayList<>();
+
+        // 1. Inputs: propagated values arrive as formal parameters; everything
+        //    else is a fresh CLIENT_INPUT declared inside the block.
+        for (Variable param : params) {
+            if (propagated.contains(param.getName())) {
+                Variable formal = new Variable(param.getName(), param.getTypeName(),
+                                               Variable.VariableOrigin.SERVER_OUTPUT);
+                formal.setNullable(!isJavaPrimitive(param.getTypeName()));
+                formalParams.add(formal);
+                statements.add(new AtcPropagatedInputStmt(
+                        param.getTypeName(), param.getName(),
+                        scan.producerOf(param.getName()),
+                        producingBlockIndex(scan, param.getName())));
+            } else {
+                statements.add(new AtcSymbolicVarDecl(param.getTypeName(), param.getName()));
+            }
+        }
+
+        // 2. Precondition.
+        Expr pre = spec.getPrecondition();
+        if (pre != null) {
+            statements.add(new AtcAssumeStmt(
+                    AstHelper.rewriteLibraryExpr(pre, null, stateVars)));
+        }
+
+        // 3. Old-state snapshots for every \old(...) the postcondition mentions.
+        Expr post = spec.getPostcondition();
+        for (String stateVar : AstHelper.collectOldVarNames(post)) {
+            String declaredType = jmlSpecAst.getStateVarType(stateVar);
+            if (declaredType == null) {
+                System.out.println("[WARN] \\old(" + stateVar + ") in " + spec.getName()
+                        + " refers to a name that is not declared in the spec's state block;"
+                        + " snapshotting it as Object.");
+                declaredType = "Object";
+            }
+            statements.add(new AtcVarDecl(declaredType, stateVar + "_old",
+                    AstHelper.createNameExpr(snapshotExpression(declaredType, stateVar))));
+        }
+
+        // 4. The call — captured when \result is bound, plain otherwise.
+        String resultVar = spec.getResultBinding();
+        String returnType = spec.getReturnTypeName();
+        List<Expr> callArgs = new ArrayList<>();
+        for (Variable param : params) {
+            callArgs.add(AstHelper.createNameExpr(param.getName()));
+        }
+        in.ac.iiitb.plproject.ast.MethodCallExpr callExpr = AstHelper.createMethodCallExpr(
+                AstHelper.createNameExpr("Helper"), signature.getName(), callArgs);
+
+        if (resultVar != null) {
+            statements.add(new AtcReturnCaptureStmt(returnType, resultVar, callExpr,
+                                                    !isJavaPrimitive(returnType)));
+        } else {
+            statements.add(new AtcMethodCallStmt(callExpr));
+        }
+
+        // 5. Assertion — exactly what the postcondition constrains, no more.
+        //    The `\result == <boundVar>` conjunct is dropped: the capture in step 4
+        //    IS that binding, so re-asserting it would be a tautology.  Nothing
+        //    else is synthesised, which is what keeps a nullable SERVER_OUTPUT
+        //    (HashMap.put's old value) free of a spurious non-null assertion.
+        List<Expr> assertions = new ArrayList<>();
+        for (Expr conjunct : AstHelper.splitConjuncts(post)) {
+            if (AstHelper.isResultBindingConjunct(conjunct, resultVar)) continue;
+            assertions.add(AstHelper.rewriteLibraryExpr(conjunct, resultVar, stateVars));
+        }
+        if (!assertions.isEmpty()) {
+            statements.add(new AtcAssertStmt(AstHelper.combineExpressionsWithAnd(assertions)));
+        }
+
+        // 6. Hand the captured value back so main() can chain it forward.
+        if (resultVar != null) {
+            statements.add(new AtcReturnStmt(resultVar));
+        }
+
+        return new AtcTestMethod(spec.getName() + "_helper", statements,
+                                 resultVar != null ? returnType : "void", formalParams);
+    }
+
+    /**
+     * Builds main(): instantiate, then call the helpers in test-string order,
+     * threading each captured SERVER_OUTPUT into the blocks that consume it.
+     */
+    private List<AtcStatement> generateLibraryMain(JmlSpecAst jmlSpecAst,
+                                                   TestStringAst testStringAst,
+                                                   PropagationScan scan,
+                                                   Map<String, AtcTestMethod> helpersByFunction) {
+        List<AtcStatement> statements = new ArrayList<>();
+        statements.add(new AtcVarDecl(GENERATED_CLASS, "instance",
+                AstHelper.createObjectCreationExpr(GENERATED_CLASS, new ArrayList<Expr>())));
+
+        // A SERVER_OUTPUT produced by two different blocks (e.g. put called twice)
+        // needs a distinct local per block: oldVal_0, oldVal_1.  A value produced
+        // once keeps its plain spec name: taskId, result.
+        Map<String, Integer> productionCount = new LinkedHashMap<>();
+        for (PropagationScan.Step step : scan.getSteps()) {
+            if (step.getProducedVar() != null) {
+                productionCount.merge(step.getProducedVar(), 1, Integer::sum);
+            }
+        }
+
+        Map<String, String> latestLocalFor = new LinkedHashMap<>();
+        for (PropagationScan.Step step : scan.getSteps()) {
+            AtcTestMethod helper = helpersByFunction.get(step.getFunctionName());
+            if (helper == null) continue;
+
+            List<Expr> args = new ArrayList<>();
+            for (Variable formal : helper.getParameters()) {
+                String local = latestLocalFor.get(formal.getName());
+                args.add(AstHelper.createNameExpr(local != null ? local : formal.getName()));
+            }
+            in.ac.iiitb.plproject.ast.MethodCallExpr call = AstHelper.createMethodCallExpr(
+                    AstHelper.createNameExpr("instance"), helper.getMethodName(), args);
+
+            String produced = step.getProducedVar();
+            if (produced != null && helper.hasReturnValue()) {
+                String local = productionCount.get(produced) > 1
+                        ? produced + "_" + step.getIndex()
+                        : produced;
+                statements.add(new AtcVarDecl(helper.getReturnType(), local, call));
+                latestLocalFor.put(produced, local);
+            } else {
+                statements.add(new AtcMethodCallStmt(call));
+            }
+        }
+        return statements;
+    }
+
+    /** Index of the block whose \result binding produced {@code varName}, or -1. */
+    private int producingBlockIndex(PropagationScan scan, String varName) {
+        for (PropagationScan.Step step : scan.getSteps()) {
+            if (varName.equals(step.getProducedVar())) return step.getIndex();
+        }
+        return -1;
+    }
+
+    /**
+     * Expression that snapshots a piece of library state before the call.
+     * Reference state is copied so the snapshot cannot alias the live object;
+     * primitives are read directly.
+     */
+    static String snapshotExpression(String declaredType, String stateVar) {
+        String base = declaredType.split("[<>]")[0].trim();
+        if (base.equals("Map") || base.equals("HashMap")) {
+            return "new java.util.HashMap<>(Helper." + stateVar + ")";
+        }
+        if (base.equals("List") || base.equals("ArrayList")) {
+            return "new java.util.ArrayList<>(Helper." + stateVar + ")";
+        }
+        if (base.equals("Set") || base.equals("HashSet")) {
+            return "new java.util.HashSet<>(Helper." + stateVar + ")";
+        }
+        return "Helper." + stateVar;
+    }
+
+    /** True for the eight Java primitives — the types that cannot hold null. */
+    static boolean isJavaPrimitive(String typeName) {
+        if (typeName == null) return false;
+        switch (typeName) {
+            case "int": case "long": case "short": case "byte":
+            case "double": case "float": case "boolean": case "char":
+                return true;
+            default:
+                return false;
+        }
+    }
+}

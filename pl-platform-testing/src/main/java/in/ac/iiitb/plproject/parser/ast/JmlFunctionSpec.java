@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;           // NEW
 import java.util.HashSet;       // NEW
-import java.util.regex.Matcher; // NEW
-import java.util.regex.Pattern; // NEW
+import java.util.LinkedHashSet; // NEW
 import in.ac.iiitb.plproject.ast.Expr;
 
 /**
@@ -54,7 +53,7 @@ public class JmlFunctionSpec {
      * Dry-run PDF §3: orderId has Origin = SERVER_OUTPUT because the
      * postcondition of placeOrder contains "\result = orderId".
      */
-    private Set<String> serverOutputVars;
+    private Set<String> serverOutputVars; // LinkedHashSet — detection order is stable
     // ── END NEW ───────────────────────────────────────────────────────────────
 
     /**
@@ -73,10 +72,8 @@ public class JmlFunctionSpec {
         this.postcondition = combineWithAnd(this.ensuresClauses);
 
         // ── NEW: auto-detect SERVER_OUTPUT vars from postcondition ────────────
-        this.serverOutputVars = new HashSet<>();
-        if (this.postcondition != null) {
-            this.serverOutputVars.addAll(detectResultBindings(this.postcondition));
-        }
+        this.serverOutputVars = new LinkedHashSet<>();
+        this.serverOutputVars.addAll(detectResultBindings(this.postcondition, this.signature));
         // ── END NEW ───────────────────────────────────────────────────────────
     }
 
@@ -96,10 +93,8 @@ public class JmlFunctionSpec {
         if (postcondition != null) this.ensuresClauses.add(postcondition);
 
         // ── NEW: auto-detect SERVER_OUTPUT vars from postcondition ────────────
-        this.serverOutputVars = new HashSet<>();
-        if (this.postcondition != null) {
-            this.serverOutputVars.addAll(detectResultBindings(this.postcondition));
-        }
+        this.serverOutputVars = new LinkedHashSet<>();
+        this.serverOutputVars.addAll(detectResultBindings(this.postcondition, this.signature));
         // ── END NEW ───────────────────────────────────────────────────────────
     }
 
@@ -165,7 +160,7 @@ public class JmlFunctionSpec {
      *   }
      */
     public Set<String> getServerOutputVars() {
-        return new HashSet<>(serverOutputVars);
+        return new LinkedHashSet<>(serverOutputVars);
     }
 
     /**
@@ -201,41 +196,53 @@ public class JmlFunctionSpec {
      * @return set of variable names bound to \result; empty if none found
      */
     public static Set<String> detectResultBindings(Expr postcondition) {
-        Set<String> bindings = new HashSet<>();
-        if (postcondition == null) return bindings;
+        if (postcondition == null) return new LinkedHashSet<>();
+        return new LinkedHashSet<>(
+            in.ac.iiitb.plproject.ast.AstHelper.detectResultBindings(postcondition));
+    }
 
-        String repr = postcondition.toString();
-
-        // Match: \result ==/= varName   OR   result ==/= varName
-        // The variable name must start with a letter/underscore and contain only
-        // word characters. We stop before operators, spaces, ∧, ;, ∪, {, }.
-        Pattern p = Pattern.compile(
-            "(?:\\\\result|\\bresult)\\s*==?\\s*([a-zA-Z_][a-zA-Z0-9_]*)");
-        Matcher m = p.matcher(repr);
-        while (m.find()) {
-            String candidate = m.group(1);
-            // Exclude Java keywords / boolean literals that can appear in specs
-            if (!candidate.equals("null") && !candidate.equals("true")
-                    && !candidate.equals("false")) {
-                bindings.add(candidate);
+    /**
+     * Signature-aware overload.  A \result binding names a value the callee
+     * produced, so a name that is already a formal parameter of the function can
+     * never be a SERVER_OUTPUT — it is CLIENT_INPUT the caller passed in.
+     *
+     * Without this filter an ordinary functional spec such as
+     * {@code abs: \result == x || \result == -x} would misreport its own
+     * parameter {@code x} as server-generated.
+     */
+    public static Set<String> detectResultBindings(Expr postcondition, FunctionSignature signature) {
+        Set<String> bindings = detectResultBindings(postcondition);
+        if (signature != null && signature.getParameters() != null) {
+            for (Variable p : signature.getParameters()) {
+                bindings.remove(p.getName());
             }
         }
-
-        // Also match the reverse: varName = \result  (some spec styles write it
-        // this way, though the dry-run PDF uses \result = varName)
-        Pattern pReverse = Pattern.compile(
-            "([a-zA-Z_][a-zA-Z0-9_]*)\\s*==?\\s*(?:\\\\result|\\bresult)\\b");
-        Matcher mReverse = pReverse.matcher(repr);
-        while (mReverse.find()) {
-            String candidate = mReverse.group(1);
-            if (!candidate.equals("null") && !candidate.equals("true")
-                    && !candidate.equals("false")) {
-                bindings.add(candidate);
-            }
-        }
-
         return bindings;
     }
+
+    /**
+     * The single variable name bound to {@code \result}, or {@code null} when
+     * this function has no {@code \result} binding (a void or read-only block).
+     *
+     * Section 6, limitation #4: multi-valued returns (tuples/records) are not
+     * supported — a spec binding more than one name reports only the first, in
+     * detection order.
+     */
+    public String getResultBinding() {
+        if (serverOutputVars.isEmpty()) return null;
+        return serverOutputVars.iterator().next();
+    }
+
+    /** True when this function produces a SERVER_OUTPUT value. */
+    public boolean hasResultBinding() {
+        return !serverOutputVars.isEmpty();
+    }
+
+    /** Declared return type of the produced value, or {@code "void"}. */
+    public String getReturnTypeName() {
+        return signature != null ? signature.getReturnTypeName() : "void";
+    }
+
     // ── END NEW ───────────────────────────────────────────────────────────────
 
     @Override

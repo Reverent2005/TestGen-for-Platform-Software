@@ -846,5 +846,257 @@ public class AstHelper {
         }
         return expr;
     }
-}
 
+    // ═════════════════════════════════════════════════════════════════════════
+    // LIBRARY DRY-RUN SUPPORT (return-value handling)
+    // ─────────────────────────────────────────────────────────────────────────
+    // The helpers below back the "Library Testing Dry Runs with Return Value
+    // Handling" pipeline (Stack / HashMap / TaskQueue examples).  They live here
+    // because ResultExpr, OldExpr, NameExpr, BinaryExpr and friends are
+    // package-private to in.ac.iiitb.plproject.ast, so no other package can walk
+    // the AST directly.
+    // ═════════════════════════════════════════════════════════════════════════
+
+    /**
+     * Finds the variable names bound to {@code \result} in a postcondition by
+     * walking the AST (NOT the string representation).
+     *
+     * <p>A binding is an {@code EQUALS} node with {@link ResultExpr} on one side
+     * and a plain identifier on the other, e.g. {@code \result == poppedElem}.
+     *
+     * <p>Walking the AST matters: {@code BinaryExpr.toString()} renders EQUALS as
+     * the word {@code equals} ("(\result equals poppedElem)"), so a regex looking
+     * for "\result =" or "\result ==" over the string form never fires.
+     */
+    public static Set<String> detectResultBindings(Expr postcondition) {
+        Set<String> bindings = new LinkedHashSet<>();
+        collectResultBindings(postcondition, bindings);
+        return bindings;
+    }
+
+    private static void collectResultBindings(Expr expr, Set<String> out) {
+        if (expr == null) return;
+
+        if (expr instanceof BinaryExpr) {
+            BinaryExpr bin = (BinaryExpr) expr;
+            if (bin.op == BinaryExpr.Operator.EQUALS) {
+                String bound = boundNameOf(bin.left, bin.right);
+                if (bound == null) bound = boundNameOf(bin.right, bin.left);
+                if (bound != null) out.add(bound);
+            }
+            collectResultBindings(bin.left, out);
+            collectResultBindings(bin.right, out);
+        } else if (expr instanceof UnaryExpr) {
+            collectResultBindings(((UnaryExpr) expr).expr, out);
+        } else if (expr instanceof MethodCallExpr) {
+            MethodCallExpr call = (MethodCallExpr) expr;
+            collectResultBindings(call.scope, out);
+            for (Expr arg : call.args) collectResultBindings(arg, out);
+        } else if (expr instanceof OldExpr) {
+            collectResultBindings(((OldExpr) expr).getInner(), out);
+        }
+    }
+
+    /** Returns {@code other}'s identifier when {@code maybeResult} is \result and other is a plain name. */
+    private static String boundNameOf(Expr maybeResult, Expr other) {
+        if (!(maybeResult instanceof ResultExpr)) return null;
+        String name = getNameFromExpr(other);
+        if (name == null) return null;
+        if (!name.matches("[a-zA-Z_][a-zA-Z0-9_]*")) return null; // exclude "M.get(key)" etc.
+        if (name.equals("null") || name.equals("true") || name.equals("false")) return null;
+        return name;
+    }
+
+    /** True when {@code expr} is exactly the conjunct {@code \result == boundVar}. */
+    public static boolean isResultBindingConjunct(Expr expr, String boundVar) {
+        if (boundVar == null || !(expr instanceof BinaryExpr)) return false;
+        BinaryExpr bin = (BinaryExpr) expr;
+        if (bin.op != BinaryExpr.Operator.EQUALS) return false;
+        return boundVar.equals(boundNameOf(bin.left, bin.right))
+            || boundVar.equals(boundNameOf(bin.right, bin.left));
+    }
+
+    /** Collects the simple variable names appearing inside {@code \old(...)}. */
+    public static Set<String> collectOldVarNames(Expr expr) {
+        Set<String> out = new LinkedHashSet<>();
+        collectOldVarNamesRecursive(expr, out);
+        return out;
+    }
+
+    private static void collectOldVarNamesRecursive(Expr expr, Set<String> out) {
+        if (expr == null) return;
+        if (expr instanceof OldExpr) {
+            String name = getNameFromExpr(((OldExpr) expr).getInner());
+            if (name != null) out.add(leadingIdentifier(name));
+            collectOldVarNamesRecursive(((OldExpr) expr).getInner(), out);
+        } else if (expr instanceof BinaryExpr) {
+            collectOldVarNamesRecursive(((BinaryExpr) expr).left, out);
+            collectOldVarNamesRecursive(((BinaryExpr) expr).right, out);
+        } else if (expr instanceof UnaryExpr) {
+            collectOldVarNamesRecursive(((UnaryExpr) expr).expr, out);
+        } else if (expr instanceof MethodCallExpr) {
+            MethodCallExpr call = (MethodCallExpr) expr;
+            collectOldVarNamesRecursive(call.scope, out);
+            for (Expr arg : call.args) collectOldVarNamesRecursive(arg, out);
+        }
+    }
+
+    /** Splits an AND-tree into its individual conjuncts (order preserved). */
+    public static List<Expr> splitConjuncts(Expr expr) {
+        List<Expr> out = new ArrayList<>();
+        splitConjunctsRecursive(expr, out);
+        return out;
+    }
+
+    private static void splitConjunctsRecursive(Expr expr, List<Expr> out) {
+        if (expr == null) return;
+        if (expr instanceof BinaryExpr && ((BinaryExpr) expr).op == BinaryExpr.Operator.AND) {
+            splitConjunctsRecursive(((BinaryExpr) expr).left, out);
+            splitConjunctsRecursive(((BinaryExpr) expr).right, out);
+        } else {
+            out.add(expr);
+        }
+    }
+
+    /**
+     * Returns the leading Java identifier of a raw name, skipping any {@code !}
+     * prefix.  {@code "!Tasks.containsKey(id)"} yields {@code "Tasks"}.
+     */
+    public static String leadingIdentifier(String raw) {
+        if (raw == null) return null;
+        int i = 0;
+        while (i < raw.length() && (raw.charAt(i) == '!' || Character.isWhitespace(raw.charAt(i)))) i++;
+        int start = i;
+        while (i < raw.length() && (Character.isLetterOrDigit(raw.charAt(i))
+                                    || raw.charAt(i) == '_' || raw.charAt(i) == '$')) i++;
+        return raw.substring(start, i);
+    }
+
+    /**
+     * Rewrites a library specification expression into something the code
+     * generator can emit verbatim:
+     *
+     * <ul>
+     *   <li>{@code \result}      → the SERVER_OUTPUT capture variable</li>
+     *   <li>{@code \old(size)}   → {@code size_old} (the snapshot local)</li>
+     *   <li>a global-state name  → {@code Helper.<name>} (qualified library state)</li>
+     * </ul>
+     *
+     * Parameters, capture variables and snapshot locals are left alone — they are
+     * real locals in the generated helper method.
+     *
+     * @param stateVars names declared in the spec file's {@code state { ... }} block
+     */
+    public static Expr rewriteLibraryExpr(Expr expr, String resultVar, Set<String> stateVars) {
+        if (expr == null) return null;
+
+        if (expr instanceof ResultExpr) {
+            return resultVar != null ? createNameExpr(resultVar) : expr;
+        }
+        if (expr instanceof OldExpr) {
+            Expr inner = ((OldExpr) expr).getInner();
+            String name = getNameFromExpr(inner);
+            if (name != null) {
+                return createNameExpr(leadingIdentifier(name) + "_old");
+            }
+            // TODO (Section 6): \old() over a compound expression is not modelled;
+            // fall back to rewriting the inner expression in place.
+            return rewriteLibraryExpr(inner, resultVar, stateVars);
+        }
+        if (expr instanceof NameExpr) {
+            String raw = getNameFromExpr(expr);
+            if (raw == null) return expr;
+            String head = leadingIdentifier(raw);
+            if (stateVars != null && stateVars.contains(head)) {
+                int bangs = raw.length() - raw.replaceFirst("^!+", "").length();
+                String prefix = raw.substring(0, bangs);
+                return createNameExpr(prefix + "Helper." + raw.substring(bangs));
+            }
+            return expr;
+        }
+        if (expr instanceof BinaryExpr) {
+            BinaryExpr bin = (BinaryExpr) expr;
+            return createBinaryExpr(rewriteLibraryExpr(bin.left, resultVar, stateVars),
+                                    rewriteLibraryExpr(bin.right, resultVar, stateVars),
+                                    bin.op.toString());
+        }
+        if (expr instanceof UnaryExpr) {
+            UnaryExpr un = (UnaryExpr) expr;
+            return createUnaryExpr(rewriteLibraryExpr(un.expr, resultVar, stateVars), un.op.toString());
+        }
+        if (expr instanceof MethodCallExpr) {
+            MethodCallExpr call = (MethodCallExpr) expr;
+            List<Expr> args = new ArrayList<>();
+            for (Expr arg : call.args) args.add(rewriteLibraryExpr(arg, resultVar, stateVars));
+            return createMethodCallExpr(rewriteLibraryExpr(call.scope, resultVar, stateVars),
+                                        call.name.identifier, args);
+        }
+        return expr;
+    }
+
+    /**
+     * Renders an expression the way the .spec file writes it, for human-facing
+     * output such as a singular case's per-condition report.
+     *
+     * <p>{@link #exprToJavaCode} is for code the compiler reads, so it renders an
+     * equality between reference types as {@code java.util.Objects.equals(a, b)}.
+     * That is right for generated code and unreadable in a report; this renders the
+     * same node as {@code a == b}, and keeps {@code \result} and {@code \old(x)}
+     * in their JML form.
+     */
+    public static String exprToSpecSource(Object expr) {
+        if (!(expr instanceof Expr)) return String.valueOf(expr);
+        Expr e = (Expr) expr;
+
+        if (e instanceof ResultExpr) return "\\result";
+        if (e instanceof OldExpr)    return "\\old(" + exprToSpecSource(((OldExpr) e).getInner()) + ")";
+        if (e instanceof NameExpr)   return ((SimpleName) ((NameExpr) e).name).identifier;
+        if (e instanceof IntegerLiteralExpr) return String.valueOf(((IntegerLiteralExpr) e).value);
+        if (e instanceof DoubleLiteralExpr)  return String.valueOf(((DoubleLiteralExpr) e).value);
+        if (e instanceof BooleanLiteralExpr) return String.valueOf(((BooleanLiteralExpr) e).value);
+        if (e instanceof StringLiteralExpr)  return "\"" + ((StringLiteralExpr) e).value + "\"";
+
+        if (e instanceof UnaryExpr) {
+            UnaryExpr unary = (UnaryExpr) e;
+            String op = unary.op == UnaryExpr.Operator.LOGICAL_COMPLEMENT ? "!"
+                      : unary.op == UnaryExpr.Operator.MINUS ? "-" : "+";
+            return op + exprToSpecSource(unary.expr);
+        }
+        if (e instanceof MethodCallExpr) {
+            MethodCallExpr call = (MethodCallExpr) e;
+            StringBuilder sb = new StringBuilder();
+            if (call.scope != null) sb.append(exprToSpecSource(call.scope)).append('.');
+            sb.append(call.name.identifier).append('(');
+            for (int i = 0; i < call.args.size(); i++) {
+                if (i > 0) sb.append(", ");
+                sb.append(exprToSpecSource(call.args.get(i)));
+            }
+            return sb.append(')').toString();
+        }
+        if (e instanceof BinaryExpr) {
+            BinaryExpr bin = (BinaryExpr) e;
+            String left = exprToSpecSource(bin.left);
+            String right = exprToSpecSource(bin.right);
+            return left + " " + specOperator(bin.op) + " " + right;
+        }
+        return e.toString();
+    }
+
+    private static String specOperator(BinaryExpr.Operator op) {
+        switch (op) {
+            case AND:                   return "&&";
+            case OR:                    return "||";
+            case EQUALS:                return "==";
+            case NOT_EQUALS:            return "!=";
+            case LESS_THAN:             return "<";
+            case LESS_THAN_OR_EQUAL:    return "<=";
+            case GREATER_THAN:          return ">";
+            case GREATER_THAN_OR_EQUAL: return ">=";
+            case PLUS:                  return "+";
+            case MINUS:                 return "-";
+            case MULTIPLY:              return "*";
+            case DIVIDE:                return "/";
+            default:                    return op.toString();
+        }
+    }
+}

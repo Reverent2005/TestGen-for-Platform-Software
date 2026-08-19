@@ -1,0 +1,23 @@
+/*
+ * EXAMPLE 2 — HashMap<String,Integer>, singular case.
+ *
+ * Both puts use the SAME key, which is the point of the example: the first put
+ * finds no previous value and returns null, the second returns the first put's
+ * value.  That nullable return is exactly what must not attract a non-null
+ * assertion, and running this case is what demonstrates it.
+ *
+ * getOldValue and remove reuse the same key so their preconditions
+ * (key in dom(M)) hold when they run.
+ */
+test HashMapDryRun {
+    sequence: put -> put -> getOldValue -> remove;
+
+    inputs {
+        put[0].key = "session";
+        put[0].value = 10;
+        put[1].key = "session";
+        put[1].value = 20;
+        getOldValue[2].key = "session";
+        remove[3].key = "session";
+    }
+}

@@ -59,6 +59,16 @@ public class Variable {
     private String typeName;
     private VariableOrigin origin; // NEW field
 
+    /**
+     * Whether this variable's value may legitimately be null at runtime.
+     *
+     * Dry-run PDF, HashMap example: put()'s previous value is null when the key
+     * was absent, so it must be carried in a boxed type (Integer, not int) and
+     * must never attract a synthesised non-null assertion.  Only what the
+     * postcondition actually constrains is asserted.
+     */
+    private boolean nullable = false;
+
     // ── EXISTING constructor – unchanged signature, defaults to CLIENT_INPUT ─
     public Variable(String name, String typeName) {
         this.name = name;
@@ -134,11 +144,20 @@ public class Variable {
     public boolean isServerOutput() {
         return origin == VariableOrigin.SERVER_OUTPUT;
     }
+
+    /** True when null is a legal value for this variable. */
+    public boolean isNullable() {
+        return nullable;
+    }
+
+    public void setNullable(boolean nullable) {
+        this.nullable = nullable;
+    }
     // ── END NEW ──────────────────────────────────────────────────────────────
 
     // ── EXISTING toString – extended to show origin ───────────────────────────
     @Override
     public String toString() {
-        return name + ": " + typeName + " [" + origin + "]";
+        return name + ": " + typeName + " [" + origin + (nullable ? ", nullable" : "") + "]";
     }
 }

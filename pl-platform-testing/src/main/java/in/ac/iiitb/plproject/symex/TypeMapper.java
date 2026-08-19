@@ -77,6 +77,11 @@ public class TypeMapper {
         if (typeName == null) {
             return false;
         }
+        // A boxed primitive is a reference type but never a collection — it must
+        // never be routed down the makeSymbolicRef path.
+        if (isBoxedPrimitiveType(typeName)) {
+            return false;
+        }
         // Check exact match
         if (COLLECTION_TYPES.contains(typeName)) {
             return true;
@@ -155,6 +160,42 @@ public class TypeMapper {
         return getCollectionInitCode(typeName, null);
     }
     
+    // Boxed primitives.  These are reference types, but symbolically they are
+    // NOT objects to be summoned with makeSymbolicRef — they must route to the
+    // matching primitive factory (Section 5, invariant 7).  Integer in particular
+    // is what HashMap.put and TaskQueue.submit return.
+    private static final Set<String> BOXED_PRIMITIVE_TYPES = new HashSet<>();
+    static {
+        BOXED_PRIMITIVE_TYPES.add("Integer");
+        BOXED_PRIMITIVE_TYPES.add("Long");
+        BOXED_PRIMITIVE_TYPES.add("Short");
+        BOXED_PRIMITIVE_TYPES.add("Byte");
+        BOXED_PRIMITIVE_TYPES.add("Double");
+        BOXED_PRIMITIVE_TYPES.add("Float");
+        BOXED_PRIMITIVE_TYPES.add("Boolean");
+        BOXED_PRIMITIVE_TYPES.add("Character");
+        BOXED_PRIMITIVE_TYPES.add("java.lang.Integer");
+        BOXED_PRIMITIVE_TYPES.add("java.lang.Long");
+        BOXED_PRIMITIVE_TYPES.add("java.lang.Short");
+        BOXED_PRIMITIVE_TYPES.add("java.lang.Byte");
+        BOXED_PRIMITIVE_TYPES.add("java.lang.Double");
+        BOXED_PRIMITIVE_TYPES.add("java.lang.Float");
+        BOXED_PRIMITIVE_TYPES.add("java.lang.Boolean");
+        BOXED_PRIMITIVE_TYPES.add("java.lang.Character");
+    }
+
+    /**
+     * True for a boxed primitive wrapper (Integer, Long, Double, Boolean, ...).
+     *
+     * A nullable SERVER_OUTPUT has to be boxed so that null is representable, but
+     * it still has to be made symbolic through the primitive path:
+     * {@code Debug.makeSymbolicInteger}, never the generic
+     * {@code Debug.makeSymbolicRef} fallback, which would under-constrain it.
+     */
+    public static boolean isBoxedPrimitiveType(String typeName) {
+        return typeName != null && BOXED_PRIMITIVE_TYPES.contains(typeName.trim());
+    }
+
     /**
      * Checks if a type is a primitive or primitive wrapper.
      * 
@@ -181,7 +222,37 @@ public class TypeMapper {
      * @return true if it should use makeSymbolicRef, false otherwise
      */
     public static boolean shouldUseSymbolicRef(String typeName) {
-        return !isPrimitiveType(typeName) && !isCollectionType(typeName);
+        return !isPrimitiveType(typeName)
+            && !isBoxedPrimitiveType(typeName)
+            && !isCollectionType(typeName);
+    }
+
+    /**
+     * Name of the {@code Debug.makeSymbolic*} factory for a type, or null when the
+     * type has no primitive factory and must fall back to
+     * {@code Debug.makeSymbolicRef} (Section 6, limitation #2).
+     */
+    public static String symbolicFactoryFor(String typeName) {
+        if (typeName == null) return null;
+        String t = typeName.trim();
+        if (t.equalsIgnoreCase("int") || t.equals("Integer") || t.equals("java.lang.Integer")
+                || t.equalsIgnoreCase("long") || t.equals("Long") || t.equals("java.lang.Long")
+                || t.equalsIgnoreCase("short") || t.equals("Short")
+                || t.equalsIgnoreCase("byte") || t.equals("Byte")
+                || t.equalsIgnoreCase("char") || t.equals("Character")) {
+            return "makeSymbolicInteger";
+        }
+        if (t.equalsIgnoreCase("double") || t.equals("Double") || t.equals("java.lang.Double")
+                || t.equalsIgnoreCase("float") || t.equals("Float")) {
+            return "makeSymbolicReal";
+        }
+        if (t.equalsIgnoreCase("string") || t.equals("java.lang.String")) {
+            return "makeSymbolicString";
+        }
+        if (t.equalsIgnoreCase("boolean") || t.equals("Boolean") || t.equals("java.lang.Boolean")) {
+            return "makeSymbolicBoolean";
+        }
+        return null;
     }
     
     /**

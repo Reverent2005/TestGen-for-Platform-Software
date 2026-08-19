@@ -24,7 +24,58 @@ public class SpecToAstConverter {
             specs.add(spec);
         }
         
-        return new JmlSpecAst(specs);
+        // Step 3: Pick up the optional global-state declaration block
+        return new JmlSpecAst(specs, extractStateVars(specText));
+    }
+    
+    // ──────────────────────────────────────────────────────────
+    // Optional `state { ... }` block
+    // ──────────────────────────────────────────────────────────
+    /**
+     * Parses the optional global-state declaration that a library spec file may
+     * carry ahead of its spec blocks:
+     *
+     * <pre>
+     * state {
+     *     List&lt;String&gt; S;
+     *     int size;
+     * }
+     * </pre>
+     *
+     * Library specs constrain global state (S, size, M, Tasks, nextId) rather
+     * than parameters alone, so the generator needs to know which free names in a
+     * pre/postcondition are library state — those get qualified as
+     * {@code Helper.<name>} — and what type to give an {@code \old(...)} snapshot.
+     * A spec file with no such block yields an empty map and is unaffected.
+     */
+    static Map<String, String> extractStateVars(String specText) {
+        Map<String, String> stateVars = new LinkedHashMap<>();
+        
+        Matcher m = Pattern.compile("(?m)^\\s*state\\s*\\{([^}]*)\\}", Pattern.DOTALL)
+                           .matcher(specText);
+        if (!m.find()) return stateVars;
+        
+        for (String decl : m.group(1).split(";")) {
+            String line = stripComments(decl).trim();
+            if (line.isEmpty()) continue;
+            
+            int split = line.lastIndexOf(' ');
+            int tab = line.lastIndexOf('\t');
+            if (tab > split) split = tab;
+            if (split < 0) continue;
+            
+            String type = line.substring(0, split).trim();
+            String name = line.substring(split + 1).trim();
+            if (!type.isEmpty() && name.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
+                stateVars.put(name, type);
+            }
+        }
+        return stateVars;
+    }
+    
+    static String stripComments(String text) {
+        return text.replaceAll("(?s)/\\*.*?\\*/", "")
+                   .replaceAll("(?m)//[^\n]*", "");
     }
     
     // ──────────────────────────────────────────────────────────

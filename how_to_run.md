@@ -70,25 +70,35 @@ You will find some `.jpf` files, `GenratedATCs.java` and a `Helper.java`.
 Now you need to generate the bytecode(.class) of the java files while in the `outputs` directory:
 ```bash
 # 1. Define JPF Classpath (Absolute Paths)
-export JPF_CP="/home/reverent/jpf-core/build/jpf.jar:/home/reverent/jpf-symbc/build/jpf-symbc.jar:/home/reverent/jpf-symbc/build/jpf-symbc-classes.jar:."
-
+export JPF_HOME=/home/akshatbetalol/jpf-core
 # 2. Create output directory
-mkdir -p bin
+javac -cp ".:$JPF_HOME/build/jpf.jar:/home/akshatbetalol/jpf-symbc/build/jpf-symbc.jar:/home/akshatbetalol/jpf-symbc/build/jpf-symbc-classes.jar" \
+-d target/classes \
+$(find src/main/java -name "*.java") \
+outputs/*.java
+```java -cp target/classes in.ac.iiitb.plproject.Main
+java -jar $JPF_HOME/build/RunJPF.jar run.jpf'''
+---
 
-# 3. Compile with Package Structure
-javac -cp "$JPF_CP" -d bin \
-in/ac/iiitb/plproject/atc/generated/Helper.java \
-in/ac/iiitb/plproject/atc/generated/GeneratedATCs.java
-```
+## Library dry runs (Stack / HashMap / TaskQueue)
 
-Run JPF using the `RunJPF.jar` bootstrapper. Ensure your `.jpf` file points to the `./bin` directory by checking if the following properties are set in `GeneratedATCs_main.jpf`:
-```properties
-target = in.ac.iiitb.plproject.atc.generated.GeneratedATCs
-classpath = ./bin
-vm.insn_factory.class = gov.nasa.jpf.symbc.SymbolicInstructionFactory
-```
+The three library examples with return-value handling have their own driver:
 
-Now while inside the `outputs` directory run:
 ```bash
-java -jar ~/jpf-core/build/RunJPF.jar GeneratedATCs_main.jpf
+cd pl-platform-testing/
+mvn -o compile
+java -cp target/classes in.ac.iiitb.plproject.atc.LibraryDryRunExamples
+mvn -o test          # regression suite for the propagation invariants
 ```
+
+Each example writes three generated files: the SPF flavour, the JUnit flavour, and
+`SingularCase.java` — one concrete run of the test string that checks every
+precondition before its call and every postcondition after it, and exits non-zero
+if any fails. The test strings themselves live in `specs/*.tests`.
+
+```bash
+cd ../ && ./verify-generated.sh    # compile and run all three, singular cases included
+```
+
+See [LIBRARY_DRY_RUNS.md](LIBRARY_DRY_RUNS.md) for the outputs, the spec files and
+the known limitations.

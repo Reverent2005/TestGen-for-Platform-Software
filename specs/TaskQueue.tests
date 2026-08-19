@@ -1,0 +1,15 @@
+/*
+ * EXAMPLE 3 — TaskQueue, singular case.
+ *
+ * Only submit takes a CLIENT_INPUT.  taskId is a SERVER_OUTPUT: the caller cannot
+ * know it before the call, so it is NOT bound here — it is captured from submit
+ * and threaded into getResult and cancelTask by the propagation scan.  Binding it
+ * would be rejected by the validator.
+ */
+test TaskQueueDryRun {
+    sequence: submit -> getResult -> cancelTask;
+
+    inputs {
+        submit[0].payload = "render-report";
+    }
+}

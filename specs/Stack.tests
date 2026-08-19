@@ -1,0 +1,19 @@
+/*
+ * EXAMPLE 1 — Stack<String>, singular case.
+ *
+ * The test string is the sequence of blocks; the inputs block pins down every
+ * CLIENT_INPUT so the sequence can be run once, concretely, with each
+ * precondition checked before its call and each postcondition after it.
+ *
+ * The two pushes get different elements so the run distinguishes "pop returned
+ * the top" from "pop returned something".  Neither pop nor peek appears in the
+ * inputs block: they take no parameters, and what they return is SERVER_OUTPUT.
+ */
+test StackDryRun {
+    sequence: push -> push -> pop -> peek;
+
+    inputs {
+        push[0].elem = "alpha";
+        push[1].elem = "beta";
+    }
+}
