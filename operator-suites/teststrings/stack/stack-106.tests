@@ -1,0 +1,6 @@
+test StackGenerated106 {
+    sequence: pop -> peek -> peek -> pop -> peek -> peek;
+
+    inputs {
+    }
+}

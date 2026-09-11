@@ -1,0 +1,475 @@
+/*
+ * GENERATED MUTATION SUITE — stack
+ *
+ * Produced by OperatorMutantGenerator from:
+ *   ../libraries/stack/Helper.java
+ *
+ * DO NOT EDIT. Regenerate with ./run-operator-suites.sh stack
+ *
+ * Every operator in MutationOperator is applied to every line of the library
+ * that admits it, so this file is what the specification is measured against
+ * when nobody is choosing the faults. It is the counterpart of the
+ * hand-written set in mutations/stack.mutants:
+ * that one asks whether the suite catches the faults we thought of, this one
+ * asks what fraction of all faults of each KIND it catches.
+ *
+ * `expect` is absent throughout: a generated mutant carries no prediction,
+ * and some of these are equivalent to the original and cannot be killed by
+ * anyone. The run measures; it does not check a declaration.
+ */
+
+mutant STACK_GEN_SDL_1 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        public static List<String> S = new ArrayList<String>();
+    replace:     
+}
+
+mutant STACK_GEN_SEI_2 {
+    description: a write to size is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        public static List<String> S = new ArrayList<String>();
+    replace:     public static List<String> S = new ArrayList<String>(); size = size + 1;
+}
+
+mutant STACK_GEN_CRP_3 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int size = 0;
+    replace:     public static int size = 1;
+}
+
+mutant STACK_GEN_CRP_4 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int size = 0;
+    replace:     public static int size = -1;
+}
+
+mutant STACK_GEN_SDL_5 {
+    description: the statement is removed, in push()
+    operator:    statement-deletion
+    in:          push
+    file:        Helper.java
+    find:        S.add(elem);
+    replace:     
+}
+
+mutant STACK_GEN_STR_6 {
+    description: the statement runs twice, in push()
+    operator:    statement-replacement
+    in:          push
+    file:        Helper.java
+    find:        S.add(elem);
+    replace:     S.add(elem); S.add(elem);
+}
+
+mutant STACK_GEN_ARP_7 {
+    description: the argument to add() is shifted by + 1, in push()
+    operator:    argument-replacement
+    in:          push
+    file:        Helper.java
+    find:        S.add(elem);
+    replace:     S.add(elem + 1);
+}
+
+mutant STACK_GEN_ARP_8 {
+    description: the argument to add() is shifted by - 1, in push()
+    operator:    argument-replacement
+    in:          push
+    file:        Helper.java
+    find:        S.add(elem);
+    replace:     S.add(elem - 1);
+}
+
+mutant STACK_GEN_MCR_9 {
+    description: .add( becomes .contains(, in push()
+    operator:    method-call-replacement
+    in:          push
+    file:        Helper.java
+    find:        S.add(elem);
+    replace:     S.contains(elem);
+}
+
+mutant STACK_GEN_SEI_10 {
+    description: a write to size is inserted after the statement, in push()
+    operator:    side-effect-insertion
+    in:          push
+    file:        Helper.java
+    find:        S.add(elem);
+    replace:     S.add(elem); size = size + 1;
+}
+
+mutant STACK_GEN_AOI_11 {
+    description: the value assigned to size is shifted by + 1, in push()
+    operator:    arithmetic-operator-insertion
+    in:          push
+    file:        Helper.java
+    find:        size = S.size();
+    replace:     size = S.size() + 1;
+}
+
+mutant STACK_GEN_AOI_12 {
+    description: the value assigned to size is shifted by - 1, in push()
+    operator:    arithmetic-operator-insertion
+    in:          push
+    file:        Helper.java
+    find:        size = S.size();
+    replace:     size = S.size() - 1;
+}
+
+mutant STACK_GEN_UOI_13 {
+    description: the value assigned to size is negated, in push()
+    operator:    unary-operator-insertion
+    in:          push
+    file:        Helper.java
+    find:        size = S.size();
+    replace:     size = -(S.size());
+}
+
+mutant STACK_GEN_ABS_14 {
+    description: the value assigned to size is forced negative, in push()
+    operator:    absolute-value-insertion
+    in:          push
+    file:        Helper.java
+    find:        size = S.size();
+    replace:     size = -Math.abs(S.size());
+}
+
+mutant STACK_GEN_SDL_15 {
+    description: the statement is removed, in push()
+    operator:    statement-deletion
+    in:          push
+    file:        Helper.java
+    find:        size = S.size();
+    replace:     
+}
+
+mutant STACK_GEN_MCR_16 {
+    description: .size() becomes .hashCode(), in push()
+    operator:    method-call-replacement
+    in:          push
+    file:        Helper.java
+    find:        size = S.size();
+    replace:     size = S.hashCode();
+}
+
+mutant STACK_GEN_SDL_17 {
+    description: the statement is removed, in push()
+    operator:    statement-deletion
+    in:          push
+    file:        Helper.java
+    find:        top = elem;
+    replace:     
+}
+
+mutant STACK_GEN_SEI_18 {
+    description: a write to size is inserted after the statement, in push()
+    operator:    side-effect-insertion
+    in:          push
+    file:        Helper.java
+    find:        top = elem;
+    replace:     top = elem; size = size + 1;
+}
+
+mutant STACK_GEN_AOR_19 {
+    description: - becomes +, in pop()
+    operator:    arithmetic-operator-replacement
+    in:          pop
+    file:        Helper.java
+    find:        String poppedElem = S.remove(S.size() - 1);
+    replace:     String poppedElem = S.remove(S.size() + 1);
+}
+
+mutant STACK_GEN_AOR_20 {
+    description: - becomes *, in pop()
+    operator:    arithmetic-operator-replacement
+    in:          pop
+    file:        Helper.java
+    find:        String poppedElem = S.remove(S.size() - 1);
+    replace:     String poppedElem = S.remove(S.size() * 1);
+}
+
+mutant STACK_GEN_AOR_21 {
+    description: - becomes /, in pop()
+    operator:    arithmetic-operator-replacement
+    in:          pop
+    file:        Helper.java
+    find:        String poppedElem = S.remove(S.size() - 1);
+    replace:     String poppedElem = S.remove(S.size() / 1);
+}
+
+mutant STACK_GEN_AOR_22 {
+    description: - becomes %, in pop()
+    operator:    arithmetic-operator-replacement
+    in:          pop
+    file:        Helper.java
+    find:        String poppedElem = S.remove(S.size() - 1);
+    replace:     String poppedElem = S.remove(S.size() % 1);
+}
+
+mutant STACK_GEN_CRP_23 {
+    description: the literal 1 becomes 0, in pop()
+    operator:    constant-replacement
+    in:          pop
+    file:        Helper.java
+    find:        String poppedElem = S.remove(S.size() - 1);
+    replace:     String poppedElem = S.remove(S.size() - 0);
+}
+
+mutant STACK_GEN_CRP_24 {
+    description: the literal 1 becomes -1, in pop()
+    operator:    constant-replacement
+    in:          pop
+    file:        Helper.java
+    find:        String poppedElem = S.remove(S.size() - 1);
+    replace:     String poppedElem = S.remove(S.size() - -1);
+}
+
+mutant STACK_GEN_CRP_25 {
+    description: the literal 1 becomes 2, in pop()
+    operator:    constant-replacement
+    in:          pop
+    file:        Helper.java
+    find:        String poppedElem = S.remove(S.size() - 1);
+    replace:     String poppedElem = S.remove(S.size() - 2);
+}
+
+mutant STACK_GEN_MCR_26 {
+    description: .remove( becomes .get(, in pop()
+    operator:    method-call-replacement
+    in:          pop
+    file:        Helper.java
+    find:        String poppedElem = S.remove(S.size() - 1);
+    replace:     String poppedElem = S.get(S.size() - 1);
+}
+
+mutant STACK_GEN_MCR_27 {
+    description: .size() becomes .hashCode(), in pop()
+    operator:    method-call-replacement
+    in:          pop
+    file:        Helper.java
+    find:        String poppedElem = S.remove(S.size() - 1);
+    replace:     String poppedElem = S.remove(S.hashCode() - 1);
+}
+
+mutant STACK_GEN_AOR_28 {
+    description: - becomes +, in pop()
+    operator:    arithmetic-operator-replacement
+    in:          pop
+    file:        Helper.java
+    find:        top = S.isEmpty() ? null : S.get(S.size() - 1);
+    replace:     top = S.isEmpty() ? null : S.get(S.size() + 1);
+}
+
+mutant STACK_GEN_AOR_29 {
+    description: - becomes *, in pop()
+    operator:    arithmetic-operator-replacement
+    in:          pop
+    file:        Helper.java
+    find:        top = S.isEmpty() ? null : S.get(S.size() - 1);
+    replace:     top = S.isEmpty() ? null : S.get(S.size() * 1);
+}
+
+mutant STACK_GEN_AOR_30 {
+    description: - becomes /, in pop()
+    operator:    arithmetic-operator-replacement
+    in:          pop
+    file:        Helper.java
+    find:        top = S.isEmpty() ? null : S.get(S.size() - 1);
+    replace:     top = S.isEmpty() ? null : S.get(S.size() / 1);
+}
+
+mutant STACK_GEN_AOR_31 {
+    description: - becomes %, in pop()
+    operator:    arithmetic-operator-replacement
+    in:          pop
+    file:        Helper.java
+    find:        top = S.isEmpty() ? null : S.get(S.size() - 1);
+    replace:     top = S.isEmpty() ? null : S.get(S.size() % 1);
+}
+
+mutant STACK_GEN_CRP_32 {
+    description: the literal 1 becomes 0, in pop()
+    operator:    constant-replacement
+    in:          pop
+    file:        Helper.java
+    find:        top = S.isEmpty() ? null : S.get(S.size() - 1);
+    replace:     top = S.isEmpty() ? null : S.get(S.size() - 0);
+}
+
+mutant STACK_GEN_CRP_33 {
+    description: the literal 1 becomes -1, in pop()
+    operator:    constant-replacement
+    in:          pop
+    file:        Helper.java
+    find:        top = S.isEmpty() ? null : S.get(S.size() - 1);
+    replace:     top = S.isEmpty() ? null : S.get(S.size() - -1);
+}
+
+mutant STACK_GEN_CRP_34 {
+    description: the literal 1 becomes 2, in pop()
+    operator:    constant-replacement
+    in:          pop
+    file:        Helper.java
+    find:        top = S.isEmpty() ? null : S.get(S.size() - 1);
+    replace:     top = S.isEmpty() ? null : S.get(S.size() - 2);
+}
+
+mutant STACK_GEN_SDL_35 {
+    description: the statement is removed, in pop()
+    operator:    statement-deletion
+    in:          pop
+    file:        Helper.java
+    find:        top = S.isEmpty() ? null : S.get(S.size() - 1);
+    replace:     
+}
+
+mutant STACK_GEN_MCR_36 {
+    description: .isEmpty() becomes .equals(null), in pop()
+    operator:    method-call-replacement
+    in:          pop
+    file:        Helper.java
+    find:        top = S.isEmpty() ? null : S.get(S.size() - 1);
+    replace:     top = S.equals(null) ? null : S.get(S.size() - 1);
+}
+
+mutant STACK_GEN_MCR_37 {
+    description: .size() becomes .hashCode(), in pop()
+    operator:    method-call-replacement
+    in:          pop
+    file:        Helper.java
+    find:        top = S.isEmpty() ? null : S.get(S.size() - 1);
+    replace:     top = S.isEmpty() ? null : S.get(S.hashCode() - 1);
+}
+
+mutant STACK_GEN_MCR_38 {
+    description: .get( becomes .remove(, in pop()
+    operator:    method-call-replacement
+    in:          pop
+    file:        Helper.java
+    find:        top = S.isEmpty() ? null : S.get(S.size() - 1);
+    replace:     top = S.isEmpty() ? null : S.remove(S.size() - 1);
+}
+
+mutant STACK_GEN_RVR_39 {
+    description: the answer becomes null, in pop()
+    operator:    return-value-replacement
+    in:          pop
+    file:        Helper.java
+    find:        return poppedElem;
+    replace:     return null;
+}
+
+mutant STACK_GEN_SEI_40 {
+    description: a write to size is inserted before the return, in pop()
+    operator:    side-effect-insertion
+    in:          pop
+    file:        Helper.java
+    find:        return poppedElem;
+    replace:     size = size + 1; return poppedElem;
+}
+
+mutant STACK_GEN_AOR_41 {
+    description: - becomes +, in peek()
+    operator:    arithmetic-operator-replacement
+    in:          peek
+    file:        Helper.java
+    find:        return S.get(S.size() - 1);
+    replace:     return S.get(S.size() + 1);
+}
+
+mutant STACK_GEN_AOR_42 {
+    description: - becomes *, in peek()
+    operator:    arithmetic-operator-replacement
+    in:          peek
+    file:        Helper.java
+    find:        return S.get(S.size() - 1);
+    replace:     return S.get(S.size() * 1);
+}
+
+mutant STACK_GEN_AOR_43 {
+    description: - becomes /, in peek()
+    operator:    arithmetic-operator-replacement
+    in:          peek
+    file:        Helper.java
+    find:        return S.get(S.size() - 1);
+    replace:     return S.get(S.size() / 1);
+}
+
+mutant STACK_GEN_AOR_44 {
+    description: - becomes %, in peek()
+    operator:    arithmetic-operator-replacement
+    in:          peek
+    file:        Helper.java
+    find:        return S.get(S.size() - 1);
+    replace:     return S.get(S.size() % 1);
+}
+
+mutant STACK_GEN_CRP_45 {
+    description: the literal 1 becomes 0, in peek()
+    operator:    constant-replacement
+    in:          peek
+    file:        Helper.java
+    find:        return S.get(S.size() - 1);
+    replace:     return S.get(S.size() - 0);
+}
+
+mutant STACK_GEN_CRP_46 {
+    description: the literal 1 becomes -1, in peek()
+    operator:    constant-replacement
+    in:          peek
+    file:        Helper.java
+    find:        return S.get(S.size() - 1);
+    replace:     return S.get(S.size() - -1);
+}
+
+mutant STACK_GEN_CRP_47 {
+    description: the literal 1 becomes 2, in peek()
+    operator:    constant-replacement
+    in:          peek
+    file:        Helper.java
+    find:        return S.get(S.size() - 1);
+    replace:     return S.get(S.size() - 2);
+}
+
+mutant STACK_GEN_RVR_48 {
+    description: the answer becomes null, in peek()
+    operator:    return-value-replacement
+    in:          peek
+    file:        Helper.java
+    find:        return S.get(S.size() - 1);
+    replace:     return null;
+}
+
+mutant STACK_GEN_MCR_49 {
+    description: .size() becomes .hashCode(), in peek()
+    operator:    method-call-replacement
+    in:          peek
+    file:        Helper.java
+    find:        return S.get(S.size() - 1);
+    replace:     return S.get(S.hashCode() - 1);
+}
+
+mutant STACK_GEN_MCR_50 {
+    description: .get( becomes .remove(, in peek()
+    operator:    method-call-replacement
+    in:          peek
+    file:        Helper.java
+    find:        return S.get(S.size() - 1);
+    replace:     return S.remove(S.size() - 1);
+}
+
+mutant STACK_GEN_SEI_51 {
+    description: a write to size is inserted before the return, in peek()
+    operator:    side-effect-insertion
+    in:          peek
+    file:        Helper.java
+    find:        return S.get(S.size() - 1);
+    replace:     size = size + 1; return S.get(S.size() - 1);
+}
+

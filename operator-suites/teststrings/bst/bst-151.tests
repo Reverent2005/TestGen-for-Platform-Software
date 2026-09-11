@@ -1,0 +1,8 @@
+test BstGenerated151 {
+    sequence: min -> contains -> min -> insert;
+
+    inputs {
+        contains[1].key = 1;
+        insert[3].key = 50;
+    }
+}

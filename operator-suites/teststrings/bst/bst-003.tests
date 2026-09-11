@@ -1,0 +1,9 @@
+test BstGenerated3 {
+    sequence: insert -> min -> delete -> insert;
+
+    inputs {
+        insert[0].key = 0;
+        delete[2].key = 1;
+        insert[3].key = 0;
+    }
+}

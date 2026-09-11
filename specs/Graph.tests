@@ -1,0 +1,25 @@
+/*
+ * EXAMPLE 12 — Graph, singular case.
+ *
+ * Two vertices are declared, one edge joins them, and the graph is then asked
+ * about that edge from one side only.  Asking from one side is the point: the
+ * edge was added as A—B, so a library that recorded it in one adjacency list
+ * only still answers degree("A") correctly and fails
+ * `Adj.get(to).contains(from)`.
+ *
+ * addEdge takes two CLIENT_INPUTs, both bound here.  Nothing propagates in this
+ * example: vertexDegree and connected are captured and dropped.
+ */
+test GraphDryRun {
+    sequence: addVertex -> addVertex -> addEdge -> degree -> hasEdge;
+
+    inputs {
+        addVertex[0].name = "A";
+        addVertex[1].name = "B";
+        addEdge[2].from = "A";
+        addEdge[2].to = "B";
+        degree[3].name = "A";
+        hasEdge[4].from = "A";
+        hasEdge[4].to = "B";
+    }
+}

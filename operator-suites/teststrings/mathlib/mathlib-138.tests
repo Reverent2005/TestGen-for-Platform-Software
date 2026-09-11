@@ -1,0 +1,8 @@
+test MathlibGenerated138 {
+    sequence: abs -> abs;
+
+    inputs {
+        abs[0].x = 5;
+        abs[1].x = 48;
+    }
+}

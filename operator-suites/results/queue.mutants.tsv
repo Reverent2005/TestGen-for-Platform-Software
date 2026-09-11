@@ -1,0 +1,51 @@
+# generated mutants — queue
+# id	status	operator	method	file	killed-by-family	detail
+QUEUE_GEN_SDL_1	INVALID	statement-deletion	-	Helper.java	-	the mutated library does not compile: GeneratedATCs.java:13: cannot find symbol
+QUEUE_GEN_SEI_2	INVALID	side-effect-insertion	-	Helper.java	-	the mutated library does not compile: Helper.java:26: <identifier> expected
+QUEUE_GEN_CRP_3	KILLED	constant-replacement	-	Helper.java	-	killed by a generated assertion in GeneratedATCs_JUnit
+QUEUE_GEN_CRP_4	KILLED	constant-replacement	-	Helper.java	-	killed by a generated assertion in GeneratedATCs_JUnit
+QUEUE_GEN_SDL_5	KILLED	statement-deletion	enqueue	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_STR_6	KILLED	statement-replacement	enqueue	Helper.java	-	killed by block 0  enqueue  ensures  size == \old(size) + 1
+QUEUE_GEN_ARP_7	KILLED	argument-replacement	enqueue	Helper.java	-	killed by block 0  enqueue  ensures  Q.contains(elem)
+QUEUE_GEN_ARP_8	INVALID	argument-replacement	enqueue	Helper.java	-	the mutated library does not compile: Helper.java:32: bad operand types for binary operator '-'
+QUEUE_GEN_MCR_9	KILLED	method-call-replacement	enqueue	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_SEI_10	SURVIVED	side-effect-insertion	enqueue	Helper.java	-	every generated condition still holds
+QUEUE_GEN_AOI_11	KILLED	arithmetic-operator-insertion	enqueue	Helper.java	-	killed by block 0  enqueue  ensures  size == \old(size) + 1
+QUEUE_GEN_AOI_12	KILLED	arithmetic-operator-insertion	enqueue	Helper.java	-	killed by block 0  enqueue  ensures  size == \old(size) + 1
+QUEUE_GEN_UOI_13	KILLED	unary-operator-insertion	enqueue	Helper.java	-	killed by block 0  enqueue  ensures  size == \old(size) + 1
+QUEUE_GEN_ABS_14	KILLED	absolute-value-insertion	enqueue	Helper.java	-	killed by block 0  enqueue  ensures  size == \old(size) + 1
+QUEUE_GEN_SDL_15	KILLED	statement-deletion	enqueue	Helper.java	-	killed by block 0  enqueue  ensures  size == \old(size) + 1
+QUEUE_GEN_MCR_16	KILLED	method-call-replacement	enqueue	Helper.java	-	killed by block 0  enqueue  ensures  size == \old(size) + 1
+QUEUE_GEN_CRP_17	KILLED	constant-replacement	enqueue	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_CRP_18	KILLED	constant-replacement	enqueue	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_SDL_19	KILLED	statement-deletion	enqueue	Helper.java	-	killed by block 2  dequeue  ensures  dequeuedElem == \old(head)
+QUEUE_GEN_ARP_20	KILLED	argument-replacement	enqueue	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_ARP_21	KILLED	argument-replacement	enqueue	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_MCR_22	KILLED	method-call-replacement	enqueue	Helper.java	-	killed by block 0  enqueue  ensures  Q.contains(elem)
+QUEUE_GEN_SEI_23	KILLED	side-effect-insertion	enqueue	Helper.java	-	killed by block 0  enqueue  ensures  size == \old(size) + 1
+QUEUE_GEN_CRP_24	KILLED	constant-replacement	dequeue	Helper.java	-	killed by block 2  dequeue  ensures  dequeuedElem == \old(head)
+QUEUE_GEN_CRP_25	KILLED	constant-replacement	dequeue	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_ARP_26	KILLED	argument-replacement	dequeue	Helper.java	-	killed by block 2  dequeue  ensures  dequeuedElem == \old(head)
+QUEUE_GEN_ARP_27	KILLED	argument-replacement	dequeue	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_MCR_28	KILLED	method-call-replacement	dequeue	Helper.java	-	killed by block 2  dequeue  ensures  size == \old(size) - 1
+QUEUE_GEN_CRP_29	KILLED	constant-replacement	dequeue	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_CRP_30	KILLED	constant-replacement	dequeue	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_SDL_31	KILLED	statement-deletion	dequeue	Helper.java	-	killed by block 3  front  ensures  frontElem == head
+QUEUE_GEN_ARP_32	KILLED	argument-replacement	dequeue	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_ARP_33	KILLED	argument-replacement	dequeue	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_MCR_34	SURVIVED	method-call-replacement	dequeue	Helper.java	queue-022: enqueue -> dequeue -> enqueue -> isEmpty	every generated condition still holds
+QUEUE_GEN_MCR_35	KILLED	method-call-replacement	dequeue	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_SEI_36	KILLED	side-effect-insertion	dequeue	Helper.java	-	killed by block 2  dequeue  ensures  size == \old(size) - 1
+QUEUE_GEN_RVR_37	KILLED	return-value-replacement	dequeue	Helper.java	-	killed by block 2  dequeue  ensures  dequeuedElem == \old(head)
+QUEUE_GEN_SEI_38	KILLED	side-effect-insertion	dequeue	Helper.java	-	killed by block 2  dequeue  ensures  size == \old(size) - 1
+QUEUE_GEN_CRP_39	KILLED	constant-replacement	front	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_CRP_40	KILLED	constant-replacement	front	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_RVR_41	KILLED	return-value-replacement	front	Helper.java	-	killed by block 3  front  ensures  frontElem == head
+QUEUE_GEN_ARP_42	KILLED	argument-replacement	front	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_ARP_43	KILLED	argument-replacement	front	Helper.java	-	killed by the singular case (exit 1)
+QUEUE_GEN_MCR_44	KILLED	method-call-replacement	front	Helper.java	-	killed by block 4  isEmpty  ensures  emptyFlag == false
+QUEUE_GEN_SEI_45	KILLED	side-effect-insertion	front	Helper.java	-	killed by block 3  front  ensures  size == \old(size)
+QUEUE_GEN_RVR_46	KILLED	return-value-replacement	isEmpty	Helper.java	-	killed by block 4  isEmpty  ensures  emptyFlag == false
+QUEUE_GEN_RVR_47	SURVIVED	return-value-replacement	isEmpty	Helper.java	-	every generated condition still holds
+QUEUE_GEN_MCR_48	SURVIVED	method-call-replacement	isEmpty	Helper.java	-	every generated condition still holds
+QUEUE_GEN_SEI_49	KILLED	side-effect-insertion	isEmpty	Helper.java	-	killed by block 4  isEmpty  ensures  size == \old(size)

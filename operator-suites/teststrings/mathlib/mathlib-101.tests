@@ -1,0 +1,11 @@
+test MathlibGenerated101 {
+    sequence: abs -> gcd -> abs -> abs;
+
+    inputs {
+        abs[0].x = 0;
+        gcd[1].a = 3;
+        gcd[1].b = 48;
+        abs[2].x = 3;
+        abs[3].x = 1;
+    }
+}

@@ -1,0 +1,9 @@
+test TaskqueueGenerated216 {
+    sequence: submit -> submit -> submit;
+
+    inputs {
+        submit[0].payload = "render-report";
+        submit[1].payload = "gamma";
+        submit[2].payload = "gamma";
+    }
+}

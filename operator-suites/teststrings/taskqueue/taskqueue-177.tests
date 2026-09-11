@@ -1,0 +1,9 @@
+test TaskqueueGenerated177 {
+    sequence: getResult -> submit -> submit -> getResult;
+
+    inputs {
+        getResult[0].taskId = 3;
+        submit[1].payload = "alpha";
+        submit[2].payload = "render-report";
+    }
+}

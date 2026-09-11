@@ -4,7 +4,8 @@ package org.junit;
 public class Assume {
     public static void assumeTrue(boolean condition) {
         if (!condition) {
-            throw new IllegalStateException("assumption violated");
+            // Skipped, not failed: see AssumptionViolatedException.
+            throw new AssumptionViolatedException("assumption violated");
         }
     }
 }

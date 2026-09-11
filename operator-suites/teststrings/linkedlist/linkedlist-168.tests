@@ -1,0 +1,10 @@
+test LinkedlistGenerated168 {
+    sequence: addFirst -> removeFirst -> addLast -> addLast -> removeFirst -> indexOf;
+
+    inputs {
+        addFirst[0].value = 7;
+        addLast[2].value = 1;
+        addLast[3].value = 2;
+        indexOf[5].value = 10;
+    }
+}

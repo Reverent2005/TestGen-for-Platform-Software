@@ -1,0 +1,25 @@
+# generated suites — summary
+
+PHASE 1 — generated test strings
+library         tests   passed   stopped   failed   invalid
+stack             260      120       140        0         0
+ALL               260      120       140        0         0
+
+PHASE 2 and 3 — generated mutants, alone and against the family
+library         mutants   killed  survived  invalid    alone by family with family
+stack                51       39         9        3    81.3%         6       93.8%
+ALL                  51       39         9        3    81.3%         6       93.8%
+
+BY OPERATOR
+operator                           abbr   mutants   killed  survived  invalid    alone with family
+arithmetic-operator-replacement    AOR         12        9         3        0    75.0%       91.7%
+arithmetic-operator-insertion      AOI          2        2         0        0   100.0%      100.0%
+unary-operator-insertion           UOI          1        1         0        0   100.0%      100.0%
+absolute-value-insertion           ABS          1        1         0        0   100.0%      100.0%
+constant-replacement               CRP         11       10         1        0    90.9%      100.0%
+return-value-replacement           RVR          2        1         1        0    50.0%       50.0%
+statement-deletion                 SDL          5        4         0        1   100.0%      100.0%
+statement-replacement              STR          1        1         0        0   100.0%      100.0%
+argument-replacement               ARP          2        0         1        1     0.0%      100.0%
+method-call-replacement            MCR          9        7         2        0    77.8%      100.0%
+side-effect-insertion              SEI          5        3         1        1    75.0%       75.0%

@@ -1,0 +1,6 @@
+test TicketserviceGenerated104 {
+    sequence: numSeatsAvailable -> numSeatsAvailable -> numSeatsAvailable;
+
+    inputs {
+    }
+}

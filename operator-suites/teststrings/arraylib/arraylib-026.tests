@@ -1,0 +1,7 @@
+test ArraylibGenerated26 {
+    sequence: sum -> get;
+
+    inputs {
+        get[1].index = 7;
+    }
+}

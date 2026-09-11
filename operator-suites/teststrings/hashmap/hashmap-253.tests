@@ -1,0 +1,9 @@
+test HashmapGenerated253 {
+    sequence: put -> remove;
+
+    inputs {
+        put[0].key = "gamma";
+        put[0].value = 20;
+        remove[1].key = "session";
+    }
+}

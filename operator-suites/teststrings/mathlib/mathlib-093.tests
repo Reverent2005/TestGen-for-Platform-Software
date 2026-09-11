@@ -1,0 +1,11 @@
+test MathlibGenerated93 {
+    sequence: gcd -> power -> factorial;
+
+    inputs {
+        gcd[0].a = -17;
+        gcd[0].b = 0;
+        power[1].base = 1;
+        power[1].exponent = 4;
+        factorial[2].n = -17;
+    }
+}

@@ -1,0 +1,6 @@
+test QueueGenerated150 {
+    sequence: isEmpty -> front -> isEmpty -> isEmpty;
+
+    inputs {
+    }
+}

@@ -1,0 +1,12 @@
+test HashmapGenerated255 {
+    sequence: put -> getOldValue -> put -> getOldValue;
+
+    inputs {
+        put[0].key = "gamma";
+        put[0].value = 2;
+        getOldValue[1].key = "alpha";
+        put[2].key = "gamma";
+        put[2].value = 0;
+        getOldValue[3].key = "alpha";
+    }
+}

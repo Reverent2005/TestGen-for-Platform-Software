@@ -1,0 +1,9 @@
+test MathlibGenerated200 {
+    sequence: factorial -> power;
+
+    inputs {
+        factorial[0].n = 48;
+        power[1].base = 1;
+        power[1].exponent = 2;
+    }
+}

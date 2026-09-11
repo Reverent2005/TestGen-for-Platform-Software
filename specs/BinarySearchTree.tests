@@ -1,0 +1,24 @@
+/*
+ * EXAMPLE 10 — BinarySearchTree, singular case.
+ *
+ * 50 is inserted first and becomes the root; 30 then goes to its left and 70 to
+ * its right, so the tree has both shapes of child and the run distinguishes a
+ * left descent from a right one.  min() must answer 30 — the key that is neither
+ * the root nor the last inserted — and delete(30) then removes an interior key
+ * with no children of its own.
+ *
+ * All three keys are distinct because insert's precondition requires it; a fourth
+ * insert of 50 would be rejected before it ran, which is the contract working
+ * rather than the library failing.
+ */
+test BinarySearchTreeDryRun {
+    sequence: insert -> insert -> insert -> contains -> min -> delete;
+
+    inputs {
+        insert[0].key = 50;
+        insert[1].key = 30;
+        insert[2].key = 70;
+        contains[3].key = 30;
+        delete[5].key = 30;
+    }
+}

@@ -1,0 +1,8 @@
+test LinkedlistGenerated5 {
+    sequence: addLast -> addFirst;
+
+    inputs {
+        addLast[0].value = 3;
+        addFirst[1].value = 3;
+    }
+}

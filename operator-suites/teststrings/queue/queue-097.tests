@@ -1,0 +1,11 @@
+test QueueGenerated97 {
+    sequence: dequeue -> enqueue -> enqueue -> enqueue -> isEmpty -> enqueue -> enqueue;
+
+    inputs {
+        enqueue[1].elem = "second";
+        enqueue[2].elem = "second";
+        enqueue[3].elem = "second";
+        enqueue[5].elem = "beta";
+        enqueue[6].elem = "second";
+    }
+}

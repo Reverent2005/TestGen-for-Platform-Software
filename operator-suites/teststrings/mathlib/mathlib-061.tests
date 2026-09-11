@@ -1,0 +1,9 @@
+test MathlibGenerated61 {
+    sequence: factorial -> abs -> factorial;
+
+    inputs {
+        factorial[0].n = -17;
+        abs[1].x = 2;
+        factorial[2].n = 2;
+    }
+}

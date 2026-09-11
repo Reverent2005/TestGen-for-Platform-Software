@@ -1,0 +1,11 @@
+test MathlibGenerated22 {
+    sequence: power -> gcd -> factorial;
+
+    inputs {
+        power[0].base = 48;
+        power[0].exponent = 1;
+        gcd[1].a = 7;
+        gcd[1].b = 0;
+        factorial[2].n = 3;
+    }
+}

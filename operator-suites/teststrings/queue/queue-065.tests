@@ -1,0 +1,6 @@
+test QueueGenerated65 {
+    sequence: dequeue -> front -> dequeue -> front;
+
+    inputs {
+    }
+}

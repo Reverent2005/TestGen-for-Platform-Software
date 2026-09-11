@@ -1,0 +1,457 @@
+/*
+ * GENERATED MUTATION SUITE — queue
+ *
+ * Produced by OperatorMutantGenerator from:
+ *   ../libraries/queue/Helper.java
+ *
+ * DO NOT EDIT. Regenerate with ./run-operator-suites.sh queue
+ *
+ * Every operator in MutationOperator is applied to every line of the library
+ * that admits it, so this file is what the specification is measured against
+ * when nobody is choosing the faults. It is the counterpart of the
+ * hand-written set in mutations/queue.mutants:
+ * that one asks whether the suite catches the faults we thought of, this one
+ * asks what fraction of all faults of each KIND it catches.
+ *
+ * `expect` is absent throughout: a generated mutant carries no prediction,
+ * and some of these are equivalent to the original and cannot be killed by
+ * anyone. The run measures; it does not check a declaration.
+ */
+
+mutant QUEUE_GEN_SDL_1 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        public static List<String> Q = new ArrayList<String>();
+    replace:     
+}
+
+mutant QUEUE_GEN_SEI_2 {
+    description: a write to size is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        public static List<String> Q = new ArrayList<String>();
+    replace:     public static List<String> Q = new ArrayList<String>(); size = size + 1;
+}
+
+mutant QUEUE_GEN_CRP_3 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int size = 0;
+    replace:     public static int size = 1;
+}
+
+mutant QUEUE_GEN_CRP_4 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int size = 0;
+    replace:     public static int size = -1;
+}
+
+mutant QUEUE_GEN_SDL_5 {
+    description: the statement is removed, in enqueue()
+    operator:    statement-deletion
+    in:          enqueue
+    file:        Helper.java
+    find:        Q.add(elem);
+    replace:     
+}
+
+mutant QUEUE_GEN_STR_6 {
+    description: the statement runs twice, in enqueue()
+    operator:    statement-replacement
+    in:          enqueue
+    file:        Helper.java
+    find:        Q.add(elem);
+    replace:     Q.add(elem); Q.add(elem);
+}
+
+mutant QUEUE_GEN_ARP_7 {
+    description: the argument to add() is shifted by + 1, in enqueue()
+    operator:    argument-replacement
+    in:          enqueue
+    file:        Helper.java
+    find:        Q.add(elem);
+    replace:     Q.add(elem + 1);
+}
+
+mutant QUEUE_GEN_ARP_8 {
+    description: the argument to add() is shifted by - 1, in enqueue()
+    operator:    argument-replacement
+    in:          enqueue
+    file:        Helper.java
+    find:        Q.add(elem);
+    replace:     Q.add(elem - 1);
+}
+
+mutant QUEUE_GEN_MCR_9 {
+    description: .add( becomes .contains(, in enqueue()
+    operator:    method-call-replacement
+    in:          enqueue
+    file:        Helper.java
+    find:        Q.add(elem);
+    replace:     Q.contains(elem);
+}
+
+mutant QUEUE_GEN_SEI_10 {
+    description: a write to size is inserted after the statement, in enqueue()
+    operator:    side-effect-insertion
+    in:          enqueue
+    file:        Helper.java
+    find:        Q.add(elem);
+    replace:     Q.add(elem); size = size + 1;
+}
+
+mutant QUEUE_GEN_AOI_11 {
+    description: the value assigned to size is shifted by + 1, in enqueue()
+    operator:    arithmetic-operator-insertion
+    in:          enqueue
+    file:        Helper.java
+    find:        size = Q.size();
+    replace:     size = Q.size() + 1;
+}
+
+mutant QUEUE_GEN_AOI_12 {
+    description: the value assigned to size is shifted by - 1, in enqueue()
+    operator:    arithmetic-operator-insertion
+    in:          enqueue
+    file:        Helper.java
+    find:        size = Q.size();
+    replace:     size = Q.size() - 1;
+}
+
+mutant QUEUE_GEN_UOI_13 {
+    description: the value assigned to size is negated, in enqueue()
+    operator:    unary-operator-insertion
+    in:          enqueue
+    file:        Helper.java
+    find:        size = Q.size();
+    replace:     size = -(Q.size());
+}
+
+mutant QUEUE_GEN_ABS_14 {
+    description: the value assigned to size is forced negative, in enqueue()
+    operator:    absolute-value-insertion
+    in:          enqueue
+    file:        Helper.java
+    find:        size = Q.size();
+    replace:     size = -Math.abs(Q.size());
+}
+
+mutant QUEUE_GEN_SDL_15 {
+    description: the statement is removed, in enqueue()
+    operator:    statement-deletion
+    in:          enqueue
+    file:        Helper.java
+    find:        size = Q.size();
+    replace:     
+}
+
+mutant QUEUE_GEN_MCR_16 {
+    description: .size() becomes .hashCode(), in enqueue()
+    operator:    method-call-replacement
+    in:          enqueue
+    file:        Helper.java
+    find:        size = Q.size();
+    replace:     size = Q.hashCode();
+}
+
+mutant QUEUE_GEN_CRP_17 {
+    description: the literal 0 becomes 1, in enqueue()
+    operator:    constant-replacement
+    in:          enqueue
+    file:        Helper.java
+    find:        head = Q.get(0);
+    replace:     head = Q.get(1);
+}
+
+mutant QUEUE_GEN_CRP_18 {
+    description: the literal 0 becomes -1, in enqueue()
+    operator:    constant-replacement
+    in:          enqueue
+    file:        Helper.java
+    find:        head = Q.get(0);
+    replace:     head = Q.get(-1);
+}
+
+mutant QUEUE_GEN_SDL_19 {
+    description: the statement is removed, in enqueue()
+    operator:    statement-deletion
+    in:          enqueue
+    file:        Helper.java
+    find:        head = Q.get(0);
+    replace:     
+}
+
+mutant QUEUE_GEN_ARP_20 {
+    description: the argument to get() is shifted by + 1, in enqueue()
+    operator:    argument-replacement
+    in:          enqueue
+    file:        Helper.java
+    find:        head = Q.get(0);
+    replace:     head = Q.get(0 + 1);
+}
+
+mutant QUEUE_GEN_ARP_21 {
+    description: the argument to get() is shifted by - 1, in enqueue()
+    operator:    argument-replacement
+    in:          enqueue
+    file:        Helper.java
+    find:        head = Q.get(0);
+    replace:     head = Q.get(0 - 1);
+}
+
+mutant QUEUE_GEN_MCR_22 {
+    description: .get( becomes .remove(, in enqueue()
+    operator:    method-call-replacement
+    in:          enqueue
+    file:        Helper.java
+    find:        head = Q.get(0);
+    replace:     head = Q.remove(0);
+}
+
+mutant QUEUE_GEN_SEI_23 {
+    description: a write to size is inserted after the statement, in enqueue()
+    operator:    side-effect-insertion
+    in:          enqueue
+    file:        Helper.java
+    find:        head = Q.get(0);
+    replace:     head = Q.get(0); size = size + 1;
+}
+
+mutant QUEUE_GEN_CRP_24 {
+    description: the literal 0 becomes 1, in dequeue()
+    operator:    constant-replacement
+    in:          dequeue
+    file:        Helper.java
+    find:        String dequeuedElem = Q.remove(0);
+    replace:     String dequeuedElem = Q.remove(1);
+}
+
+mutant QUEUE_GEN_CRP_25 {
+    description: the literal 0 becomes -1, in dequeue()
+    operator:    constant-replacement
+    in:          dequeue
+    file:        Helper.java
+    find:        String dequeuedElem = Q.remove(0);
+    replace:     String dequeuedElem = Q.remove(-1);
+}
+
+mutant QUEUE_GEN_ARP_26 {
+    description: the argument to remove() is shifted by + 1, in dequeue()
+    operator:    argument-replacement
+    in:          dequeue
+    file:        Helper.java
+    find:        String dequeuedElem = Q.remove(0);
+    replace:     String dequeuedElem = Q.remove(0 + 1);
+}
+
+mutant QUEUE_GEN_ARP_27 {
+    description: the argument to remove() is shifted by - 1, in dequeue()
+    operator:    argument-replacement
+    in:          dequeue
+    file:        Helper.java
+    find:        String dequeuedElem = Q.remove(0);
+    replace:     String dequeuedElem = Q.remove(0 - 1);
+}
+
+mutant QUEUE_GEN_MCR_28 {
+    description: .remove( becomes .get(, in dequeue()
+    operator:    method-call-replacement
+    in:          dequeue
+    file:        Helper.java
+    find:        String dequeuedElem = Q.remove(0);
+    replace:     String dequeuedElem = Q.get(0);
+}
+
+mutant QUEUE_GEN_CRP_29 {
+    description: the literal 0 becomes 1, in dequeue()
+    operator:    constant-replacement
+    in:          dequeue
+    file:        Helper.java
+    find:        head = Q.isEmpty() ? null : Q.get(0);
+    replace:     head = Q.isEmpty() ? null : Q.get(1);
+}
+
+mutant QUEUE_GEN_CRP_30 {
+    description: the literal 0 becomes -1, in dequeue()
+    operator:    constant-replacement
+    in:          dequeue
+    file:        Helper.java
+    find:        head = Q.isEmpty() ? null : Q.get(0);
+    replace:     head = Q.isEmpty() ? null : Q.get(-1);
+}
+
+mutant QUEUE_GEN_SDL_31 {
+    description: the statement is removed, in dequeue()
+    operator:    statement-deletion
+    in:          dequeue
+    file:        Helper.java
+    find:        head = Q.isEmpty() ? null : Q.get(0);
+    replace:     
+}
+
+mutant QUEUE_GEN_ARP_32 {
+    description: the argument to get() is shifted by + 1, in dequeue()
+    operator:    argument-replacement
+    in:          dequeue
+    file:        Helper.java
+    find:        head = Q.isEmpty() ? null : Q.get(0);
+    replace:     head = Q.isEmpty() ? null : Q.get(0 + 1);
+}
+
+mutant QUEUE_GEN_ARP_33 {
+    description: the argument to get() is shifted by - 1, in dequeue()
+    operator:    argument-replacement
+    in:          dequeue
+    file:        Helper.java
+    find:        head = Q.isEmpty() ? null : Q.get(0);
+    replace:     head = Q.isEmpty() ? null : Q.get(0 - 1);
+}
+
+mutant QUEUE_GEN_MCR_34 {
+    description: .isEmpty() becomes .equals(null), in dequeue()
+    operator:    method-call-replacement
+    in:          dequeue
+    file:        Helper.java
+    find:        head = Q.isEmpty() ? null : Q.get(0);
+    replace:     head = Q.equals(null) ? null : Q.get(0);
+}
+
+mutant QUEUE_GEN_MCR_35 {
+    description: .get( becomes .remove(, in dequeue()
+    operator:    method-call-replacement
+    in:          dequeue
+    file:        Helper.java
+    find:        head = Q.isEmpty() ? null : Q.get(0);
+    replace:     head = Q.isEmpty() ? null : Q.remove(0);
+}
+
+mutant QUEUE_GEN_SEI_36 {
+    description: a write to size is inserted after the statement, in dequeue()
+    operator:    side-effect-insertion
+    in:          dequeue
+    file:        Helper.java
+    find:        head = Q.isEmpty() ? null : Q.get(0);
+    replace:     head = Q.isEmpty() ? null : Q.get(0); size = size + 1;
+}
+
+mutant QUEUE_GEN_RVR_37 {
+    description: the answer becomes null, in dequeue()
+    operator:    return-value-replacement
+    in:          dequeue
+    file:        Helper.java
+    find:        return dequeuedElem;
+    replace:     return null;
+}
+
+mutant QUEUE_GEN_SEI_38 {
+    description: a write to size is inserted before the return, in dequeue()
+    operator:    side-effect-insertion
+    in:          dequeue
+    file:        Helper.java
+    find:        return dequeuedElem;
+    replace:     size = size + 1; return dequeuedElem;
+}
+
+mutant QUEUE_GEN_CRP_39 {
+    description: the literal 0 becomes 1, in front()
+    operator:    constant-replacement
+    in:          front
+    file:        Helper.java
+    find:        return Q.get(0);
+    replace:     return Q.get(1);
+}
+
+mutant QUEUE_GEN_CRP_40 {
+    description: the literal 0 becomes -1, in front()
+    operator:    constant-replacement
+    in:          front
+    file:        Helper.java
+    find:        return Q.get(0);
+    replace:     return Q.get(-1);
+}
+
+mutant QUEUE_GEN_RVR_41 {
+    description: the answer becomes null, in front()
+    operator:    return-value-replacement
+    in:          front
+    file:        Helper.java
+    find:        return Q.get(0);
+    replace:     return null;
+}
+
+mutant QUEUE_GEN_ARP_42 {
+    description: the argument to get() is shifted by + 1, in front()
+    operator:    argument-replacement
+    in:          front
+    file:        Helper.java
+    find:        return Q.get(0);
+    replace:     return Q.get(0 + 1);
+}
+
+mutant QUEUE_GEN_ARP_43 {
+    description: the argument to get() is shifted by - 1, in front()
+    operator:    argument-replacement
+    in:          front
+    file:        Helper.java
+    find:        return Q.get(0);
+    replace:     return Q.get(0 - 1);
+}
+
+mutant QUEUE_GEN_MCR_44 {
+    description: .get( becomes .remove(, in front()
+    operator:    method-call-replacement
+    in:          front
+    file:        Helper.java
+    find:        return Q.get(0);
+    replace:     return Q.remove(0);
+}
+
+mutant QUEUE_GEN_SEI_45 {
+    description: a write to size is inserted before the return, in front()
+    operator:    side-effect-insertion
+    in:          front
+    file:        Helper.java
+    find:        return Q.get(0);
+    replace:     size = size + 1; return Q.get(0);
+}
+
+mutant QUEUE_GEN_RVR_46 {
+    description: the answer is always true, in isEmpty()
+    operator:    return-value-replacement
+    in:          isEmpty
+    file:        Helper.java
+    find:        return Q.isEmpty();
+    replace:     return true;
+}
+
+mutant QUEUE_GEN_RVR_47 {
+    description: the answer is always false, in isEmpty()
+    operator:    return-value-replacement
+    in:          isEmpty
+    file:        Helper.java
+    find:        return Q.isEmpty();
+    replace:     return false;
+}
+
+mutant QUEUE_GEN_MCR_48 {
+    description: .isEmpty() becomes .equals(null), in isEmpty()
+    operator:    method-call-replacement
+    in:          isEmpty
+    file:        Helper.java
+    find:        return Q.isEmpty();
+    replace:     return Q.equals(null);
+}
+
+mutant QUEUE_GEN_SEI_49 {
+    description: a write to size is inserted before the return, in isEmpty()
+    operator:    side-effect-insertion
+    in:          isEmpty
+    file:        Helper.java
+    find:        return Q.isEmpty();
+    replace:     size = size + 1; return Q.isEmpty();
+}
+

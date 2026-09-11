@@ -1,0 +1,262 @@
+# generated test strings — linkedlist
+# name	status	conditions	sequence
+linkedlist-001	STOPPED	8	addFirst -> removeFirst -> indexOf
+linkedlist-002	PASSED	21	addFirst -> addLast -> addLast -> removeFirst -> removeFirst -> indexOf
+linkedlist-003	PASSED	7	addLast -> removeFirst
+linkedlist-004	STOPPED	18	addFirst -> addLast -> indexOf -> removeFirst -> removeFirst -> indexOf
+linkedlist-005	PASSED	8	addLast -> addFirst
+linkedlist-006	PASSED	17	addLast -> addFirst -> removeFirst -> indexOf -> indexOf
+linkedlist-007	PASSED	17	addFirst -> addLast -> removeFirst -> indexOf -> indexOf
+linkedlist-008	STOPPED	1	indexOf -> indexOf -> indexOf -> addFirst -> indexOf
+linkedlist-009	PASSED	18	addFirst -> addLast -> addFirst -> removeFirst -> indexOf
+linkedlist-010	STOPPED	1	removeFirst -> addLast
+linkedlist-011	PASSED	18	addFirst -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-012	PASSED	11	addFirst -> indexOf -> addLast
+linkedlist-013	PASSED	14	addFirst -> indexOf -> indexOf -> addLast
+linkedlist-014	STOPPED	1	indexOf -> addLast -> addFirst
+linkedlist-015	PASSED	15	addLast -> indexOf -> addLast -> addLast
+linkedlist-016	PASSED	14	addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-017	PASSED	18	addFirst -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-018	STOPPED	1	removeFirst -> addLast -> addFirst -> addFirst -> indexOf -> indexOf
+linkedlist-019	PASSED	17	addFirst -> addLast -> removeFirst -> indexOf -> indexOf
+linkedlist-020	STOPPED	15	addLast -> addFirst -> removeFirst -> removeFirst -> indexOf
+linkedlist-021	STOPPED	18	addFirst -> addLast -> indexOf -> removeFirst -> removeFirst -> indexOf
+linkedlist-022	STOPPED	1	indexOf -> removeFirst -> addLast
+linkedlist-023	PASSED	22	addFirst -> addLast -> addLast -> addLast -> removeFirst -> indexOf
+linkedlist-024	STOPPED	1	indexOf -> addLast -> addLast -> removeFirst -> addFirst
+linkedlist-025	PASSED	19	addFirst -> addFirst -> addFirst -> addLast -> removeFirst
+linkedlist-026	STOPPED	1	indexOf -> addFirst -> addLast -> addLast -> removeFirst -> addFirst
+linkedlist-027	STOPPED	1	indexOf -> addLast
+linkedlist-028	PASSED	10	addLast -> indexOf -> removeFirst
+linkedlist-029	STOPPED	1	indexOf -> removeFirst -> addFirst -> removeFirst -> indexOf
+linkedlist-030	STOPPED	1	removeFirst -> addLast -> indexOf -> indexOf
+linkedlist-031	STOPPED	1	removeFirst -> removeFirst -> removeFirst -> indexOf
+linkedlist-032	PASSED	21	addFirst -> addFirst -> addLast -> removeFirst -> removeFirst -> indexOf
+linkedlist-033	PASSED	14	addLast -> addFirst -> indexOf -> removeFirst
+linkedlist-034	STOPPED	1	indexOf -> indexOf
+linkedlist-035	STOPPED	1	indexOf -> indexOf -> indexOf -> addLast -> removeFirst -> addFirst
+linkedlist-036	STOPPED	1	indexOf -> addLast -> removeFirst -> removeFirst -> addFirst
+linkedlist-037	PASSED	17	addFirst -> addLast -> indexOf -> removeFirst -> removeFirst
+linkedlist-038	STOPPED	1	indexOf -> indexOf -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-039	STOPPED	15	addFirst -> addLast -> removeFirst -> removeFirst -> indexOf -> indexOf
+linkedlist-040	PASSED	23	addLast -> addLast -> addFirst -> indexOf -> addFirst -> addLast
+linkedlist-041	STOPPED	8	addFirst -> removeFirst -> removeFirst -> indexOf
+linkedlist-042	PASSED	14	addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-043	STOPPED	8	addLast -> removeFirst -> indexOf
+linkedlist-044	PASSED	17	addFirst -> addLast -> removeFirst -> indexOf -> indexOf
+linkedlist-045	PASSED	14	addFirst -> addFirst -> indexOf -> removeFirst
+linkedlist-046	STOPPED	11	addLast -> indexOf -> removeFirst -> indexOf
+linkedlist-047	PASSED	14	addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-048	STOPPED	1	removeFirst -> addLast -> addFirst -> removeFirst -> indexOf
+linkedlist-049	PASSED	21	addFirst -> addFirst -> indexOf -> removeFirst -> removeFirst -> addLast
+linkedlist-050	STOPPED	1	indexOf -> removeFirst -> addLast -> addLast -> addFirst
+linkedlist-051	STOPPED	1	indexOf -> removeFirst -> addFirst -> addFirst -> indexOf -> addLast
+linkedlist-052	PASSED	14	addFirst -> addLast -> removeFirst -> removeFirst
+linkedlist-053	STOPPED	8	addFirst -> removeFirst -> indexOf -> indexOf -> indexOf -> addFirst -> indexOf
+linkedlist-054	STOPPED	1	removeFirst -> indexOf -> addFirst -> addLast
+linkedlist-055	STOPPED	8	addLast -> removeFirst -> indexOf
+linkedlist-056	STOPPED	15	addFirst -> addLast -> removeFirst -> removeFirst -> indexOf
+linkedlist-057	STOPPED	1	indexOf -> addLast -> addFirst -> indexOf -> removeFirst -> removeFirst
+linkedlist-058	STOPPED	1	indexOf -> addLast -> indexOf -> addFirst
+linkedlist-059	PASSED	26	addFirst -> addLast -> addLast -> addLast -> removeFirst -> addFirst -> indexOf
+linkedlist-060	PASSED	17	addFirst -> addLast -> removeFirst -> indexOf -> indexOf
+linkedlist-061	PASSED	11	addLast -> indexOf -> addLast
+linkedlist-062	PASSED	18	addFirst -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-063	STOPPED	1	removeFirst -> indexOf -> addFirst -> addLast -> addFirst -> removeFirst
+linkedlist-064	PASSED	17	addFirst -> addLast -> removeFirst -> indexOf -> indexOf
+linkedlist-065	PASSED	23	addFirst -> addFirst -> addLast -> addLast -> removeFirst -> addLast
+linkedlist-066	PASSED	21	addFirst -> addLast -> addLast -> removeFirst -> indexOf -> indexOf
+linkedlist-067	STOPPED	1	removeFirst -> indexOf -> addLast -> addFirst -> removeFirst -> removeFirst -> indexOf
+linkedlist-068	STOPPED	1	removeFirst -> indexOf -> indexOf -> indexOf -> addLast -> removeFirst -> indexOf
+linkedlist-069	PASSED	21	addFirst -> indexOf -> addLast -> addFirst -> removeFirst -> indexOf
+linkedlist-070	STOPPED	1	indexOf -> addLast -> removeFirst -> addFirst
+linkedlist-071	PASSED	22	addFirst -> addFirst -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-072	PASSED	7	addLast -> removeFirst
+linkedlist-073	STOPPED	8	addLast -> removeFirst -> indexOf
+linkedlist-074	PASSED	14	addFirst -> addFirst -> removeFirst -> indexOf
+linkedlist-075	PASSED	15	addLast -> addFirst -> addFirst -> indexOf
+linkedlist-076	PASSED	20	addFirst -> addLast -> removeFirst -> indexOf -> indexOf -> indexOf
+linkedlist-077	PASSED	18	addFirst -> addFirst -> removeFirst -> addLast -> indexOf
+linkedlist-078	PASSED	18	addFirst -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-079	PASSED	11	addFirst -> addLast -> removeFirst
+linkedlist-080	PASSED	7	addLast -> indexOf
+linkedlist-081	STOPPED	1	removeFirst -> addFirst -> removeFirst -> addLast -> indexOf
+linkedlist-082	STOPPED	8	addFirst -> removeFirst -> indexOf
+linkedlist-083	PASSED	18	addFirst -> addLast -> addLast -> removeFirst -> indexOf
+linkedlist-084	PASSED	21	addFirst -> addFirst -> addLast -> indexOf -> removeFirst -> indexOf
+linkedlist-085	PASSED	17	addFirst -> addLast -> indexOf -> removeFirst -> indexOf
+linkedlist-086	STOPPED	1	removeFirst -> addFirst -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-087	STOPPED	1	removeFirst -> addLast -> addFirst -> removeFirst -> indexOf
+linkedlist-088	STOPPED	1	removeFirst -> addLast -> addLast -> addFirst -> indexOf
+linkedlist-089	PASSED	24	addFirst -> addLast -> removeFirst -> addFirst -> indexOf -> removeFirst -> indexOf
+linkedlist-090	PASSED	22	addFirst -> addLast -> indexOf -> removeFirst -> addLast -> addFirst
+linkedlist-091	PASSED	11	addFirst -> addFirst -> removeFirst
+linkedlist-092	PASSED	22	addFirst -> addLast -> removeFirst -> addLast -> addFirst -> indexOf
+linkedlist-093	PASSED	8	addFirst -> addLast
+linkedlist-094	STOPPED	1	removeFirst -> removeFirst -> indexOf
+linkedlist-095	STOPPED	1	indexOf -> addLast -> addFirst -> removeFirst -> addFirst
+linkedlist-096	PASSED	14	addFirst -> addLast -> indexOf -> indexOf
+linkedlist-097	STOPPED	15	addFirst -> addFirst -> removeFirst -> removeFirst -> indexOf
+linkedlist-098	PASSED	15	addFirst -> addFirst -> addLast -> indexOf
+linkedlist-099	STOPPED	1	removeFirst -> addLast -> addFirst -> indexOf
+linkedlist-100	STOPPED	1	removeFirst -> removeFirst -> addLast -> indexOf -> addFirst
+linkedlist-101	PASSED	17	addFirst -> addLast -> removeFirst -> indexOf -> indexOf
+linkedlist-102	PASSED	7	addFirst -> removeFirst
+linkedlist-103	PASSED	18	addLast -> removeFirst -> addLast -> addFirst -> indexOf
+linkedlist-104	PASSED	18	addFirst -> addLast -> addFirst -> removeFirst -> indexOf
+linkedlist-105	PASSED	18	addFirst -> addLast -> addLast -> removeFirst -> indexOf
+linkedlist-106	STOPPED	1	removeFirst -> addLast -> addFirst -> indexOf
+linkedlist-107	STOPPED	1	removeFirst -> removeFirst -> addFirst -> addFirst -> addFirst -> removeFirst
+linkedlist-108	PASSED	18	addFirst -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-109	PASSED	23	addLast -> addLast -> addLast -> removeFirst -> addFirst -> addLast
+linkedlist-110	PASSED	18	addFirst -> addFirst -> addFirst -> removeFirst -> indexOf
+linkedlist-111	STOPPED	8	addLast -> removeFirst -> indexOf
+linkedlist-112	PASSED	15	addFirst -> addLast -> removeFirst -> addFirst
+linkedlist-113	PASSED	11	addFirst -> addLast -> indexOf
+linkedlist-114	STOPPED	1	indexOf -> addLast -> addFirst -> addLast -> addFirst -> removeFirst
+linkedlist-115	PASSED	17	addFirst -> addFirst -> removeFirst -> indexOf -> indexOf
+linkedlist-116	STOPPED	1	indexOf -> addLast -> removeFirst
+linkedlist-117	PASSED	18	addFirst -> addLast -> removeFirst -> addLast -> indexOf
+linkedlist-118	PASSED	18	addFirst -> addLast -> addLast -> removeFirst -> indexOf
+linkedlist-119	PASSED	14	addLast -> addFirst -> removeFirst -> indexOf
+linkedlist-120	PASSED	17	addLast -> indexOf -> removeFirst -> addFirst -> removeFirst
+linkedlist-121	STOPPED	1	indexOf -> removeFirst
+linkedlist-122	PASSED	18	addLast -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-123	PASSED	14	addFirst -> addFirst -> removeFirst -> indexOf
+linkedlist-124	PASSED	14	addFirst -> removeFirst -> addLast -> indexOf
+linkedlist-125	PASSED	17	addFirst -> addLast -> indexOf -> removeFirst -> indexOf
+linkedlist-126	PASSED	14	addLast -> indexOf -> removeFirst -> addFirst
+linkedlist-127	PASSED	14	addFirst -> removeFirst -> addLast -> indexOf
+linkedlist-128	PASSED	11	addFirst -> indexOf -> addLast
+linkedlist-129	PASSED	14	addFirst -> indexOf -> addLast -> removeFirst
+linkedlist-130	STOPPED	8	addFirst -> removeFirst -> indexOf
+linkedlist-131	PASSED	17	addFirst -> indexOf -> addLast -> removeFirst -> indexOf
+linkedlist-132	STOPPED	1	removeFirst -> addLast -> indexOf -> addFirst
+linkedlist-133	STOPPED	1	removeFirst -> indexOf -> addLast -> addLast
+linkedlist-134	STOPPED	1	indexOf -> addFirst -> addLast -> removeFirst -> indexOf -> indexOf
+linkedlist-135	STOPPED	15	addFirst -> addLast -> removeFirst -> removeFirst -> indexOf
+linkedlist-136	STOPPED	1	removeFirst -> removeFirst -> indexOf
+linkedlist-137	STOPPED	15	addFirst -> addLast -> removeFirst -> removeFirst -> removeFirst -> addLast -> indexOf
+linkedlist-138	PASSED	24	addFirst -> indexOf -> indexOf -> addLast -> addFirst -> removeFirst -> indexOf
+linkedlist-139	PASSED	22	addFirst -> removeFirst -> addFirst -> indexOf -> addFirst -> addFirst
+linkedlist-140	STOPPED	1	indexOf -> indexOf -> removeFirst -> addFirst -> removeFirst
+linkedlist-141	STOPPED	15	addFirst -> addLast -> removeFirst -> removeFirst -> indexOf
+linkedlist-142	STOPPED	1	removeFirst -> removeFirst -> removeFirst -> indexOf -> indexOf -> addFirst
+linkedlist-143	PASSED	17	addFirst -> addLast -> removeFirst -> indexOf -> indexOf
+linkedlist-144	STOPPED	8	addFirst -> removeFirst -> indexOf
+linkedlist-145	PASSED	18	addLast -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-146	PASSED	14	addLast -> indexOf -> addLast -> removeFirst
+linkedlist-147	PASSED	12	addFirst -> addLast -> addLast
+linkedlist-148	PASSED	11	addLast -> addFirst -> removeFirst
+linkedlist-149	PASSED	11	addFirst -> addLast -> removeFirst
+linkedlist-150	STOPPED	15	addFirst -> addLast -> removeFirst -> removeFirst -> indexOf
+linkedlist-151	PASSED	7	addLast -> removeFirst
+linkedlist-152	PASSED	26	addLast -> removeFirst -> addLast -> indexOf -> addLast -> addLast -> addFirst
+linkedlist-153	STOPPED	1	indexOf -> addFirst -> removeFirst -> indexOf -> addFirst
+linkedlist-154	PASSED	21	addLast -> addLast -> addFirst -> indexOf -> removeFirst -> indexOf
+linkedlist-155	PASSED	17	addFirst -> indexOf -> indexOf -> removeFirst -> addLast
+linkedlist-156	PASSED	18	addFirst -> addLast -> addLast -> removeFirst -> indexOf
+linkedlist-157	STOPPED	1	removeFirst -> addFirst -> removeFirst -> addFirst
+linkedlist-158	PASSED	14	addLast -> removeFirst -> addFirst -> indexOf
+linkedlist-159	STOPPED	1	removeFirst -> addLast -> addFirst -> indexOf
+linkedlist-160	PASSED	15	addLast -> addFirst -> addFirst -> indexOf
+linkedlist-161	STOPPED	8	addFirst -> removeFirst -> removeFirst -> removeFirst -> indexOf
+linkedlist-162	STOPPED	1	removeFirst -> addFirst -> indexOf -> removeFirst -> addLast -> addFirst
+linkedlist-163	PASSED	11	addLast -> removeFirst -> addFirst
+linkedlist-164	STOPPED	1	indexOf -> addFirst -> removeFirst -> addFirst -> removeFirst -> addFirst
+linkedlist-165	STOPPED	1	indexOf -> addFirst -> indexOf
+linkedlist-166	PASSED	18	addFirst -> addFirst -> removeFirst -> addLast -> indexOf
+linkedlist-167	PASSED	20	addLast -> addLast -> addLast -> addLast -> addLast
+linkedlist-168	PASSED	21	addFirst -> removeFirst -> addLast -> addLast -> removeFirst -> indexOf
+linkedlist-169	STOPPED	1	indexOf -> indexOf -> indexOf -> indexOf
+linkedlist-170	PASSED	18	addFirst -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-171	PASSED	12	addLast -> addFirst -> addLast
+linkedlist-172	PASSED	21	addFirst -> addLast -> addLast -> removeFirst -> removeFirst -> indexOf
+linkedlist-173	PASSED	20	addFirst -> addLast -> removeFirst -> indexOf -> indexOf -> indexOf
+linkedlist-174	PASSED	11	addFirst -> addLast -> removeFirst
+linkedlist-175	STOPPED	1	removeFirst -> addLast -> removeFirst -> indexOf -> addFirst
+linkedlist-176	STOPPED	11	addFirst -> indexOf -> removeFirst -> removeFirst
+linkedlist-177	PASSED	14	addFirst -> removeFirst -> addLast -> indexOf
+linkedlist-178	PASSED	10	addFirst -> indexOf -> indexOf
+linkedlist-179	STOPPED	1	indexOf -> addLast -> removeFirst -> addFirst -> addLast -> removeFirst
+linkedlist-180	PASSED	22	addLast -> addFirst -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-181	PASSED	18	addFirst -> addLast -> removeFirst -> addFirst -> indexOf
+linkedlist-182	STOPPED	1	indexOf -> addLast
+linkedlist-183	PASSED	18	addFirst -> addLast -> addFirst -> removeFirst -> indexOf
+linkedlist-184	STOPPED	1	removeFirst -> addFirst -> addLast -> indexOf -> removeFirst -> addLast
+linkedlist-185	STOPPED	15	addFirst -> addLast -> removeFirst -> removeFirst -> indexOf
+linkedlist-186	PASSED	14	addLast -> addFirst -> removeFirst -> indexOf
+linkedlist-187	PASSED	20	addFirst -> addLast -> removeFirst -> indexOf -> indexOf -> indexOf
+linkedlist-188	PASSED	14	addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-189	PASSED	15	addLast -> addFirst -> addLast -> removeFirst
+linkedlist-190	STOPPED	15	addFirst -> removeFirst -> addFirst -> removeFirst -> indexOf -> indexOf -> addLast
+linkedlist-191	STOPPED	1	indexOf -> indexOf -> removeFirst
+linkedlist-192	STOPPED	8	addFirst -> removeFirst -> removeFirst
+linkedlist-193	PASSED	14	addLast -> addFirst -> removeFirst -> indexOf
+linkedlist-194	STOPPED	8	addLast -> removeFirst -> indexOf
+linkedlist-195	STOPPED	1	removeFirst -> addFirst -> addFirst -> addLast -> indexOf -> removeFirst
+linkedlist-196	PASSED	14	addFirst -> removeFirst -> addLast -> indexOf
+linkedlist-197	PASSED	14	addLast -> addFirst -> removeFirst -> indexOf
+linkedlist-198	STOPPED	8	addLast -> removeFirst -> indexOf
+linkedlist-199	PASSED	14	addFirst -> addFirst -> removeFirst -> indexOf
+linkedlist-200	STOPPED	1	removeFirst -> indexOf
+linkedlist-201	STOPPED	18	addFirst -> addLast -> removeFirst -> indexOf -> removeFirst -> indexOf
+linkedlist-202	STOPPED	1	indexOf -> indexOf
+linkedlist-203	STOPPED	8	addLast -> removeFirst -> indexOf
+linkedlist-204	PASSED	17	addFirst -> addLast -> removeFirst -> indexOf -> indexOf
+linkedlist-205	PASSED	11	addFirst -> addLast -> removeFirst
+linkedlist-206	PASSED	21	addFirst -> addLast -> removeFirst -> removeFirst -> addFirst -> indexOf
+linkedlist-207	STOPPED	1	indexOf -> addLast -> removeFirst -> addFirst
+linkedlist-208	PASSED	8	addLast -> addLast
+linkedlist-209	PASSED	15	addFirst -> addLast -> removeFirst -> addFirst
+linkedlist-210	PASSED	11	addFirst -> removeFirst -> addLast
+linkedlist-211	STOPPED	1	removeFirst -> addLast -> addFirst -> indexOf
+linkedlist-212	PASSED	18	addFirst -> addLast -> addFirst -> removeFirst -> indexOf
+linkedlist-213	PASSED	18	addLast -> addFirst -> removeFirst -> addLast -> indexOf
+linkedlist-214	STOPPED	8	addFirst -> removeFirst -> removeFirst -> addLast
+linkedlist-215	STOPPED	1	removeFirst -> addFirst -> addLast -> addLast -> removeFirst
+linkedlist-216	PASSED	18	addLast -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-217	PASSED	26	addFirst -> removeFirst -> addFirst -> addLast -> addFirst -> addLast -> removeFirst
+linkedlist-218	PASSED	18	addFirst -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-219	STOPPED	1	indexOf -> addFirst -> addLast
+linkedlist-220	PASSED	22	addFirst -> addLast -> removeFirst -> addLast -> addFirst -> removeFirst
+linkedlist-221	STOPPED	8	addLast -> removeFirst -> indexOf
+linkedlist-222	PASSED	14	addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-223	PASSED	16	addLast -> addFirst -> addLast -> addLast
+linkedlist-224	STOPPED	1	removeFirst -> addLast -> indexOf -> removeFirst
+linkedlist-225	STOPPED	1	removeFirst -> addFirst -> indexOf -> indexOf -> addFirst
+linkedlist-226	STOPPED	8	addFirst -> removeFirst -> removeFirst -> indexOf
+linkedlist-227	STOPPED	11	addLast -> indexOf -> removeFirst -> indexOf
+linkedlist-228	STOPPED	8	addFirst -> removeFirst -> indexOf -> addLast -> indexOf
+linkedlist-229	PASSED	15	addFirst -> addFirst -> addFirst -> removeFirst
+linkedlist-230	STOPPED	1	removeFirst -> addFirst -> indexOf -> removeFirst -> indexOf
+linkedlist-231	STOPPED	8	addLast -> removeFirst -> indexOf -> removeFirst -> indexOf -> removeFirst -> indexOf
+linkedlist-232	PASSED	25	addFirst -> addFirst -> addLast -> removeFirst -> indexOf -> addLast -> indexOf
+linkedlist-233	PASSED	14	addFirst -> indexOf -> removeFirst -> addLast
+linkedlist-234	STOPPED	8	addFirst -> removeFirst -> removeFirst
+linkedlist-235	STOPPED	1	removeFirst -> addFirst -> addLast -> indexOf -> addLast
+linkedlist-236	PASSED	27	addFirst -> addLast -> removeFirst -> addLast -> addLast -> addFirst -> addLast
+linkedlist-237	PASSED	17	addFirst -> addLast -> removeFirst -> indexOf -> indexOf
+linkedlist-238	PASSED	21	addFirst -> addLast -> removeFirst -> addFirst -> removeFirst -> indexOf
+linkedlist-239	PASSED	7	addFirst -> indexOf
+linkedlist-240	STOPPED	1	indexOf -> removeFirst -> removeFirst -> removeFirst -> addFirst
+linkedlist-241	PASSED	22	addFirst -> addLast -> addLast -> addLast -> removeFirst -> indexOf
+linkedlist-242	STOPPED	1	indexOf -> addLast -> removeFirst -> addLast -> addFirst
+linkedlist-243	PASSED	22	addLast -> removeFirst -> addFirst -> addFirst -> addLast -> removeFirst
+linkedlist-244	PASSED	18	addFirst -> removeFirst -> addFirst -> addFirst -> indexOf
+linkedlist-245	PASSED	18	addFirst -> addLast -> removeFirst -> addFirst -> indexOf
+linkedlist-246	PASSED	14	addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-247	PASSED	14	addLast -> addFirst -> removeFirst -> indexOf
+linkedlist-248	PASSED	17	addFirst -> addLast -> indexOf -> indexOf -> removeFirst
+linkedlist-249	STOPPED	1	removeFirst -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-250	PASSED	22	addFirst -> addFirst -> addFirst -> addLast -> removeFirst -> indexOf
+linkedlist-251	STOPPED	15	addFirst -> removeFirst -> addLast -> removeFirst -> indexOf
+linkedlist-252	PASSED	22	addFirst -> addLast -> addLast -> addLast -> removeFirst -> indexOf
+linkedlist-253	STOPPED	1	removeFirst -> removeFirst
+linkedlist-254	PASSED	21	addFirst -> addLast -> addLast -> removeFirst -> removeFirst -> indexOf
+linkedlist-255	STOPPED	1	removeFirst -> addLast -> addLast -> addFirst
+linkedlist-256	STOPPED	1	indexOf -> addLast -> removeFirst -> indexOf -> addFirst
+linkedlist-257	STOPPED	1	indexOf -> addLast -> addLast
+linkedlist-258	STOPPED	15	addFirst -> removeFirst -> addLast -> removeFirst -> removeFirst -> indexOf
+linkedlist-259	PASSED	21	addLast -> addFirst -> addLast -> removeFirst -> removeFirst -> indexOf
+linkedlist-260	STOPPED	18	addFirst -> indexOf -> addLast -> removeFirst -> removeFirst -> removeFirst

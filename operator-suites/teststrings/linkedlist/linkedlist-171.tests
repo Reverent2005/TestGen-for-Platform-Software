@@ -1,0 +1,9 @@
+test LinkedlistGenerated171 {
+    sequence: addLast -> addFirst -> addLast;
+
+    inputs {
+        addLast[0].value = 7;
+        addFirst[1].value = 0;
+        addLast[2].value = 1;
+    }
+}

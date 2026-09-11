@@ -1,0 +1,7 @@
+test QueueGenerated222 {
+    sequence: isEmpty -> enqueue;
+
+    inputs {
+        enqueue[1].elem = "alpha";
+    }
+}

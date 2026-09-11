@@ -1,0 +1,10 @@
+test MathlibGenerated94 {
+    sequence: abs -> power -> factorial;
+
+    inputs {
+        abs[0].x = 3;
+        power[1].base = -17;
+        power[1].exponent = 4;
+        factorial[2].n = 1;
+    }
+}

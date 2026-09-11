@@ -1,0 +1,11 @@
+test BstGenerated38 {
+    sequence: insert -> insert -> insert -> insert -> contains;
+
+    inputs {
+        insert[0].key = 0;
+        insert[1].key = 1;
+        insert[2].key = 0;
+        insert[3].key = 0;
+        contains[4].key = 0;
+    }
+}

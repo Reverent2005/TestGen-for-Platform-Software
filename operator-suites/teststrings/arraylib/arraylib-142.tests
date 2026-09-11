@@ -1,0 +1,11 @@
+test ArraylibGenerated142 {
+    sequence: indexOf -> set -> set;
+
+    inputs {
+        indexOf[0].value = 2;
+        set[1].index = 0;
+        set[1].value = 0;
+        set[2].index = 7;
+        set[2].value = 3;
+    }
+}

@@ -1,0 +1,6 @@
+test StackGenerated56 {
+    sequence: pop -> peek;
+
+    inputs {
+    }
+}

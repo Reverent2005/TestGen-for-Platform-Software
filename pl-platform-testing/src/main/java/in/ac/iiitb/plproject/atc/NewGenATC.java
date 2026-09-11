@@ -33,11 +33,24 @@ public class NewGenATC implements GenATC {
             System.out.println("[WARN] " + warning);
         }
 
-        // Library dry runs (a test string that produces or consumes SERVER_OUTPUT
-        // values) need return-value handling: captures, propagated parameters and
-        // value threading through main().  Purely functional specs — no \result
-        // binding anywhere — keep the original single-block generation path.
-        if (lastScan.hasReturnValueHandling()) {
+        // Which of the two generation paths applies.
+        //
+        // A LIBRARY spec constrains global state: its conditions name fields that
+        // have to be emitted as Helper.<name>, and its \old(...) snapshots have to
+        // become locals taken before the call. A purely FUNCTIONAL spec has neither,
+        // and keeps the original single-block path.
+        //
+        // The test used to be "does anything in this test string produce or consume a
+        // SERVER_OUTPUT". That is the wrong question, and it was only ever right by
+        // accident: every checked-in test string happens to contain at least one
+        // function that returns something. A sequence of nothing but void calls —
+        // `push -> push -> push`, which the generated families produce readily — has
+        // no return-value handling and still constrains state, and it took the
+        // functional path, which emitted `\old(size)` verbatim into Java.
+        //
+        // Declaring a `state` block is what actually distinguishes the two.
+        boolean constrainsLibraryState = !jmlSpecAst.getStateVars().isEmpty();
+        if (constrainsLibraryState || lastScan.hasReturnValueHandling()) {
             return generateLibraryAtcFile(jmlSpecAst, testStringAst, lastScan);
         }
 
@@ -781,7 +794,19 @@ public class NewGenATC implements GenATC {
             List<Expr> args = new ArrayList<>();
             for (Variable formal : helper.getParameters()) {
                 String local = latestLocalFor.get(formal.getName());
-                args.add(AstHelper.createNameExpr(local != null ? local : formal.getName()));
+                if (local != null) {
+                    args.add(AstHelper.createNameExpr(local));
+                    continue;
+                }
+                // Nothing has produced this value YET. A helper's parameter list is
+                // per function while propagation is per block, so a sequence that
+                // calls a consumer before its producer — `cancelTask -> submit`, which
+                // the generated families produce readily — reaches a call site where
+                // the captured local does not exist. Naming it anyway does not
+                // compile; the value is a CLIENT_INPUT at this block, and the SPF body
+                // re-binds every parameter symbolically before using it, so what is
+                // passed here is a placeholder rather than data.
+                args.add(AstHelper.createNameExpr(placeholderFor(formal.getTypeName())));
             }
             in.ac.iiitb.plproject.ast.MethodCallExpr call = AstHelper.createMethodCallExpr(
                     AstHelper.createNameExpr("instance"), helper.getMethodName(), args);
@@ -798,6 +823,24 @@ public class NewGenATC implements GenATC {
             }
         }
         return statements;
+    }
+
+    /**
+     * A stand-in for a propagated parameter at a block that runs before its producer.
+     *
+     * <p>Deliberately a literal rather than a fresh symbolic value: this is main(),
+     * which threads values between helpers, and the helper it is calling declares its
+     * own symbolic value for the parameter on the way in.
+     */
+    private static String placeholderFor(String typeName) {
+        if (typeName == null) return "null";
+        switch (typeName) {
+            case "int": case "long": case "short": case "byte":   return "0";
+            case "double": case "float":                          return "0.0";
+            case "boolean":                                       return "false";
+            case "char":                                          return "'a'";
+            default:                                              return "null";
+        }
     }
 
     /** Index of the block whose \result binding produced {@code varName}, or -1. */

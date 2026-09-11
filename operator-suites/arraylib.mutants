@@ -1,0 +1,833 @@
+/*
+ * GENERATED MUTATION SUITE — arraylib
+ *
+ * Produced by OperatorMutantGenerator from:
+ *   ../libraries/arraylib/Helper.java
+ *
+ * DO NOT EDIT. Regenerate with ./run-operator-suites.sh arraylib
+ *
+ * Every operator in MutationOperator is applied to every line of the library
+ * that admits it, so this file is what the specification is measured against
+ * when nobody is choosing the faults. It is the counterpart of the
+ * hand-written set in mutations/arraylib.mutants:
+ * that one asks whether the suite catches the faults we thought of, this one
+ * asks what fraction of all faults of each KIND it catches.
+ *
+ * `expect` is absent throughout: a generated mutant carries no prediction,
+ * and some of these are equivalent to the original and cannot be killed by
+ * anyone. The run measures; it does not check a declaration.
+ */
+
+mutant ARRAYLIB_GEN_CRP_1 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int[] A = new int[] { 0, 0, 0, 0 };
+    replace:     public static int[] A = new int[] { 1, 0, 0, 0 };
+}
+
+mutant ARRAYLIB_GEN_CRP_2 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int[] A = new int[] { 0, 0, 0, 0 };
+    replace:     public static int[] A = new int[] { -1, 0, 0, 0 };
+}
+
+mutant ARRAYLIB_GEN_CRP_3 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int[] A = new int[] { 0, 0, 0, 0 };
+    replace:     public static int[] A = new int[] { 0, 1, 0, 0 };
+}
+
+mutant ARRAYLIB_GEN_CRP_4 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int[] A = new int[] { 0, 0, 0, 0 };
+    replace:     public static int[] A = new int[] { 0, -1, 0, 0 };
+}
+
+mutant ARRAYLIB_GEN_CRP_5 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int[] A = new int[] { 0, 0, 0, 0 };
+    replace:     public static int[] A = new int[] { 0, 0, 1, 0 };
+}
+
+mutant ARRAYLIB_GEN_CRP_6 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int[] A = new int[] { 0, 0, 0, 0 };
+    replace:     public static int[] A = new int[] { 0, 0, -1, 0 };
+}
+
+mutant ARRAYLIB_GEN_CRP_7 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int[] A = new int[] { 0, 0, 0, 0 };
+    replace:     public static int[] A = new int[] { 0, 0, 0, 1 };
+}
+
+mutant ARRAYLIB_GEN_CRP_8 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int[] A = new int[] { 0, 0, 0, 0 };
+    replace:     public static int[] A = new int[] { 0, 0, 0, -1 };
+}
+
+mutant ARRAYLIB_GEN_CRP_9 {
+    description: the literal 4 becomes 0, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int length = 4;
+    replace:     public static int length = 0;
+}
+
+mutant ARRAYLIB_GEN_CRP_10 {
+    description: the literal 4 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int length = 4;
+    replace:     public static int length = 1;
+}
+
+mutant ARRAYLIB_GEN_CRP_11 {
+    description: the literal 4 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int length = 4;
+    replace:     public static int length = -1;
+}
+
+mutant ARRAYLIB_GEN_CRP_12 {
+    description: the literal 4 becomes 5, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int length = 4;
+    replace:     public static int length = 5;
+}
+
+mutant ARRAYLIB_GEN_CRP_13 {
+    description: the literal 4 becomes 3, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int length = 4;
+    replace:     public static int length = 3;
+}
+
+mutant ARRAYLIB_GEN_CRP_14 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int writes = 0;
+    replace:     public static int writes = 1;
+}
+
+mutant ARRAYLIB_GEN_CRP_15 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int writes = 0;
+    replace:     public static int writes = -1;
+}
+
+mutant ARRAYLIB_GEN_SDL_16 {
+    description: the statement is removed, in set()
+    operator:    statement-deletion
+    in:          set
+    file:        Helper.java
+    find:        A[index] = value;
+    replace:     
+}
+
+mutant ARRAYLIB_GEN_SEI_17 {
+    description: a write to length is inserted after the statement, in set()
+    operator:    side-effect-insertion
+    in:          set
+    file:        Helper.java
+    find:        A[index] = value;
+    replace:     A[index] = value; length = length + 1;
+}
+
+mutant ARRAYLIB_GEN_AOR_18 {
+    description: + becomes -, in set()
+    operator:    arithmetic-operator-replacement
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     writes = writes - 1;
+}
+
+mutant ARRAYLIB_GEN_AOR_19 {
+    description: + becomes *, in set()
+    operator:    arithmetic-operator-replacement
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     writes = writes * 1;
+}
+
+mutant ARRAYLIB_GEN_AOR_20 {
+    description: + becomes /, in set()
+    operator:    arithmetic-operator-replacement
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     writes = writes / 1;
+}
+
+mutant ARRAYLIB_GEN_AOR_21 {
+    description: + becomes %, in set()
+    operator:    arithmetic-operator-replacement
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     writes = writes % 1;
+}
+
+mutant ARRAYLIB_GEN_AOI_22 {
+    description: the value assigned to writes is shifted by + 1, in set()
+    operator:    arithmetic-operator-insertion
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     writes = writes + 1 + 1;
+}
+
+mutant ARRAYLIB_GEN_AOI_23 {
+    description: the value assigned to writes is shifted by - 1, in set()
+    operator:    arithmetic-operator-insertion
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     writes = writes + 1 - 1;
+}
+
+mutant ARRAYLIB_GEN_UOI_24 {
+    description: the value assigned to writes is negated, in set()
+    operator:    unary-operator-insertion
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     writes = -(writes + 1);
+}
+
+mutant ARRAYLIB_GEN_ABS_25 {
+    description: the value assigned to writes is forced negative, in set()
+    operator:    absolute-value-insertion
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     writes = -Math.abs(writes + 1);
+}
+
+mutant ARRAYLIB_GEN_CRP_26 {
+    description: the literal 1 becomes 0, in set()
+    operator:    constant-replacement
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     writes = writes + 0;
+}
+
+mutant ARRAYLIB_GEN_CRP_27 {
+    description: the literal 1 becomes -1, in set()
+    operator:    constant-replacement
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     writes = writes + -1;
+}
+
+mutant ARRAYLIB_GEN_CRP_28 {
+    description: the literal 1 becomes 2, in set()
+    operator:    constant-replacement
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     writes = writes + 2;
+}
+
+mutant ARRAYLIB_GEN_SDL_29 {
+    description: the statement is removed, in set()
+    operator:    statement-deletion
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     
+}
+
+mutant ARRAYLIB_GEN_SEI_30 {
+    description: a write to length is inserted after the statement, in set()
+    operator:    side-effect-insertion
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     writes = writes + 1; length = length + 1;
+}
+
+mutant ARRAYLIB_GEN_VRO_31 {
+    description: writes becomes length, in set()
+    operator:    variable-replacement
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     length = writes + 1;
+}
+
+mutant ARRAYLIB_GEN_VRO_32 {
+    description: writes becomes length, in set()
+    operator:    variable-replacement
+    in:          set
+    file:        Helper.java
+    find:        writes = writes + 1;
+    replace:     writes = length + 1;
+}
+
+mutant ARRAYLIB_GEN_UOI_33 {
+    description: the returned value is negated, in get()
+    operator:    unary-operator-insertion
+    in:          get
+    file:        Helper.java
+    find:        return elem;
+    replace:     return -(elem);
+}
+
+mutant ARRAYLIB_GEN_ABS_34 {
+    description: the returned value is forced negative, in get()
+    operator:    absolute-value-insertion
+    in:          get
+    file:        Helper.java
+    find:        return elem;
+    replace:     return -Math.abs(elem);
+}
+
+mutant ARRAYLIB_GEN_RVR_35 {
+    description: the answer becomes 0, in get()
+    operator:    return-value-replacement
+    in:          get
+    file:        Helper.java
+    find:        return elem;
+    replace:     return 0;
+}
+
+mutant ARRAYLIB_GEN_RVR_36 {
+    description: the answer becomes 1, in get()
+    operator:    return-value-replacement
+    in:          get
+    file:        Helper.java
+    find:        return elem;
+    replace:     return 1;
+}
+
+mutant ARRAYLIB_GEN_RVR_37 {
+    description: the answer becomes -1, in get()
+    operator:    return-value-replacement
+    in:          get
+    file:        Helper.java
+    find:        return elem;
+    replace:     return -1;
+}
+
+mutant ARRAYLIB_GEN_SEI_38 {
+    description: a write to length is inserted before the return, in get()
+    operator:    side-effect-insertion
+    in:          get
+    file:        Helper.java
+    find:        return elem;
+    replace:     length = length + 1; return elem;
+}
+
+mutant ARRAYLIB_GEN_CRP_39 {
+    description: the literal 0 becomes 1, in sum()
+    operator:    constant-replacement
+    in:          sum
+    file:        Helper.java
+    find:        int total = 0;
+    replace:     int total = 1;
+}
+
+mutant ARRAYLIB_GEN_CRP_40 {
+    description: the literal 0 becomes -1, in sum()
+    operator:    constant-replacement
+    in:          sum
+    file:        Helper.java
+    find:        int total = 0;
+    replace:     int total = -1;
+}
+
+mutant ARRAYLIB_GEN_ROR_41 {
+    description: < becomes <=, in sum()
+    operator:    relational-operator-replacement
+    in:          sum
+    file:        Helper.java
+    find:        for (int i = 0; i < length; i++) {
+    replace:     for (int i = 0; i <= length; i++) {
+}
+
+mutant ARRAYLIB_GEN_ROR_42 {
+    description: < becomes >=, in sum()
+    operator:    relational-operator-replacement
+    in:          sum
+    file:        Helper.java
+    find:        for (int i = 0; i < length; i++) {
+    replace:     for (int i = 0; i >= length; i++) {
+}
+
+mutant ARRAYLIB_GEN_ROR_43 {
+    description: < becomes ==, in sum()
+    operator:    relational-operator-replacement
+    in:          sum
+    file:        Helper.java
+    find:        for (int i = 0; i < length; i++) {
+    replace:     for (int i = 0; i == length; i++) {
+}
+
+mutant ARRAYLIB_GEN_ROR_44 {
+    description: < becomes !=, in sum()
+    operator:    relational-operator-replacement
+    in:          sum
+    file:        Helper.java
+    find:        for (int i = 0; i < length; i++) {
+    replace:     for (int i = 0; i != length; i++) {
+}
+
+mutant ARRAYLIB_GEN_ROR_45 {
+    description: < becomes >, in sum()
+    operator:    relational-operator-replacement
+    in:          sum
+    file:        Helper.java
+    find:        for (int i = 0; i < length; i++) {
+    replace:     for (int i = 0; i > length; i++) {
+}
+
+mutant ARRAYLIB_GEN_CRP_46 {
+    description: the literal 0 becomes 1, in sum()
+    operator:    constant-replacement
+    in:          sum
+    file:        Helper.java
+    find:        for (int i = 0; i < length; i++) {
+    replace:     for (int i = 1; i < length; i++) {
+}
+
+mutant ARRAYLIB_GEN_CRP_47 {
+    description: the literal 0 becomes -1, in sum()
+    operator:    constant-replacement
+    in:          sum
+    file:        Helper.java
+    find:        for (int i = 0; i < length; i++) {
+    replace:     for (int i = -1; i < length; i++) {
+}
+
+mutant ARRAYLIB_GEN_LBR_48 {
+    description: the loop starts one later, in sum()
+    operator:    loop-bound-replacement
+    in:          sum
+    file:        Helper.java
+    find:        for (int i = 0; i < length; i++) {
+    replace:     for (int i = 0 + 1; i < length; i++) {
+}
+
+mutant ARRAYLIB_GEN_LBR_49 {
+    description: the loop starts one earlier, in sum()
+    operator:    loop-bound-replacement
+    in:          sum
+    file:        Helper.java
+    find:        for (int i = 0; i < length; i++) {
+    replace:     for (int i = 0 - 1; i < length; i++) {
+}
+
+mutant ARRAYLIB_GEN_VRO_50 {
+    description: length becomes writes, in sum()
+    operator:    variable-replacement
+    in:          sum
+    file:        Helper.java
+    find:        for (int i = 0; i < length; i++) {
+    replace:     for (int i = 0; i < writes; i++) {
+}
+
+mutant ARRAYLIB_GEN_AOR_51 {
+    description: + becomes -, in sum()
+    operator:    arithmetic-operator-replacement
+    in:          sum
+    file:        Helper.java
+    find:        total = total + A[i];
+    replace:     total = total - A[i];
+}
+
+mutant ARRAYLIB_GEN_AOR_52 {
+    description: + becomes *, in sum()
+    operator:    arithmetic-operator-replacement
+    in:          sum
+    file:        Helper.java
+    find:        total = total + A[i];
+    replace:     total = total * A[i];
+}
+
+mutant ARRAYLIB_GEN_AOR_53 {
+    description: + becomes /, in sum()
+    operator:    arithmetic-operator-replacement
+    in:          sum
+    file:        Helper.java
+    find:        total = total + A[i];
+    replace:     total = total / A[i];
+}
+
+mutant ARRAYLIB_GEN_AOR_54 {
+    description: + becomes %, in sum()
+    operator:    arithmetic-operator-replacement
+    in:          sum
+    file:        Helper.java
+    find:        total = total + A[i];
+    replace:     total = total % A[i];
+}
+
+mutant ARRAYLIB_GEN_AOI_55 {
+    description: the value assigned to total is shifted by + 1, in sum()
+    operator:    arithmetic-operator-insertion
+    in:          sum
+    file:        Helper.java
+    find:        total = total + A[i];
+    replace:     total = total + A[i] + 1;
+}
+
+mutant ARRAYLIB_GEN_AOI_56 {
+    description: the value assigned to total is shifted by - 1, in sum()
+    operator:    arithmetic-operator-insertion
+    in:          sum
+    file:        Helper.java
+    find:        total = total + A[i];
+    replace:     total = total + A[i] - 1;
+}
+
+mutant ARRAYLIB_GEN_UOI_57 {
+    description: the value assigned to total is negated, in sum()
+    operator:    unary-operator-insertion
+    in:          sum
+    file:        Helper.java
+    find:        total = total + A[i];
+    replace:     total = -(total + A[i]);
+}
+
+mutant ARRAYLIB_GEN_ABS_58 {
+    description: the value assigned to total is forced negative, in sum()
+    operator:    absolute-value-insertion
+    in:          sum
+    file:        Helper.java
+    find:        total = total + A[i];
+    replace:     total = -Math.abs(total + A[i]);
+}
+
+mutant ARRAYLIB_GEN_SDL_59 {
+    description: the statement is removed, in sum()
+    operator:    statement-deletion
+    in:          sum
+    file:        Helper.java
+    find:        total = total + A[i];
+    replace:     
+}
+
+mutant ARRAYLIB_GEN_SEI_60 {
+    description: a write to length is inserted after the statement, in sum()
+    operator:    side-effect-insertion
+    in:          sum
+    file:        Helper.java
+    find:        total = total + A[i];
+    replace:     total = total + A[i]; length = length + 1;
+}
+
+mutant ARRAYLIB_GEN_UOI_61 {
+    description: the returned value is negated, in sum()
+    operator:    unary-operator-insertion
+    in:          sum
+    file:        Helper.java
+    find:        return total;
+    replace:     return -(total);
+}
+
+mutant ARRAYLIB_GEN_ABS_62 {
+    description: the returned value is forced negative, in sum()
+    operator:    absolute-value-insertion
+    in:          sum
+    file:        Helper.java
+    find:        return total;
+    replace:     return -Math.abs(total);
+}
+
+mutant ARRAYLIB_GEN_RVR_63 {
+    description: the answer becomes 0, in sum()
+    operator:    return-value-replacement
+    in:          sum
+    file:        Helper.java
+    find:        return total;
+    replace:     return 0;
+}
+
+mutant ARRAYLIB_GEN_RVR_64 {
+    description: the answer becomes 1, in sum()
+    operator:    return-value-replacement
+    in:          sum
+    file:        Helper.java
+    find:        return total;
+    replace:     return 1;
+}
+
+mutant ARRAYLIB_GEN_RVR_65 {
+    description: the answer becomes -1, in sum()
+    operator:    return-value-replacement
+    in:          sum
+    file:        Helper.java
+    find:        return total;
+    replace:     return -1;
+}
+
+mutant ARRAYLIB_GEN_SEI_66 {
+    description: a write to length is inserted before the return, in sum()
+    operator:    side-effect-insertion
+    in:          sum
+    file:        Helper.java
+    find:        return total;
+    replace:     length = length + 1; return total;
+}
+
+mutant ARRAYLIB_GEN_ROR_67 {
+    description: == becomes <=, in indexOf()
+    operator:    relational-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        if (A[i] == value) {
+    replace:     if (A[i] <= value) {
+}
+
+mutant ARRAYLIB_GEN_ROR_68 {
+    description: == becomes >=, in indexOf()
+    operator:    relational-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        if (A[i] == value) {
+    replace:     if (A[i] >= value) {
+}
+
+mutant ARRAYLIB_GEN_ROR_69 {
+    description: == becomes !=, in indexOf()
+    operator:    relational-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        if (A[i] == value) {
+    replace:     if (A[i] != value) {
+}
+
+mutant ARRAYLIB_GEN_ROR_70 {
+    description: == becomes <, in indexOf()
+    operator:    relational-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        if (A[i] == value) {
+    replace:     if (A[i] < value) {
+}
+
+mutant ARRAYLIB_GEN_ROR_71 {
+    description: == becomes >, in indexOf()
+    operator:    relational-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        if (A[i] == value) {
+    replace:     if (A[i] > value) {
+}
+
+mutant ARRAYLIB_GEN_COI_72 {
+    description: the guard is negated, in indexOf()
+    operator:    conditional-operator-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        if (A[i] == value) {
+    replace:     if (!(A[i] == value)) {
+}
+
+mutant ARRAYLIB_GEN_CTC_73 {
+    description: the branch is always taken, in indexOf()
+    operator:    condition-to-constant
+    in:          indexOf
+    file:        Helper.java
+    find:        if (A[i] == value) {
+    replace:     if (true) {
+}
+
+mutant ARRAYLIB_GEN_CTC_74 {
+    description: the branch is never taken, in indexOf()
+    operator:    condition-to-constant
+    in:          indexOf
+    file:        Helper.java
+    find:        if (A[i] == value) {
+    replace:     if (false) {
+}
+
+mutant ARRAYLIB_GEN_UOI_75 {
+    description: the returned value is negated, in indexOf()
+    operator:    unary-operator-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        return i;
+    replace:     return -(i);
+}
+
+mutant ARRAYLIB_GEN_ABS_76 {
+    description: the returned value is forced negative, in indexOf()
+    operator:    absolute-value-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        return i;
+    replace:     return -Math.abs(i);
+}
+
+mutant ARRAYLIB_GEN_RVR_77 {
+    description: the answer becomes 0, in indexOf()
+    operator:    return-value-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return i;
+    replace:     return 0;
+}
+
+mutant ARRAYLIB_GEN_RVR_78 {
+    description: the answer becomes 1, in indexOf()
+    operator:    return-value-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return i;
+    replace:     return 1;
+}
+
+mutant ARRAYLIB_GEN_RVR_79 {
+    description: the answer becomes -1, in indexOf()
+    operator:    return-value-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return i;
+    replace:     return -1;
+}
+
+mutant ARRAYLIB_GEN_SEI_80 {
+    description: a write to length is inserted before the return, in indexOf()
+    operator:    side-effect-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        return i;
+    replace:     length = length + 1; return i;
+}
+
+mutant ARRAYLIB_GEN_AOR_81 {
+    description: - becomes +, in indexOf()
+    operator:    arithmetic-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return +1;
+}
+
+mutant ARRAYLIB_GEN_AOR_82 {
+    description: - becomes *, in indexOf()
+    operator:    arithmetic-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return *1;
+}
+
+mutant ARRAYLIB_GEN_AOR_83 {
+    description: - becomes /, in indexOf()
+    operator:    arithmetic-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return /1;
+}
+
+mutant ARRAYLIB_GEN_AOR_84 {
+    description: - becomes %, in indexOf()
+    operator:    arithmetic-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return %1;
+}
+
+mutant ARRAYLIB_GEN_UOI_85 {
+    description: the returned value is negated, in indexOf()
+    operator:    unary-operator-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return -(-1);
+}
+
+mutant ARRAYLIB_GEN_ABS_86 {
+    description: the returned value is forced negative, in indexOf()
+    operator:    absolute-value-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return -Math.abs(-1);
+}
+
+mutant ARRAYLIB_GEN_CRP_87 {
+    description: the literal 1 becomes 0, in indexOf()
+    operator:    constant-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return -0;
+}
+
+mutant ARRAYLIB_GEN_CRP_88 {
+    description: the literal 1 becomes -1, in indexOf()
+    operator:    constant-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return --1;
+}
+
+mutant ARRAYLIB_GEN_CRP_89 {
+    description: the literal 1 becomes 2, in indexOf()
+    operator:    constant-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return -2;
+}
+
+mutant ARRAYLIB_GEN_RVR_90 {
+    description: the answer becomes 0, in indexOf()
+    operator:    return-value-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return 0;
+}
+
+mutant ARRAYLIB_GEN_RVR_91 {
+    description: the answer becomes 1, in indexOf()
+    operator:    return-value-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return 1;
+}
+
+mutant ARRAYLIB_GEN_SEI_92 {
+    description: a write to length is inserted before the return, in indexOf()
+    operator:    side-effect-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     length = length + 1; return -1;
+}
+

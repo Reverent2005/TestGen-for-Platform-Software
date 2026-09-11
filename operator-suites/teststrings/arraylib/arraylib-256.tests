@@ -1,0 +1,8 @@
+test ArraylibGenerated256 {
+    sequence: sum -> set -> sum;
+
+    inputs {
+        set[1].index = 0;
+        set[1].value = 2;
+    }
+}

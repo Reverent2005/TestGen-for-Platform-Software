@@ -1,0 +1,6 @@
+test StackGenerated225 {
+    sequence: pop -> pop -> pop;
+
+    inputs {
+    }
+}

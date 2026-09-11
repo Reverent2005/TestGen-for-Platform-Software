@@ -1,0 +1,37 @@
+/*
+ * EXAMPLE 13 — LruCache, singular case.
+ *
+ * The cache holds two entries.  Three are put into it, so the third put must
+ * evict one; then the surviving OLDER entry is read, which promotes it; then the
+ * evicted key is restored, which must evict the entry the read demoted.
+ *
+ *   put("alpha", "1")   C = {alpha}          evicted: null
+ *   put("beta",  "2")   C = {alpha, beta}    evicted: null
+ *   put("gamma", "3")   C = {beta, gamma}    evicted: "alpha"   <- the value threaded on
+ *   get("beta")         C = {gamma, beta}    beta is now most recently used
+ *   restore(evictedKey="alpha", "1")
+ *                       C = {beta, alpha}    gamma goes, because the get promoted beta
+ *
+ * restore.evictedKey is NOT bound here and cannot be: it is the SERVER_OUTPUT of
+ * block 2, and the validator rejects a binding for it.  restore.value IS bound,
+ * because the caller is the one who still has the evicted entry's value — that
+ * asymmetry inside a single call is the reason this library is in the set.
+ *
+ * The get in block 3 is what makes block 4's eviction observable: without it the
+ * victim would be "beta" and a cache that evicted the most recently used entry
+ * instead of the least would pass anyway.
+ */
+test LruCacheDryRun {
+    sequence: put -> put -> put -> get -> restore;
+
+    inputs {
+        put[0].key = "alpha";
+        put[0].value = "1";
+        put[1].key = "beta";
+        put[1].value = "2";
+        put[2].key = "gamma";
+        put[2].value = "3";
+        get[3].key = "beta";
+        restore[4].value = "1";
+    }
+}

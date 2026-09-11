@@ -1,0 +1,86 @@
+/*
+ * MUTATION SET — EXAMPLE 8, SinglyLinkedList<Integer>
+ * Library under test: libraries/linkedlist/Helper.java
+ * Test string:        specs/LinkedList.tests   (addFirst -> addLast -> removeFirst -> indexOf)
+ *
+ * Every fault here is seeded into the node chain rather than into the mirror, so
+ * what these mutants measure is whether a spec written against a mirror still
+ * catches faults in the structure the mirror is derived from.  It does: the
+ * mirror is rebuilt from the chain after every operation, so a broken chain
+ * produces a broken mirror.
+ */
+
+mutant LIST_ADDLAST_AT_FRONT {
+    description: addLast links the new node onto the front, so both ends grow the same way
+    operator:    statement-replacement
+    in:          addLast
+    find:        cursor.next = node;
+    replace:     node.next = first; first = node;
+}
+
+mutant LIST_ADDFIRST_MIRROR_STALE {
+    description: addFirst updates the chain but never rebuilds the spec-visible mirror
+    operator:    statement-deletion
+    in:          addFirst
+    find:        refresh();
+    replace:
+}
+
+mutant LIST_REMOVEFIRST_FROM_TAIL {
+    description: removeFirst hands back the last value instead of the first
+    operator:    return-value-replacement
+    in:          removeFirst
+    find:        Integer removedValue = first.value;
+    replace:     Integer removedValue = tail;
+}
+
+mutant LIST_REMOVEFIRST_KEEPS_NODE {
+    description: removeFirst reports a value but never unlinks the node
+    operator:    statement-deletion
+    in:          removeFirst
+    find:        first = first.next;
+    replace:
+}
+
+mutant LIST_INDEXOF_NEVER_MATCHES {
+    description: indexOf inverts its comparison, so it reports -1 for a value it holds
+    operator:    conditional-operator-insertion
+    in:          indexOf
+    find:        if (cursor.value.equals(value)) {
+    replace:     if (!cursor.value.equals(value)) {
+    expect:      survives
+    note:        LinkedList.spec constrains indexOf to the range -1 <= position < size, and -1 is in that range: the spec cannot say A[position] == value, since position is the thing being defined. This is the same gap ARRAY_INDEXOF_ALWAYS_FIRST records for Example 5.
+}
+
+/*
+ * ── operator coverage ────────────────────────────────────────────────────────
+ * indexOf is the only arithmetic in this library, and both of these land on it —
+ * one dies on the declared range and the other slips through it, which is the
+ * range clause's strength and its limit in two lines.
+ */
+
+mutant LIST_INDEXOF_COUNTS_FROM_ONE {
+    description: indexOf numbers positions from 1, so every answer is one too high
+    operator:    constant-replacement
+    in:          indexOf
+    find:        int position = 0;
+    replace:     int position = 1;
+}
+
+mutant LIST_INDEXOF_NEVER_WALKS {
+    description: indexOf inverts its loop guard, so it never looks at a single node
+    operator:    relational-operator-replacement
+    in:          indexOf
+    find:        while (cursor != null) {
+    replace:     while (cursor == null) {
+    expect:      survives
+    note:        an empty search answers -1, which LinkedList.spec's range clause -1 <= position < size admits. It is the same gap LIST_INDEXOF_NEVER_MATCHES records, reached by never starting rather than by never matching.
+}
+
+mutant LIST_REFRESH_TAIL_INTO_HEAD {
+    description: the mirror rebuild files the last value into head, so both ends read the same
+    operator:    variable-replacement
+    in:          refresh
+    find:        tail = L.isEmpty() ? null : L.get(L.size() - 1);
+    replace:     head = L.isEmpty() ? null : L.get(L.size() - 1);
+}

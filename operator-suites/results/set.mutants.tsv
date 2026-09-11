@@ -1,0 +1,29 @@
+# generated mutants — set
+# id	status	operator	method	file	killed-by-family	detail
+SET_GEN_SDL_1	INVALID	statement-deletion	-	Helper.java	-	the mutated library does not compile: GeneratedATCs.java:13: cannot find symbol
+SET_GEN_SEI_2	INVALID	side-effect-insertion	-	Helper.java	-	the mutated library does not compile: Helper.java:24: <identifier> expected
+SET_GEN_CRP_3	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+SET_GEN_CRP_4	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+SET_GEN_ARP_5	KILLED	argument-replacement	add	Helper.java	-	killed by block 0  add  ensures  E.contains(elem)
+SET_GEN_ARP_6	INVALID	argument-replacement	add	Helper.java	-	the mutated library does not compile: Helper.java:34: bad operand types for binary operator '-'
+SET_GEN_MCR_7	KILLED	method-call-replacement	add	Helper.java	-	killed by block 0  add  ensures  E.contains(elem)
+SET_GEN_AOI_8	KILLED	arithmetic-operator-insertion	add	Helper.java	-	killed by block 3  remove  ensures  size == \old(size) - 1
+SET_GEN_AOI_9	KILLED	arithmetic-operator-insertion	add	Helper.java	-	killed by block 3  remove  ensures  size == \old(size) - 1
+SET_GEN_UOI_10	KILLED	unary-operator-insertion	add	Helper.java	-	killed by block 3  remove  ensures  size == \old(size) - 1
+SET_GEN_ABS_11	KILLED	absolute-value-insertion	add	Helper.java	-	killed by block 3  remove  ensures  size == \old(size) - 1
+SET_GEN_SDL_12	KILLED	statement-deletion	add	Helper.java	-	killed by block 3  remove  ensures  size == \old(size) - 1
+SET_GEN_MCR_13	KILLED	method-call-replacement	add	Helper.java	-	killed by block 3  remove  ensures  size == \old(size) - 1
+SET_GEN_RVR_14	SURVIVED	return-value-replacement	add	Helper.java	-	every generated condition still holds
+SET_GEN_RVR_15	SURVIVED	return-value-replacement	add	Helper.java	-	every generated condition still holds
+SET_GEN_SEI_16	KILLED	side-effect-insertion	add	Helper.java	-	killed by block 3  remove  ensures  size == \old(size) - 1
+SET_GEN_RVR_17	SURVIVED	return-value-replacement	contains	Helper.java	set-002: add -> add -> remove -> contains	every generated condition still holds
+SET_GEN_RVR_18	KILLED	return-value-replacement	contains	Helper.java	-	killed by block 2  contains  ensures  present == E.contains(elem)
+SET_GEN_ARP_19	KILLED	argument-replacement	contains	Helper.java	-	killed by block 2  contains  ensures  present == E.contains(elem)
+SET_GEN_ARP_20	INVALID	argument-replacement	contains	Helper.java	-	the mutated library does not compile: Helper.java:41: bad operand types for binary operator '-'
+SET_GEN_SEI_21	KILLED	side-effect-insertion	contains	Helper.java	-	killed by block 2  contains  ensures  size == \old(size)
+SET_GEN_SDL_22	KILLED	statement-deletion	remove	Helper.java	-	killed by block 3  remove  ensures  !E.contains(elem)
+SET_GEN_STR_23	SURVIVED	statement-replacement	remove	Helper.java	-	every generated condition still holds
+SET_GEN_ARP_24	KILLED	argument-replacement	remove	Helper.java	-	killed by block 3  remove  ensures  !E.contains(elem)
+SET_GEN_ARP_25	INVALID	argument-replacement	remove	Helper.java	-	the mutated library does not compile: Helper.java:46: bad operand types for binary operator '-'
+SET_GEN_MCR_26	INVALID	method-call-replacement	remove	Helper.java	-	the mutated library does not compile: Helper.java:46: cannot find symbol
+SET_GEN_SEI_27	SURVIVED	side-effect-insertion	remove	Helper.java	-	every generated condition still holds

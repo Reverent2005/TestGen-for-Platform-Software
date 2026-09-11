@@ -1,0 +1,9 @@
+test MathlibGenerated70 {
+    sequence: power -> abs;
+
+    inputs {
+        power[0].base = 5;
+        power[0].exponent = 3;
+        abs[1].x = 0;
+    }
+}

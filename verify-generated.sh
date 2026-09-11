@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-# Verifies the three library dry runs end to end:
-#   1. regenerate all three examples
+# Verifies every library dry run end to end:
+#   1. regenerate every example the driver registers
 #   2. compile each generated SPF file, JUnit file and library against
 #      compile-time stubs for gov.nasa.jpf.symbc.Debug and org.junit
 #   3. execute each generated sequence to confirm every assertion holds
+#
+# The list of examples is not written down here: whatever
+# LibraryDryRunExamples writes into outputs/ is what gets verified, so adding a
+# library to the driver adds it to this check too.
 #
 # Run from the repository root:  ./verify-generated.sh
 set -euo pipefail
@@ -22,8 +26,8 @@ mkdir -p "$WORK/stubs"
 javac -nowarn -d "$WORK/stubs" $(find "$STUBS" -name '*.java')
 
 status=0
-for example in example1-stack example2-hashmap example3-taskqueue; do
-    dir="$PROJECT/outputs/$example"
+for dir in $(ls -d "$PROJECT"/outputs/example*/ | sort -V); do
+    example="$(basename "$dir")"
     out="$WORK/$example"
     mkdir -p "$out"
 
@@ -37,10 +41,19 @@ for example in example1-stack example2-hashmap example3-taskqueue; do
     fi
 
     # -ea so the generated assert() statements are actually checked.
-    if java -ea -cp "$WORK/stubs:$out" in.ac.iiitb.plproject.atc.generated.GeneratedATCs_JUnit; then
+    junit_out="$(java -ea -cp "$WORK/stubs:$out" \
+                     in.ac.iiitb.plproject.atc.generated.GeneratedATCs_JUnit 2>&1)" && junit_rc=0 || junit_rc=$?
+    if [ "$junit_rc" -eq 0 ]; then
         echo "  run     : OK  (all generated assertions hold against the real library)"
+    elif printf '%s' "$junit_out" | grep -q 'org.junit.AssumptionViolatedException'; then
+        # The JUnit flavour binds CLIENT_INPUTs to dummy placeholders rather than to
+        # values solved against the precondition, so a spec the dummies do not satisfy
+        # never runs. That is a skip, not a failure; the singular case below is the
+        # oracle for such an example.
+        echo "  run     : SKIPPED  (placeholder CLIENT_INPUTs do not satisfy the precondition)"
     else
         echo "  run     : FAILED"
+        printf '%s\n' "$junit_out" | sed 's/^/            /'
         status=1
     fi
 

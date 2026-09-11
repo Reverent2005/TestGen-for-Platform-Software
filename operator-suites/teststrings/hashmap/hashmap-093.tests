@@ -1,0 +1,11 @@
+test HashmapGenerated93 {
+    sequence: put -> put -> getOldValue;
+
+    inputs {
+        put[0].key = "beta";
+        put[0].value = 7;
+        put[1].key = "alpha";
+        put[1].value = 10;
+        getOldValue[2].key = "alpha";
+    }
+}

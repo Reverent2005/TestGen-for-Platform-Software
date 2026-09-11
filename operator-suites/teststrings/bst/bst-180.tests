@@ -1,0 +1,9 @@
+test BstGenerated180 {
+    sequence: insert -> contains -> delete;
+
+    inputs {
+        insert[0].key = 1;
+        contains[1].key = 0;
+        delete[2].key = 2;
+    }
+}

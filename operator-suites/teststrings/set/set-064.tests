@@ -1,0 +1,8 @@
+test SetGenerated64 {
+    sequence: contains -> remove;
+
+    inputs {
+        contains[0].elem = "beta";
+        remove[1].elem = "alpha";
+    }
+}

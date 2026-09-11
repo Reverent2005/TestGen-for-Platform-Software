@@ -1,0 +1,10 @@
+test MathlibGenerated53 {
+    sequence: power -> power;
+
+    inputs {
+        power[0].base = 4;
+        power[0].exponent = 4;
+        power[1].base = 48;
+        power[1].exponent = 1;
+    }
+}

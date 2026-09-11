@@ -1,0 +1,137 @@
+/*
+ * MUTATION SET — EXAMPLE 4, TicketService
+ * Library under test: libraries/ticketservice/Helper.java
+ * Test string:        specs/TicketService.tests
+ *                     (numSeatsAvailable -> findAndHoldSeats -> reserveSeats -> numSeatsAvailable)
+ *
+ * The library is modelled on the ticket-service challenge at
+ * github.com/yingw787/walmart_challenge_07_07_2017.  Two of these mutants are not
+ * invented faults at all — they are the original repository's own behaviour,
+ * seeded back in so the generated suite can be asked whether it would have caught
+ * them:
+ *
+ *   TICKETSERVICE_HOLD_ID_FROM_SEAT_PRODUCT  — the original derives a hold's id by
+ *       multiplying its seat ids together, and its seat ids start at 0, so the
+ *       first hold's id is always 0.
+ *   TICKETSERVICE_RESERVE_DOUBLE_COUNTS_SEATS — the seat count is decremented when
+ *       a seat is held; decrementing again on reserve is the double-count the
+ *       original's own comment warns against.
+ *
+ * The most important entry is TICKETSERVICE_ALLOCATES_WORST_SEATS.  "Find and hold
+ * the BEST available seats" is the whole point of the problem statement, and the
+ * .spec grammar cannot say it — so the pipeline cannot catch a library that hands
+ * out the worst ones.  That is a limit of the specification language, and this
+ * mutant is how it is measured rather than merely asserted.
+ */
+
+mutant TICKETSERVICE_QUERY_RETURNS_CONSTANT {
+    description: numSeatsAvailable always reports a sold-out venue
+    operator:    return-value-replacement
+    in:          numSeatsAvailable
+    find:        return available;
+    replace:     return 0;
+}
+
+mutant TICKETSERVICE_QUERY_MUTATES_STATE {
+    description: numSeatsAvailable is no longer read-only — it consumes a seat on the way out
+    operator:    side-effect-insertion
+    in:          numSeatsAvailable
+    find:        return available;
+    replace:     available = available - 1; return available;
+}
+
+mutant TICKETSERVICE_AVAILABLE_NOT_DECREMENTED {
+    description: holding seats does not reduce the number reported as available
+    operator:    statement-deletion
+    in:          findAndHoldSeats
+    find:        available = available - numSeats;
+    replace:
+}
+
+mutant TICKETSERVICE_HOLDS_ONE_SEAT_TOO_FEW {
+    description: holding n seats only takes n-1 of them out of circulation
+    operator:    arithmetic-operator-insertion
+    in:          findAndHoldSeats
+    find:        available = available - numSeats;
+    replace:     available = available - numSeats + 1;
+}
+
+mutant TICKETSERVICE_HOLD_NOT_RECORDED {
+    description: findAndHoldSeats issues a hold id but never files the hold under it
+    operator:    statement-deletion
+    in:          findAndHoldSeats
+    find:        Holds.put(seatHoldId, customerEmail);
+    replace:
+}
+
+mutant TICKETSERVICE_NEXT_HOLD_ID_NOT_ADVANCED {
+    description: findAndHoldSeats hands out the same hold id forever
+    operator:    statement-deletion
+    in:          findAndHoldSeats
+    find:        nextHoldId = nextHoldId + 1;
+    replace:
+}
+
+mutant TICKETSERVICE_HOLD_ID_FROM_SEAT_PRODUCT {
+    description: the hold id is the product of its seat ids, as in the original repository, so the first hold is always id 0
+    operator:    statement-replacement
+    in:          findAndHoldSeats
+    find:        Integer seatHoldId = nextHoldId;
+    replace:     Integer seatHoldId = 1; for (Integer seat : best) { seatHoldId = seatHoldId * seat; }
+    expect:      survives
+    note:        the spec says only that \result is the hold id and that the id keys the Holds map. It never says the id is unique, nor that it relates to nextHoldId, so a scheme that returns 0 for the first hold satisfies every generated condition. This test string creates one hold; a second hold is what would expose a collision, and the spec would still have to be strengthened to reject it.
+}
+
+mutant TICKETSERVICE_RESERVATION_NOT_RECORDED {
+    description: reserveSeats returns a confirmation code it never files under the hold
+    operator:    statement-deletion
+    in:          reserveSeats
+    find:        Reservations.put(seatHoldId, confirmationCode);
+    replace:
+}
+
+mutant TICKETSERVICE_HOLD_NOT_RELEASED {
+    description: reserveSeats commits the seats but leaves the hold standing
+    operator:    statement-deletion
+    in:          reserveSeats
+    find:        Holds.remove(seatHoldId);
+    replace:
+}
+
+mutant TICKETSERVICE_RESERVE_DOUBLE_COUNTS_SEATS {
+    description: reserveSeats decrements the seat count again, double-counting seats already removed when they were held
+    operator:    side-effect-insertion
+    in:          reserveSeats
+    find:        String confirmationCode = "R-" + seatHoldId;
+    replace:     available = available - 1; String confirmationCode = "R-" + seatHoldId;
+}
+
+mutant TICKETSERVICE_ALLOCATES_WORST_SEATS {
+    description: the venue hands out the least valuable free seats instead of the best ones
+    operator:    loop-bound-replacement
+    in:          mostValuableFreeSeats
+    find:        for (int seatId = 0; seatId < seats.length; seatId++) {
+    replace:     for (int seatId = seats.length - 1; seatId >= 0; seatId--) {
+    expect:      survives
+    note:        "find and hold the BEST available seats" is the requirement the problem statement is actually about, and the .spec grammar cannot express it: the specification can only name the counts and the two maps, never which seats a hold received. Every generated condition holds while the customer is given the worst seats in the house. Killing this needs a richer specification language, not a longer test string.
+}
+
+/*
+ * ── operator coverage ────────────────────────────────────────────────────────
+ */
+
+mutant TICKETSERVICE_HOLD_ADDS_SEATS {
+    description: holding seats increases the free count instead of reducing it
+    operator:    arithmetic-operator-replacement
+    in:          findAndHoldSeats
+    find:        available = available - numSeats;
+    replace:     available = available + numSeats;
+}
+
+mutant TICKETSERVICE_HOLD_COUNTER_STUCK {
+    description: the hold-id counter never advances
+    operator:    statement-deletion
+    in:          findAndHoldSeats
+    find:        nextHoldId = nextHoldId + 1;
+    replace:
+}

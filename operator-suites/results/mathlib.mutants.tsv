@@ -1,0 +1,158 @@
+# generated mutants — mathlib
+# id	status	operator	method	file	killed-by-family	detail
+MATHLIB_GEN_CRP_1	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_CRP_2	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_CRP_3	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_CRP_4	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_ROR_5	SURVIVED	relational-operator-replacement	abs	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_ROR_6	KILLED	relational-operator-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  absValue >= 0
+MATHLIB_GEN_ROR_7	KILLED	relational-operator-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  absValue >= 0
+MATHLIB_GEN_ROR_8	SURVIVED	relational-operator-replacement	abs	Helper.java	mathlib-007: abs -> abs -> gcd -> power -> factorial	every generated condition still holds
+MATHLIB_GEN_ROR_9	KILLED	relational-operator-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  absValue >= 0
+MATHLIB_GEN_COI_10	KILLED	conditional-operator-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  absValue >= 0
+MATHLIB_GEN_CRP_11	SURVIVED	constant-replacement	abs	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_CRP_12	SURVIVED	constant-replacement	abs	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_CTC_13	SURVIVED	condition-to-constant	abs	Helper.java	mathlib-007: abs -> abs -> gcd -> power -> factorial	every generated condition still holds
+MATHLIB_GEN_CTC_14	KILLED	condition-to-constant	abs	Helper.java	-	killed by block 0  abs  ensures  absValue >= 0
+MATHLIB_GEN_AOI_15	SURVIVED	arithmetic-operator-insertion	abs	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_AOI_16	SURVIVED	arithmetic-operator-insertion	abs	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_UOI_17	KILLED	unary-operator-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  absValue >= 0
+MATHLIB_GEN_ABS_18	KILLED	absolute-value-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  absValue >= 0
+MATHLIB_GEN_SDL_19	KILLED	statement-deletion	abs	Helper.java	-	killed by block 0  abs  ensures  absValue >= 0
+MATHLIB_GEN_SEI_20	KILLED	side-effect-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_AOR_21	KILLED	arithmetic-operator-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_AOR_22	KILLED	arithmetic-operator-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_AOR_23	KILLED	arithmetic-operator-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_AOR_24	KILLED	arithmetic-operator-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_AOI_25	KILLED	arithmetic-operator-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_AOI_26	KILLED	arithmetic-operator-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_UOI_27	KILLED	unary-operator-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_ABS_28	KILLED	absolute-value-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_CRP_29	KILLED	constant-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_CRP_30	KILLED	constant-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_CRP_31	KILLED	constant-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_SDL_32	KILLED	statement-deletion	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_VRO_33	KILLED	variable-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_VRO_34	SURVIVED	variable-replacement	abs	Helper.java	mathlib-007: abs -> abs -> gcd -> power -> factorial	every generated condition still holds
+MATHLIB_GEN_AOI_35	KILLED	arithmetic-operator-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  lastResult == absValue
+MATHLIB_GEN_AOI_36	KILLED	arithmetic-operator-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  lastResult == absValue
+MATHLIB_GEN_UOI_37	KILLED	unary-operator-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  lastResult == absValue
+MATHLIB_GEN_ABS_38	KILLED	absolute-value-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  lastResult == absValue
+MATHLIB_GEN_SDL_39	KILLED	statement-deletion	abs	Helper.java	-	killed by block 0  abs  ensures  lastResult == absValue
+MATHLIB_GEN_SEI_40	KILLED	side-effect-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_VRO_41	KILLED	variable-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  lastResult == absValue
+MATHLIB_GEN_UOI_42	KILLED	unary-operator-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  absValue >= 0
+MATHLIB_GEN_ABS_43	KILLED	absolute-value-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  absValue >= 0
+MATHLIB_GEN_RVR_44	KILLED	return-value-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  lastResult == absValue
+MATHLIB_GEN_RVR_45	KILLED	return-value-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  lastResult == absValue
+MATHLIB_GEN_RVR_46	KILLED	return-value-replacement	abs	Helper.java	-	killed by block 0  abs  ensures  absValue >= 0
+MATHLIB_GEN_SEI_47	KILLED	side-effect-insertion	abs	Helper.java	-	killed by block 0  abs  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_ROR_48	KILLED	relational-operator-replacement	gcd	Helper.java	-	killed by block 1  gcd  ensures  b % divisor == 0
+MATHLIB_GEN_ROR_49	KILLED	relational-operator-replacement	gcd	Helper.java	-	killed by the singular case (exit 1)
+MATHLIB_GEN_ROR_50	KILLED	relational-operator-replacement	gcd	Helper.java	-	killed by block 1  gcd  ensures  b % divisor == 0
+MATHLIB_GEN_ROR_51	KILLED	relational-operator-replacement	gcd	Helper.java	-	killed by block 1  gcd  ensures  b % divisor == 0
+MATHLIB_GEN_ROR_52	SURVIVED	relational-operator-replacement	gcd	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_COI_53	KILLED	conditional-operator-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  b % divisor == 0
+MATHLIB_GEN_CRP_54	KILLED	constant-replacement	gcd	Helper.java	-	killed by the singular case (exit 1)
+MATHLIB_GEN_CRP_55	KILLED	constant-replacement	gcd	Helper.java	-	killed by the singular case (exit 1)
+MATHLIB_GEN_AOR_56	KILLED	arithmetic-operator-replacement	gcd	Helper.java	-	killed by block 1  gcd  ensures  a % divisor == 0
+MATHLIB_GEN_AOR_57	KILLED	arithmetic-operator-replacement	gcd	Helper.java	-	killed by block 1  gcd  ensures  a % divisor == 0
+MATHLIB_GEN_AOR_58	KILLED	arithmetic-operator-replacement	gcd	Helper.java	-	killed by block 1  gcd  ensures  a % divisor == 0
+MATHLIB_GEN_AOR_59	KILLED	arithmetic-operator-replacement	gcd	Helper.java	-	killed by block 1  gcd  ensures  a % divisor == 0
+MATHLIB_GEN_AOI_60	SURVIVED	arithmetic-operator-insertion	gcd	Helper.java	mathlib-005: factorial -> power -> gcd	every generated condition still holds
+MATHLIB_GEN_AOI_61	KILLED	arithmetic-operator-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  divisor > 0
+MATHLIB_GEN_UOI_62	SURVIVED	unary-operator-insertion	gcd	Helper.java	mathlib-005: factorial -> power -> gcd	every generated condition still holds
+MATHLIB_GEN_ABS_63	KILLED	absolute-value-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  divisor > 0
+MATHLIB_GEN_SDL_64	KILLED	statement-deletion	gcd	Helper.java	-	killed by block 1  gcd  ensures  b % divisor == 0
+MATHLIB_GEN_SEI_65	KILLED	side-effect-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_AOI_66	KILLED	arithmetic-operator-insertion	gcd	Helper.java	-	killed by timeout — the generated run had to be stopped
+MATHLIB_GEN_AOI_67	KILLED	arithmetic-operator-insertion	gcd	Helper.java	-	killed by timeout — the generated run had to be stopped
+MATHLIB_GEN_UOI_68	KILLED	unary-operator-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  divisor > 0
+MATHLIB_GEN_ABS_69	KILLED	absolute-value-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  divisor > 0
+MATHLIB_GEN_SDL_70	KILLED	statement-deletion	gcd	Helper.java	-	killed by timeout — the generated run had to be stopped
+MATHLIB_GEN_SEI_71	KILLED	side-effect-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_AOI_72	KILLED	arithmetic-operator-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  lastResult == divisor
+MATHLIB_GEN_AOI_73	KILLED	arithmetic-operator-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  lastResult == divisor
+MATHLIB_GEN_UOI_74	KILLED	unary-operator-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  lastResult == divisor
+MATHLIB_GEN_ABS_75	KILLED	absolute-value-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  lastResult == divisor
+MATHLIB_GEN_SDL_76	KILLED	statement-deletion	gcd	Helper.java	-	killed by block 1  gcd  ensures  lastResult == divisor
+MATHLIB_GEN_SEI_77	KILLED	side-effect-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_VRO_78	KILLED	variable-replacement	gcd	Helper.java	-	killed by block 1  gcd  ensures  lastResult == divisor
+MATHLIB_GEN_UOI_79	KILLED	unary-operator-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  divisor > 0
+MATHLIB_GEN_ABS_80	KILLED	absolute-value-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  divisor > 0
+MATHLIB_GEN_RVR_81	KILLED	return-value-replacement	gcd	Helper.java	-	killed by block 1  gcd  ensures  divisor > 0
+MATHLIB_GEN_RVR_82	KILLED	return-value-replacement	gcd	Helper.java	-	killed by block 1  gcd  ensures  lastResult == divisor
+MATHLIB_GEN_RVR_83	KILLED	return-value-replacement	gcd	Helper.java	-	killed by block 1  gcd  ensures  divisor > 0
+MATHLIB_GEN_SEI_84	KILLED	side-effect-insertion	gcd	Helper.java	-	killed by block 1  gcd  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_CRP_85	KILLED	constant-replacement	power	Helper.java	-	killed by block 2  power  ensures  powerValue > 0
+MATHLIB_GEN_CRP_86	KILLED	constant-replacement	power	Helper.java	-	killed by block 2  power  ensures  powerValue > 0
+MATHLIB_GEN_CRP_87	SURVIVED	constant-replacement	power	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_ROR_88	SURVIVED	relational-operator-replacement	power	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_ROR_89	SURVIVED	relational-operator-replacement	power	Helper.java	mathlib-050: abs -> factorial -> power -> gcd	every generated condition still holds
+MATHLIB_GEN_ROR_90	SURVIVED	relational-operator-replacement	power	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_ROR_91	SURVIVED	relational-operator-replacement	power	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_ROR_92	SURVIVED	relational-operator-replacement	power	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_CRP_93	SURVIVED	constant-replacement	power	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_CRP_94	SURVIVED	constant-replacement	power	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_LBR_95	SURVIVED	loop-bound-replacement	power	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_LBR_96	SURVIVED	loop-bound-replacement	power	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_AOR_97	SURVIVED	arithmetic-operator-replacement	power	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_AOR_98	KILLED	arithmetic-operator-replacement	power	Helper.java	-	killed by block 2  power  ensures  powerValue > 0
+MATHLIB_GEN_AOR_99	KILLED	arithmetic-operator-replacement	power	Helper.java	-	killed by block 2  power  ensures  powerValue > 0
+MATHLIB_GEN_AOR_100	SURVIVED	arithmetic-operator-replacement	power	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_AOI_101	SURVIVED	arithmetic-operator-insertion	power	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_AOI_102	SURVIVED	arithmetic-operator-insertion	power	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_UOI_103	SURVIVED	unary-operator-insertion	power	Helper.java	mathlib-026: power -> gcd -> factorial	every generated condition still holds
+MATHLIB_GEN_ABS_104	KILLED	absolute-value-insertion	power	Helper.java	-	killed by block 2  power  ensures  powerValue > 0
+MATHLIB_GEN_SDL_105	SURVIVED	statement-deletion	power	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_SEI_106	KILLED	side-effect-insertion	power	Helper.java	-	killed by block 2  power  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_AOI_107	KILLED	arithmetic-operator-insertion	power	Helper.java	-	killed by block 2  power  ensures  lastResult == powerValue
+MATHLIB_GEN_AOI_108	KILLED	arithmetic-operator-insertion	power	Helper.java	-	killed by block 2  power  ensures  lastResult == powerValue
+MATHLIB_GEN_UOI_109	KILLED	unary-operator-insertion	power	Helper.java	-	killed by block 2  power  ensures  lastResult == powerValue
+MATHLIB_GEN_ABS_110	KILLED	absolute-value-insertion	power	Helper.java	-	killed by block 2  power  ensures  lastResult == powerValue
+MATHLIB_GEN_SDL_111	KILLED	statement-deletion	power	Helper.java	-	killed by block 2  power  ensures  lastResult == powerValue
+MATHLIB_GEN_SEI_112	KILLED	side-effect-insertion	power	Helper.java	-	killed by block 2  power  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_VRO_113	KILLED	variable-replacement	power	Helper.java	-	killed by block 2  power  ensures  lastResult == powerValue
+MATHLIB_GEN_UOI_114	KILLED	unary-operator-insertion	power	Helper.java	-	killed by block 2  power  ensures  powerValue > 0
+MATHLIB_GEN_ABS_115	KILLED	absolute-value-insertion	power	Helper.java	-	killed by block 2  power  ensures  powerValue > 0
+MATHLIB_GEN_RVR_116	KILLED	return-value-replacement	power	Helper.java	-	killed by block 2  power  ensures  powerValue > 0
+MATHLIB_GEN_RVR_117	KILLED	return-value-replacement	power	Helper.java	-	killed by block 2  power  ensures  lastResult == powerValue
+MATHLIB_GEN_RVR_118	KILLED	return-value-replacement	power	Helper.java	-	killed by block 2  power  ensures  powerValue > 0
+MATHLIB_GEN_SEI_119	KILLED	side-effect-insertion	power	Helper.java	-	killed by block 2  power  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_CRP_120	KILLED	constant-replacement	factorial	Helper.java	-	killed by block 3  factorial  ensures  factValue >= 1
+MATHLIB_GEN_CRP_121	KILLED	constant-replacement	factorial	Helper.java	-	killed by block 3  factorial  ensures  factValue >= 1
+MATHLIB_GEN_CRP_122	SURVIVED	constant-replacement	factorial	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_ROR_123	SURVIVED	relational-operator-replacement	factorial	Helper.java	mathlib-005: factorial -> power -> gcd	every generated condition still holds
+MATHLIB_GEN_ROR_124	SURVIVED	relational-operator-replacement	factorial	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_ROR_125	SURVIVED	relational-operator-replacement	factorial	Helper.java	mathlib-005: factorial -> power -> gcd	every generated condition still holds
+MATHLIB_GEN_ROR_126	SURVIVED	relational-operator-replacement	factorial	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_ROR_127	SURVIVED	relational-operator-replacement	factorial	Helper.java	mathlib-005: factorial -> power -> gcd	every generated condition still holds
+MATHLIB_GEN_CRP_128	KILLED	constant-replacement	factorial	Helper.java	-	killed by block 3  factorial  ensures  factValue >= 1
+MATHLIB_GEN_CRP_129	SURVIVED	constant-replacement	factorial	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_CRP_130	KILLED	constant-replacement	factorial	Helper.java	-	killed by block 3  factorial  ensures  factValue >= 1
+MATHLIB_GEN_CRP_131	SURVIVED	constant-replacement	factorial	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_LBR_132	SURVIVED	loop-bound-replacement	factorial	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_LBR_133	SURVIVED	loop-bound-replacement	factorial	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_AOR_134	SURVIVED	arithmetic-operator-replacement	factorial	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_AOR_135	KILLED	arithmetic-operator-replacement	factorial	Helper.java	-	killed by block 3  factorial  ensures  factValue >= 1
+MATHLIB_GEN_AOR_136	KILLED	arithmetic-operator-replacement	factorial	Helper.java	-	killed by block 3  factorial  ensures  factValue >= 1
+MATHLIB_GEN_AOR_137	SURVIVED	arithmetic-operator-replacement	factorial	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_AOI_138	SURVIVED	arithmetic-operator-insertion	factorial	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_AOI_139	SURVIVED	arithmetic-operator-insertion	factorial	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_UOI_140	SURVIVED	unary-operator-insertion	factorial	Helper.java	mathlib-005: factorial -> power -> gcd	every generated condition still holds
+MATHLIB_GEN_ABS_141	KILLED	absolute-value-insertion	factorial	Helper.java	-	killed by block 3  factorial  ensures  factValue >= 1
+MATHLIB_GEN_SDL_142	SURVIVED	statement-deletion	factorial	Helper.java	-	every generated condition still holds
+MATHLIB_GEN_SEI_143	KILLED	side-effect-insertion	factorial	Helper.java	-	killed by block 3  factorial  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_AOI_144	KILLED	arithmetic-operator-insertion	factorial	Helper.java	-	killed by block 3  factorial  ensures  lastResult == factValue
+MATHLIB_GEN_AOI_145	KILLED	arithmetic-operator-insertion	factorial	Helper.java	-	killed by block 3  factorial  ensures  lastResult == factValue
+MATHLIB_GEN_UOI_146	KILLED	unary-operator-insertion	factorial	Helper.java	-	killed by block 3  factorial  ensures  lastResult == factValue
+MATHLIB_GEN_ABS_147	KILLED	absolute-value-insertion	factorial	Helper.java	-	killed by block 3  factorial  ensures  lastResult == factValue
+MATHLIB_GEN_SDL_148	KILLED	statement-deletion	factorial	Helper.java	-	killed by block 3  factorial  ensures  lastResult == factValue
+MATHLIB_GEN_SEI_149	KILLED	side-effect-insertion	factorial	Helper.java	-	killed by block 3  factorial  ensures  calls == \old(calls) + 1
+MATHLIB_GEN_VRO_150	KILLED	variable-replacement	factorial	Helper.java	-	killed by block 3  factorial  ensures  lastResult == factValue
+MATHLIB_GEN_UOI_151	KILLED	unary-operator-insertion	factorial	Helper.java	-	killed by block 3  factorial  ensures  factValue >= 1
+MATHLIB_GEN_ABS_152	KILLED	absolute-value-insertion	factorial	Helper.java	-	killed by block 3  factorial  ensures  factValue >= 1
+MATHLIB_GEN_RVR_153	KILLED	return-value-replacement	factorial	Helper.java	-	killed by block 3  factorial  ensures  factValue >= 1
+MATHLIB_GEN_RVR_154	KILLED	return-value-replacement	factorial	Helper.java	-	killed by block 3  factorial  ensures  lastResult == factValue
+MATHLIB_GEN_RVR_155	KILLED	return-value-replacement	factorial	Helper.java	-	killed by block 3  factorial  ensures  factValue >= 1
+MATHLIB_GEN_SEI_156	KILLED	side-effect-insertion	factorial	Helper.java	-	killed by block 3  factorial  ensures  calls == \old(calls) + 1

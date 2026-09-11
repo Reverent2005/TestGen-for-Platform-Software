@@ -1,0 +1,92 @@
+/*
+ * MUTATION SET — EXAMPLE 10, BinarySearchTree
+ * Library under test: libraries/bst/Helper.java
+ * Test string:        specs/BinarySearchTree.tests
+ *                     (insert -> insert -> insert -> contains -> min -> delete)
+ *
+ * Every fault is seeded into the tree itself; Keys, size and minKey are rebuilt
+ * from the mutated tree afterwards, so nothing here is caught by book-keeping
+ * that a mutation could not reach.  minKey in particular is found by scanning the
+ * keys, not by walking left, which is why min()'s postcondition is a claim about
+ * the ordering rather than a comparison of the tree with itself.
+ */
+
+mutant BST_INSERT_ALWAYS_RIGHT {
+    description: insert descends right even for a key smaller than the node
+    operator:    statement-replacement
+    in:          insertInto
+    find:        node.left = insertInto(node.left, key);
+    replace:     node.right = insertInto(node.right, key);
+}
+
+mutant BST_MIN_WALKS_RIGHT {
+    description: min descends to the right child, so it finds the largest key rather than the smallest
+    operator:    statement-replacement
+    in:          min
+    find:        cursor = cursor.left;
+    replace:     cursor = cursor.right;
+}
+
+mutant BST_CONTAINS_DESCENDS_WRONG_WAY {
+    description: contains goes right when the key is smaller than the node
+    operator:    statement-replacement
+    in:          contains
+    find:        cursor = cursor.left;
+    replace:     cursor = cursor.right;
+}
+
+mutant BST_CONTAINS_ALWAYS_FALSE {
+    description: contains never reports a hit, whatever the tree holds
+    operator:    return-value-replacement
+    in:          contains
+    find:        return true;
+    replace:     return false;
+}
+
+mutant BST_DELETE_DOES_NOTHING {
+    description: delete leaves the tree exactly as it was
+    operator:    statement-deletion
+    in:          delete
+    find:        root = deleteFrom(root, key);
+    replace:
+}
+
+mutant BST_INSERT_MIRROR_STALE {
+    description: insert grows the tree but never rebuilds the spec-visible mirror
+    operator:    statement-deletion
+    in:          insert
+    find:        refresh();
+    replace:
+}
+
+/*
+ * ── operator coverage ────────────────────────────────────────────────────────
+ * A search tree is comparisons all the way down, so this is where a relational
+ * operator and a negated branch can each be broken on their own.
+ */
+
+mutant BST_INSERT_TIES_GO_LEFT {
+    description: insert sends a key equal to the node's own key down the left branch
+    operator:    relational-operator-replacement
+    in:          insertInto
+    find:        if (key < node.key) {
+    replace:     if (key <= node.key) {
+    expect:      survives
+    note:        insert's precondition requires the key to be absent, so no two keys in this run are ever equal and the changed branch is never the one taken. The mutant is unreachable rather than undetected: the precondition that bought `size == \old(size) + 1` also rules this fault out of the sequence.
+}
+
+mutant BST_INSERT_NEVER_GROWS {
+    description: insert never reaches its base case, so no node is ever created
+    operator:    conditional-operator-insertion
+    in:          insertInto
+    find:        if (node == null) {
+    replace:     if (node != null && node == null) {
+}
+
+mutant BST_REFRESH_WRITES_WRONG_FIELD {
+    description: the mirror rebuild files the key count into minKey instead of size
+    operator:    variable-replacement
+    in:          refresh
+    find:        size = Keys.size();
+    replace:     minKey = Keys.size();
+}

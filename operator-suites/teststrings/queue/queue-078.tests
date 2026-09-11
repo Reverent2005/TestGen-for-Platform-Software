@@ -1,0 +1,7 @@
+test QueueGenerated78 {
+    sequence: isEmpty -> enqueue;
+
+    inputs {
+        enqueue[1].elem = "second";
+    }
+}

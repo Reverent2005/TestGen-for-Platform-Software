@@ -1,0 +1,115 @@
+/*
+ * MUTATION SET — EXAMPLE 1, Stack<String>
+ * Library under test: libraries/stack/Helper.java
+ * Test string:        specs/Stack.tests   (push -> push -> pop -> peek)
+ *
+ * Each mutant seeds one fault into the library and the whole pipeline is re-run
+ * against it: spec -> AST -> propagation scan -> ATC IR -> GeneratedATCs.java,
+ * GeneratedATCs_JUnit.java and SingularCase.java -> compile -> execute.
+ *
+ * A mutant is KILLED when some generated pre/postcondition rejects it, and it
+ * SURVIVES when every condition still holds.  A survivor is not a bug in the
+ * runner: it is a statement about what specs/Stack.spec and specs/Stack.tests
+ * together do NOT pin down.
+ *
+ * `find` matches exactly one line, compared with leading and trailing whitespace
+ * stripped, inside the method named by `in`.  An empty `replace` deletes it.
+ */
+
+mutant STACK_PUSH_TOP_NOT_UPDATED {
+    description: push appends the element but never refreshes the derived top field
+    operator:    statement-deletion
+    in:          push
+    find:        top = elem;
+    replace:
+}
+
+mutant STACK_PUSH_SIZE_OFF_BY_ONE {
+    description: push overcounts, reporting one more element than the list holds
+    operator:    arithmetic-operator-insertion
+    in:          push
+    find:        size = S.size();
+    replace:     size = S.size() + 1;
+}
+
+mutant STACK_PUSH_AT_BOTTOM {
+    description: push inserts at the bottom of the list instead of the top
+    operator:    argument-replacement
+    in:          push
+    find:        S.add(elem);
+    replace:     S.add(0, elem);
+    expect:      survives
+    note:        Stack.spec constrains size and top, never the order of S, and the pop in the middle of this test string re-derives top from S[size-1] before peek reads it, so the two orders agree again by the time anything looks. Reordering the test string to push -> push -> peek -> pop kills this (verified), without changing the spec.
+}
+
+mutant STACK_PUSH_DROPS_ELEMENT {
+    description: push updates the bookkeeping but never stores the element
+    operator:    statement-deletion
+    in:          push
+    find:        S.add(elem);
+    replace:
+}
+
+mutant STACK_POP_SIZE_NOT_UPDATED {
+    description: pop removes the element but leaves size at its old value
+    operator:    statement-deletion
+    in:          pop
+    find:        size = S.size();
+    replace:
+}
+
+mutant STACK_POP_FROM_BOTTOM {
+    description: pop returns the oldest element instead of the newest
+    operator:    argument-replacement
+    in:          pop
+    find:        String poppedElem = S.remove(S.size() - 1);
+    replace:     String poppedElem = S.remove(0);
+    expect:      survives
+    note:        pop's postcondition binds \result to poppedElem and constrains size, but never says WHICH element came back. The binding is a capture, not an assertion.
+}
+
+mutant STACK_POP_TOP_ALWAYS_NULL {
+    description: pop clears top unconditionally instead of re-deriving it
+    operator:    condition-to-constant
+    in:          pop
+    find:        top = S.isEmpty() ? null : S.get(S.size() - 1);
+    replace:     top = null;
+}
+
+mutant STACK_PEEK_RETURNS_BOTTOM {
+    description: peek reads the bottom of the list instead of the top
+    operator:    argument-replacement
+    in:          peek
+    find:        return S.get(S.size() - 1);
+    replace:     return S.get(0);
+    expect:      survives
+    note:        by the time peek runs, this test string has left exactly one element on the stack, so bottom and top are the same element. Reordering to push -> push -> peek -> pop kills this (verified), without changing the spec.
+}
+
+mutant STACK_PEEK_MUTATES_STATE {
+    description: peek is no longer read-only — it bumps size on the way out
+    operator:    side-effect-insertion
+    in:          peek
+    find:        return S.get(S.size() - 1);
+    replace:     size = size + 1; return S.get(S.size() - 1);
+}
+
+/*
+ * ── operator coverage ────────────────────────────────────────────────────────
+ */
+
+mutant STACK_PUSH_SIZE_NEGATED {
+    description: push files the negation of the size
+    operator:    unary-operator-insertion
+    in:          push
+    find:        size = S.size();
+    replace:     size = -S.size();
+}
+
+mutant STACK_POP_RETURNS_NOTHING {
+    description: pop reports null without taking anything off the stack
+    operator:    return-value-replacement
+    in:          pop
+    find:        String poppedElem = S.remove(S.size() - 1);
+    replace:     String poppedElem = null;
+}

@@ -1,0 +1,9 @@
+test MathlibGenerated144 {
+    sequence: abs -> abs -> factorial;
+
+    inputs {
+        abs[0].x = 3;
+        abs[1].x = 3;
+        factorial[2].n = 1;
+    }
+}

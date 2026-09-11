@@ -1,0 +1,10 @@
+test MathlibGenerated256 {
+    sequence: power -> abs -> factorial;
+
+    inputs {
+        power[0].base = 5;
+        power[0].exponent = 7;
+        abs[1].x = 48;
+        factorial[2].n = 5;
+    }
+}

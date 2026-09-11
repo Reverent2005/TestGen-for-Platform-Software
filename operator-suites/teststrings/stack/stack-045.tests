@@ -1,0 +1,7 @@
+test StackGenerated45 {
+    sequence: push -> pop;
+
+    inputs {
+        push[0].elem = "beta";
+    }
+}

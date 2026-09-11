@@ -1,0 +1,69 @@
+/*
+ * MUTATION SET — EXAMPLE 9, StringSet
+ * Library under test: libraries/set/Helper.java
+ * Test string:        specs/StringSet.tests   (add -> add -> contains -> remove)
+ *
+ * The survivors here are both about what the TEST STRING never asks rather than
+ * about what the spec cannot say: it only ever mentions one element, and it only
+ * ever looks up an element that is present.  Unlike the survivors in Examples 5
+ * and 6, these two would die against a longer test string with no change to the
+ * specification at all.
+ */
+
+mutant SET_ADD_STORES_NOTHING {
+    description: add reports whether the element was new but never stores it
+    operator:    statement-replacement
+    in:          add
+    find:        boolean added = E.add(elem);
+    replace:     boolean added = !E.contains(elem);
+}
+
+mutant SET_ADD_SIZE_NOT_UPDATED {
+    description: add stores the element but leaves size at its old value
+    operator:    statement-deletion
+    in:          add
+    find:        size = E.size();
+    replace:
+}
+
+mutant SET_CONTAINS_ALWAYS_TRUE {
+    description: contains answers yes for every element it is asked about
+    operator:    return-value-replacement
+    in:          contains
+    find:        return E.contains(elem);
+    replace:     return true;
+    expect:      survives
+    note:        the test string only ever looks up "alpha", which really is in the set, so a lookup that always says yes is right every time it is asked. Appending a lookup of an element that was never added kills this without touching StringSet.spec.
+}
+
+mutant SET_REMOVE_KEEPS_ELEMENT {
+    description: remove updates the size but leaves the element in the set
+    operator:    statement-deletion
+    in:          remove
+    find:        E.remove(elem);
+    replace:
+}
+
+mutant SET_REMOVE_CLEARS_EVERYTHING {
+    description: remove empties the whole set instead of dropping one element
+    operator:    method-call-replacement
+    in:          remove
+    find:        E.remove(elem);
+    replace:     E.clear();
+    expect:      survives
+    note:        the set holds exactly one element when remove runs, because both adds used the same one, so clearing it and removing it are the same operation. A test string that added a second, different element would separate them; the specification already says enough.
+}
+
+/*
+ * ── operator coverage ────────────────────────────────────────────────────────
+ * A boolean-returning library is where a unary operator insertion bites: negating
+ * an answer is the whole fault.
+ */
+
+mutant SET_CONTAINS_NEGATED {
+    description: contains reports the opposite of what the set holds
+    operator:    unary-operator-insertion
+    in:          contains
+    find:        return E.contains(elem);
+    replace:     return !E.contains(elem);
+}

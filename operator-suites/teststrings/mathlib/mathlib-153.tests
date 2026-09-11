@@ -1,0 +1,10 @@
+test MathlibGenerated153 {
+    sequence: abs -> gcd -> factorial;
+
+    inputs {
+        abs[0].x = 0;
+        gcd[1].a = 18;
+        gcd[1].b = 7;
+        factorial[2].n = 48;
+    }
+}

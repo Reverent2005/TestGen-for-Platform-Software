@@ -1,0 +1,11 @@
+test SetGenerated180 {
+    sequence: remove -> remove -> add -> add -> remove;
+
+    inputs {
+        remove[0].elem = "gamma";
+        remove[1].elem = "gamma";
+        add[2].elem = "alpha";
+        add[3].elem = "beta";
+        remove[4].elem = "alpha";
+    }
+}

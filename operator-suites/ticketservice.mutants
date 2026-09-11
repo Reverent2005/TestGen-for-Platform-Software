@@ -1,0 +1,1976 @@
+/*
+ * GENERATED MUTATION SUITE — ticketservice
+ *
+ * Produced by OperatorMutantGenerator from:
+ *   ../libraries/ticketservice/Helper.java
+ *
+ * DO NOT EDIT. Regenerate with ./run-operator-suites.sh ticketservice
+ *
+ * Every operator in MutationOperator is applied to every line of the library
+ * that admits it, so this file is what the specification is measured against
+ * when nobody is choosing the faults. It is the counterpart of the
+ * hand-written set in mutations/ticketservice.mutants:
+ * that one asks whether the suite catches the faults we thought of, this one
+ * asks what fraction of all faults of each KIND it catches.
+ *
+ * `expect` is absent throughout: a generated mutant carries no prediction,
+ * and some of these are equivalent to the original and cannot be killed by
+ * anyone. The run measures; it does not check a declaration.
+ */
+
+mutant TICKETSERVICE_GEN_CRP_1 {
+    description: the literal 3 becomes 0, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int ROWS = 3;
+    replace:     private static final int ROWS = 0;
+}
+
+mutant TICKETSERVICE_GEN_CRP_2 {
+    description: the literal 3 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int ROWS = 3;
+    replace:     private static final int ROWS = 1;
+}
+
+mutant TICKETSERVICE_GEN_CRP_3 {
+    description: the literal 3 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int ROWS = 3;
+    replace:     private static final int ROWS = -1;
+}
+
+mutant TICKETSERVICE_GEN_CRP_4 {
+    description: the literal 3 becomes 4, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int ROWS = 3;
+    replace:     private static final int ROWS = 4;
+}
+
+mutant TICKETSERVICE_GEN_CRP_5 {
+    description: the literal 3 becomes 2, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int ROWS = 3;
+    replace:     private static final int ROWS = 2;
+}
+
+mutant TICKETSERVICE_GEN_CRP_6 {
+    description: the literal 4 becomes 0, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int COLS = 4;
+    replace:     private static final int COLS = 0;
+}
+
+mutant TICKETSERVICE_GEN_CRP_7 {
+    description: the literal 4 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int COLS = 4;
+    replace:     private static final int COLS = 1;
+}
+
+mutant TICKETSERVICE_GEN_CRP_8 {
+    description: the literal 4 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int COLS = 4;
+    replace:     private static final int COLS = -1;
+}
+
+mutant TICKETSERVICE_GEN_CRP_9 {
+    description: the literal 4 becomes 5, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int COLS = 4;
+    replace:     private static final int COLS = 5;
+}
+
+mutant TICKETSERVICE_GEN_CRP_10 {
+    description: the literal 4 becomes 3, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int COLS = 4;
+    replace:     private static final int COLS = 3;
+}
+
+mutant TICKETSERVICE_GEN_CRP_11 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int FREE = 0;
+    replace:     private static final int FREE = 1;
+}
+
+mutant TICKETSERVICE_GEN_CRP_12 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int FREE = 0;
+    replace:     private static final int FREE = -1;
+}
+
+mutant TICKETSERVICE_GEN_CRP_13 {
+    description: the literal 1 becomes 0, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int HELD = 1;
+    replace:     private static final int HELD = 0;
+}
+
+mutant TICKETSERVICE_GEN_CRP_14 {
+    description: the literal 1 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int HELD = 1;
+    replace:     private static final int HELD = -1;
+}
+
+mutant TICKETSERVICE_GEN_CRP_15 {
+    description: the literal 1 becomes 2, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int HELD = 1;
+    replace:     private static final int HELD = 2;
+}
+
+mutant TICKETSERVICE_GEN_CRP_16 {
+    description: the literal 2 becomes 0, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int RESERVED = 2;
+    replace:     private static final int RESERVED = 0;
+}
+
+mutant TICKETSERVICE_GEN_CRP_17 {
+    description: the literal 2 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int RESERVED = 2;
+    replace:     private static final int RESERVED = 1;
+}
+
+mutant TICKETSERVICE_GEN_CRP_18 {
+    description: the literal 2 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int RESERVED = 2;
+    replace:     private static final int RESERVED = -1;
+}
+
+mutant TICKETSERVICE_GEN_CRP_19 {
+    description: the literal 2 becomes 3, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        private static final int RESERVED = 2;
+    replace:     private static final int RESERVED = 3;
+}
+
+mutant TICKETSERVICE_GEN_SDL_20 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        public static Map<Integer, String> Holds = new HashMap<Integer, String>();
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_SEI_21 {
+    description: a write to available is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        public static Map<Integer, String> Holds = new HashMap<Integer, String>();
+    replace:     public static Map<Integer, String> Holds = new HashMap<Integer, String>(); available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_SDL_22 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        public static Map<Integer, String> Reservations = new HashMap<Integer, String>();
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_SEI_23 {
+    description: a write to available is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        public static Map<Integer, String> Reservations = new HashMap<Integer, String>();
+    replace:     public static Map<Integer, String> Reservations = new HashMap<Integer, String>(); available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_AOR_24 {
+    description: * becomes +, in Helper.java
+    operator:    arithmetic-operator-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = ROWS + COLS;
+}
+
+mutant TICKETSERVICE_GEN_AOR_25 {
+    description: * becomes -, in Helper.java
+    operator:    arithmetic-operator-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = ROWS - COLS;
+}
+
+mutant TICKETSERVICE_GEN_AOR_26 {
+    description: * becomes /, in Helper.java
+    operator:    arithmetic-operator-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = ROWS / COLS;
+}
+
+mutant TICKETSERVICE_GEN_AOR_27 {
+    description: * becomes %, in Helper.java
+    operator:    arithmetic-operator-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = ROWS % COLS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_28 {
+    description: ROWS becomes COLS, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = COLS * COLS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_29 {
+    description: ROWS becomes FREE, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = FREE * COLS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_30 {
+    description: ROWS becomes HELD, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = HELD * COLS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_31 {
+    description: ROWS becomes RESERVED, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = RESERVED * COLS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_32 {
+    description: ROWS becomes available, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = available * COLS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_33 {
+    description: ROWS becomes nextHoldId, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = nextHoldId * COLS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_34 {
+    description: COLS becomes ROWS, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = ROWS * ROWS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_35 {
+    description: COLS becomes FREE, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = ROWS * FREE;
+}
+
+mutant TICKETSERVICE_GEN_VRO_36 {
+    description: COLS becomes HELD, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = ROWS * HELD;
+}
+
+mutant TICKETSERVICE_GEN_VRO_37 {
+    description: COLS becomes RESERVED, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = ROWS * RESERVED;
+}
+
+mutant TICKETSERVICE_GEN_VRO_38 {
+    description: COLS becomes available, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = ROWS * available;
+}
+
+mutant TICKETSERVICE_GEN_VRO_39 {
+    description: COLS becomes nextHoldId, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        public static int available = ROWS * COLS;
+    replace:     public static int available = ROWS * nextHoldId;
+}
+
+mutant TICKETSERVICE_GEN_CRP_40 {
+    description: the literal 1 becomes 0, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int nextHoldId = 1;
+    replace:     public static int nextHoldId = 0;
+}
+
+mutant TICKETSERVICE_GEN_CRP_41 {
+    description: the literal 1 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int nextHoldId = 1;
+    replace:     public static int nextHoldId = -1;
+}
+
+mutant TICKETSERVICE_GEN_CRP_42 {
+    description: the literal 1 becomes 2, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int nextHoldId = 1;
+    replace:     public static int nextHoldId = 2;
+}
+
+mutant TICKETSERVICE_GEN_AOR_43 {
+    description: * becomes +, in Helper.java
+    operator:    arithmetic-operator-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[ROWS + COLS];
+}
+
+mutant TICKETSERVICE_GEN_AOR_44 {
+    description: * becomes -, in Helper.java
+    operator:    arithmetic-operator-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[ROWS - COLS];
+}
+
+mutant TICKETSERVICE_GEN_AOR_45 {
+    description: * becomes /, in Helper.java
+    operator:    arithmetic-operator-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[ROWS / COLS];
+}
+
+mutant TICKETSERVICE_GEN_AOR_46 {
+    description: * becomes %, in Helper.java
+    operator:    arithmetic-operator-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[ROWS % COLS];
+}
+
+mutant TICKETSERVICE_GEN_VRO_47 {
+    description: ROWS becomes COLS, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[COLS * COLS];
+}
+
+mutant TICKETSERVICE_GEN_VRO_48 {
+    description: ROWS becomes FREE, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[FREE * COLS];
+}
+
+mutant TICKETSERVICE_GEN_VRO_49 {
+    description: ROWS becomes HELD, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[HELD * COLS];
+}
+
+mutant TICKETSERVICE_GEN_VRO_50 {
+    description: ROWS becomes RESERVED, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[RESERVED * COLS];
+}
+
+mutant TICKETSERVICE_GEN_VRO_51 {
+    description: ROWS becomes available, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[available * COLS];
+}
+
+mutant TICKETSERVICE_GEN_VRO_52 {
+    description: ROWS becomes nextHoldId, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[nextHoldId * COLS];
+}
+
+mutant TICKETSERVICE_GEN_VRO_53 {
+    description: COLS becomes ROWS, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[ROWS * ROWS];
+}
+
+mutant TICKETSERVICE_GEN_VRO_54 {
+    description: COLS becomes FREE, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[ROWS * FREE];
+}
+
+mutant TICKETSERVICE_GEN_VRO_55 {
+    description: COLS becomes HELD, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[ROWS * HELD];
+}
+
+mutant TICKETSERVICE_GEN_VRO_56 {
+    description: COLS becomes RESERVED, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[ROWS * RESERVED];
+}
+
+mutant TICKETSERVICE_GEN_VRO_57 {
+    description: COLS becomes available, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[ROWS * available];
+}
+
+mutant TICKETSERVICE_GEN_VRO_58 {
+    description: COLS becomes nextHoldId, in Helper.java
+    operator:    variable-replacement
+    file:        Helper.java
+    find:        private static int[] seats = new int[ROWS * COLS];
+    replace:     private static int[] seats = new int[ROWS * nextHoldId];
+}
+
+mutant TICKETSERVICE_GEN_SDL_59 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        new HashMap<Integer, List<Integer>>();
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_SEI_60 {
+    description: a write to available is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        new HashMap<Integer, List<Integer>>();
+    replace:     new HashMap<Integer, List<Integer>>(); available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_UOI_61 {
+    description: the returned value is negated, in numSeatsAvailable()
+    operator:    unary-operator-insertion
+    in:          numSeatsAvailable
+    file:        Helper.java
+    find:        return available;
+    replace:     return -(available);
+}
+
+mutant TICKETSERVICE_GEN_ABS_62 {
+    description: the returned value is forced negative, in numSeatsAvailable()
+    operator:    absolute-value-insertion
+    in:          numSeatsAvailable
+    file:        Helper.java
+    find:        return available;
+    replace:     return -Math.abs(available);
+}
+
+mutant TICKETSERVICE_GEN_RVR_63 {
+    description: the answer becomes 0, in numSeatsAvailable()
+    operator:    return-value-replacement
+    in:          numSeatsAvailable
+    file:        Helper.java
+    find:        return available;
+    replace:     return 0;
+}
+
+mutant TICKETSERVICE_GEN_RVR_64 {
+    description: the answer becomes 1, in numSeatsAvailable()
+    operator:    return-value-replacement
+    in:          numSeatsAvailable
+    file:        Helper.java
+    find:        return available;
+    replace:     return 1;
+}
+
+mutant TICKETSERVICE_GEN_RVR_65 {
+    description: the answer becomes -1, in numSeatsAvailable()
+    operator:    return-value-replacement
+    in:          numSeatsAvailable
+    file:        Helper.java
+    find:        return available;
+    replace:     return -1;
+}
+
+mutant TICKETSERVICE_GEN_SEI_66 {
+    description: a write to available is inserted before the return, in numSeatsAvailable()
+    operator:    side-effect-insertion
+    in:          numSeatsAvailable
+    file:        Helper.java
+    find:        return available;
+    replace:     available = available + 1; return available;
+}
+
+mutant TICKETSERVICE_GEN_VRO_67 {
+    description: available becomes ROWS, in numSeatsAvailable()
+    operator:    variable-replacement
+    in:          numSeatsAvailable
+    file:        Helper.java
+    find:        return available;
+    replace:     return ROWS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_68 {
+    description: available becomes COLS, in numSeatsAvailable()
+    operator:    variable-replacement
+    in:          numSeatsAvailable
+    file:        Helper.java
+    find:        return available;
+    replace:     return COLS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_69 {
+    description: available becomes FREE, in numSeatsAvailable()
+    operator:    variable-replacement
+    in:          numSeatsAvailable
+    file:        Helper.java
+    find:        return available;
+    replace:     return FREE;
+}
+
+mutant TICKETSERVICE_GEN_VRO_70 {
+    description: available becomes HELD, in numSeatsAvailable()
+    operator:    variable-replacement
+    in:          numSeatsAvailable
+    file:        Helper.java
+    find:        return available;
+    replace:     return HELD;
+}
+
+mutant TICKETSERVICE_GEN_VRO_71 {
+    description: available becomes RESERVED, in numSeatsAvailable()
+    operator:    variable-replacement
+    in:          numSeatsAvailable
+    file:        Helper.java
+    find:        return available;
+    replace:     return RESERVED;
+}
+
+mutant TICKETSERVICE_GEN_VRO_72 {
+    description: available becomes nextHoldId, in numSeatsAvailable()
+    operator:    variable-replacement
+    in:          numSeatsAvailable
+    file:        Helper.java
+    find:        return available;
+    replace:     return nextHoldId;
+}
+
+mutant TICKETSERVICE_GEN_SDL_73 {
+    description: the statement is removed, in findAndHoldSeats()
+    operator:    statement-deletion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        List<Integer> best = mostValuableFreeSeats(numSeats);
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_SEI_74 {
+    description: a write to available is inserted after the statement, in findAndHoldSeats()
+    operator:    side-effect-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        List<Integer> best = mostValuableFreeSeats(numSeats);
+    replace:     List<Integer> best = mostValuableFreeSeats(numSeats); available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_SDL_75 {
+    description: the statement is removed, in findAndHoldSeats()
+    operator:    statement-deletion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        seats[seatId] = HELD;
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_SEI_76 {
+    description: a write to available is inserted after the statement, in findAndHoldSeats()
+    operator:    side-effect-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        seats[seatId] = HELD;
+    replace:     seats[seatId] = HELD; available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_77 {
+    description: HELD becomes ROWS, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        seats[seatId] = HELD;
+    replace:     seats[seatId] = ROWS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_78 {
+    description: HELD becomes COLS, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        seats[seatId] = HELD;
+    replace:     seats[seatId] = COLS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_79 {
+    description: HELD becomes FREE, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        seats[seatId] = HELD;
+    replace:     seats[seatId] = FREE;
+}
+
+mutant TICKETSERVICE_GEN_VRO_80 {
+    description: HELD becomes RESERVED, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        seats[seatId] = HELD;
+    replace:     seats[seatId] = RESERVED;
+}
+
+mutant TICKETSERVICE_GEN_VRO_81 {
+    description: HELD becomes available, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        seats[seatId] = HELD;
+    replace:     seats[seatId] = available;
+}
+
+mutant TICKETSERVICE_GEN_VRO_82 {
+    description: HELD becomes nextHoldId, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        seats[seatId] = HELD;
+    replace:     seats[seatId] = nextHoldId;
+}
+
+mutant TICKETSERVICE_GEN_VRO_83 {
+    description: nextHoldId becomes ROWS, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        Integer seatHoldId = nextHoldId;
+    replace:     Integer seatHoldId = ROWS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_84 {
+    description: nextHoldId becomes COLS, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        Integer seatHoldId = nextHoldId;
+    replace:     Integer seatHoldId = COLS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_85 {
+    description: nextHoldId becomes FREE, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        Integer seatHoldId = nextHoldId;
+    replace:     Integer seatHoldId = FREE;
+}
+
+mutant TICKETSERVICE_GEN_VRO_86 {
+    description: nextHoldId becomes HELD, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        Integer seatHoldId = nextHoldId;
+    replace:     Integer seatHoldId = HELD;
+}
+
+mutant TICKETSERVICE_GEN_VRO_87 {
+    description: nextHoldId becomes RESERVED, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        Integer seatHoldId = nextHoldId;
+    replace:     Integer seatHoldId = RESERVED;
+}
+
+mutant TICKETSERVICE_GEN_VRO_88 {
+    description: nextHoldId becomes available, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        Integer seatHoldId = nextHoldId;
+    replace:     Integer seatHoldId = available;
+}
+
+mutant TICKETSERVICE_GEN_AOR_89 {
+    description: + becomes -, in findAndHoldSeats()
+    operator:    arithmetic-operator-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = nextHoldId - 1;
+}
+
+mutant TICKETSERVICE_GEN_AOR_90 {
+    description: + becomes *, in findAndHoldSeats()
+    operator:    arithmetic-operator-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = nextHoldId * 1;
+}
+
+mutant TICKETSERVICE_GEN_AOR_91 {
+    description: + becomes /, in findAndHoldSeats()
+    operator:    arithmetic-operator-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = nextHoldId / 1;
+}
+
+mutant TICKETSERVICE_GEN_AOR_92 {
+    description: + becomes %, in findAndHoldSeats()
+    operator:    arithmetic-operator-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = nextHoldId % 1;
+}
+
+mutant TICKETSERVICE_GEN_AOI_93 {
+    description: the value assigned to nextHoldId is shifted by + 1, in findAndHoldSeats()
+    operator:    arithmetic-operator-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = nextHoldId + 1 + 1;
+}
+
+mutant TICKETSERVICE_GEN_AOI_94 {
+    description: the value assigned to nextHoldId is shifted by - 1, in findAndHoldSeats()
+    operator:    arithmetic-operator-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = nextHoldId + 1 - 1;
+}
+
+mutant TICKETSERVICE_GEN_UOI_95 {
+    description: the value assigned to nextHoldId is negated, in findAndHoldSeats()
+    operator:    unary-operator-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = -(nextHoldId + 1);
+}
+
+mutant TICKETSERVICE_GEN_ABS_96 {
+    description: the value assigned to nextHoldId is forced negative, in findAndHoldSeats()
+    operator:    absolute-value-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = -Math.abs(nextHoldId + 1);
+}
+
+mutant TICKETSERVICE_GEN_CRP_97 {
+    description: the literal 1 becomes 0, in findAndHoldSeats()
+    operator:    constant-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = nextHoldId + 0;
+}
+
+mutant TICKETSERVICE_GEN_CRP_98 {
+    description: the literal 1 becomes -1, in findAndHoldSeats()
+    operator:    constant-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = nextHoldId + -1;
+}
+
+mutant TICKETSERVICE_GEN_CRP_99 {
+    description: the literal 1 becomes 2, in findAndHoldSeats()
+    operator:    constant-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = nextHoldId + 2;
+}
+
+mutant TICKETSERVICE_GEN_SDL_100 {
+    description: the statement is removed, in findAndHoldSeats()
+    operator:    statement-deletion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_SEI_101 {
+    description: a write to available is inserted after the statement, in findAndHoldSeats()
+    operator:    side-effect-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = nextHoldId + 1; available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_102 {
+    description: nextHoldId becomes ROWS, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     ROWS = nextHoldId + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_103 {
+    description: nextHoldId becomes COLS, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     COLS = nextHoldId + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_104 {
+    description: nextHoldId becomes FREE, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     FREE = nextHoldId + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_105 {
+    description: nextHoldId becomes HELD, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     HELD = nextHoldId + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_106 {
+    description: nextHoldId becomes RESERVED, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     RESERVED = nextHoldId + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_107 {
+    description: nextHoldId becomes available, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     available = nextHoldId + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_108 {
+    description: nextHoldId becomes ROWS, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = ROWS + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_109 {
+    description: nextHoldId becomes COLS, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = COLS + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_110 {
+    description: nextHoldId becomes FREE, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = FREE + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_111 {
+    description: nextHoldId becomes HELD, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = HELD + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_112 {
+    description: nextHoldId becomes RESERVED, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = RESERVED + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_113 {
+    description: nextHoldId becomes available, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        nextHoldId = nextHoldId + 1;
+    replace:     nextHoldId = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_SDL_114 {
+    description: the statement is removed, in findAndHoldSeats()
+    operator:    statement-deletion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        Holds.put(seatHoldId, customerEmail);
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_STR_115 {
+    description: the statement runs twice, in findAndHoldSeats()
+    operator:    statement-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        Holds.put(seatHoldId, customerEmail);
+    replace:     Holds.put(seatHoldId, customerEmail); Holds.put(seatHoldId, customerEmail);
+}
+
+mutant TICKETSERVICE_GEN_ARP_116 {
+    description: the two arguments to put() are swapped, in findAndHoldSeats()
+    operator:    argument-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        Holds.put(seatHoldId, customerEmail);
+    replace:     Holds.put(customerEmail, seatHoldId);
+}
+
+mutant TICKETSERVICE_GEN_MCR_117 {
+    description: .put( becomes .putIfAbsent(, in findAndHoldSeats()
+    operator:    method-call-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        Holds.put(seatHoldId, customerEmail);
+    replace:     Holds.putIfAbsent(seatHoldId, customerEmail);
+}
+
+mutant TICKETSERVICE_GEN_SEI_118 {
+    description: a write to available is inserted after the statement, in findAndHoldSeats()
+    operator:    side-effect-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        Holds.put(seatHoldId, customerEmail);
+    replace:     Holds.put(seatHoldId, customerEmail); available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_119 {
+    description: Holds becomes Reservations, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        Holds.put(seatHoldId, customerEmail);
+    replace:     Reservations.put(seatHoldId, customerEmail);
+}
+
+mutant TICKETSERVICE_GEN_SDL_120 {
+    description: the statement is removed, in findAndHoldSeats()
+    operator:    statement-deletion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        heldSeats.put(seatHoldId, best);
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_STR_121 {
+    description: the statement runs twice, in findAndHoldSeats()
+    operator:    statement-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        heldSeats.put(seatHoldId, best);
+    replace:     heldSeats.put(seatHoldId, best); heldSeats.put(seatHoldId, best);
+}
+
+mutant TICKETSERVICE_GEN_ARP_122 {
+    description: the two arguments to put() are swapped, in findAndHoldSeats()
+    operator:    argument-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        heldSeats.put(seatHoldId, best);
+    replace:     heldSeats.put(best, seatHoldId);
+}
+
+mutant TICKETSERVICE_GEN_MCR_123 {
+    description: .put( becomes .putIfAbsent(, in findAndHoldSeats()
+    operator:    method-call-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        heldSeats.put(seatHoldId, best);
+    replace:     heldSeats.putIfAbsent(seatHoldId, best);
+}
+
+mutant TICKETSERVICE_GEN_SEI_124 {
+    description: a write to available is inserted after the statement, in findAndHoldSeats()
+    operator:    side-effect-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        heldSeats.put(seatHoldId, best);
+    replace:     heldSeats.put(seatHoldId, best); available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_AOR_125 {
+    description: - becomes +, in findAndHoldSeats()
+    operator:    arithmetic-operator-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     available = available + numSeats;
+}
+
+mutant TICKETSERVICE_GEN_AOR_126 {
+    description: - becomes *, in findAndHoldSeats()
+    operator:    arithmetic-operator-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     available = available * numSeats;
+}
+
+mutant TICKETSERVICE_GEN_AOR_127 {
+    description: - becomes /, in findAndHoldSeats()
+    operator:    arithmetic-operator-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     available = available / numSeats;
+}
+
+mutant TICKETSERVICE_GEN_AOR_128 {
+    description: - becomes %, in findAndHoldSeats()
+    operator:    arithmetic-operator-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     available = available % numSeats;
+}
+
+mutant TICKETSERVICE_GEN_AOI_129 {
+    description: the value assigned to available is shifted by + 1, in findAndHoldSeats()
+    operator:    arithmetic-operator-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     available = available - numSeats + 1;
+}
+
+mutant TICKETSERVICE_GEN_AOI_130 {
+    description: the value assigned to available is shifted by - 1, in findAndHoldSeats()
+    operator:    arithmetic-operator-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     available = available - numSeats - 1;
+}
+
+mutant TICKETSERVICE_GEN_UOI_131 {
+    description: the value assigned to available is negated, in findAndHoldSeats()
+    operator:    unary-operator-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     available = -(available - numSeats);
+}
+
+mutant TICKETSERVICE_GEN_ABS_132 {
+    description: the value assigned to available is forced negative, in findAndHoldSeats()
+    operator:    absolute-value-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     available = -Math.abs(available - numSeats);
+}
+
+mutant TICKETSERVICE_GEN_SDL_133 {
+    description: the statement is removed, in findAndHoldSeats()
+    operator:    statement-deletion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_VRO_134 {
+    description: available becomes ROWS, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     ROWS = available - numSeats;
+}
+
+mutant TICKETSERVICE_GEN_VRO_135 {
+    description: available becomes COLS, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     COLS = available - numSeats;
+}
+
+mutant TICKETSERVICE_GEN_VRO_136 {
+    description: available becomes FREE, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     FREE = available - numSeats;
+}
+
+mutant TICKETSERVICE_GEN_VRO_137 {
+    description: available becomes HELD, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     HELD = available - numSeats;
+}
+
+mutant TICKETSERVICE_GEN_VRO_138 {
+    description: available becomes RESERVED, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     RESERVED = available - numSeats;
+}
+
+mutant TICKETSERVICE_GEN_VRO_139 {
+    description: available becomes nextHoldId, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     nextHoldId = available - numSeats;
+}
+
+mutant TICKETSERVICE_GEN_VRO_140 {
+    description: available becomes ROWS, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     available = ROWS - numSeats;
+}
+
+mutant TICKETSERVICE_GEN_VRO_141 {
+    description: available becomes COLS, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     available = COLS - numSeats;
+}
+
+mutant TICKETSERVICE_GEN_VRO_142 {
+    description: available becomes FREE, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     available = FREE - numSeats;
+}
+
+mutant TICKETSERVICE_GEN_VRO_143 {
+    description: available becomes HELD, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     available = HELD - numSeats;
+}
+
+mutant TICKETSERVICE_GEN_VRO_144 {
+    description: available becomes RESERVED, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     available = RESERVED - numSeats;
+}
+
+mutant TICKETSERVICE_GEN_VRO_145 {
+    description: available becomes nextHoldId, in findAndHoldSeats()
+    operator:    variable-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        available = available - numSeats;
+    replace:     available = nextHoldId - numSeats;
+}
+
+mutant TICKETSERVICE_GEN_UOI_146 {
+    description: the returned value is negated, in findAndHoldSeats()
+    operator:    unary-operator-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        return seatHoldId;
+    replace:     return -(seatHoldId);
+}
+
+mutant TICKETSERVICE_GEN_ABS_147 {
+    description: the returned value is forced negative, in findAndHoldSeats()
+    operator:    absolute-value-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        return seatHoldId;
+    replace:     return -Math.abs(seatHoldId);
+}
+
+mutant TICKETSERVICE_GEN_RVR_148 {
+    description: the answer becomes 0, in findAndHoldSeats()
+    operator:    return-value-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        return seatHoldId;
+    replace:     return 0;
+}
+
+mutant TICKETSERVICE_GEN_RVR_149 {
+    description: the answer becomes 1, in findAndHoldSeats()
+    operator:    return-value-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        return seatHoldId;
+    replace:     return 1;
+}
+
+mutant TICKETSERVICE_GEN_RVR_150 {
+    description: the answer becomes -1, in findAndHoldSeats()
+    operator:    return-value-replacement
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        return seatHoldId;
+    replace:     return -1;
+}
+
+mutant TICKETSERVICE_GEN_SEI_151 {
+    description: a write to available is inserted before the return, in findAndHoldSeats()
+    operator:    side-effect-insertion
+    in:          findAndHoldSeats
+    file:        Helper.java
+    find:        return seatHoldId;
+    replace:     available = available + 1; return seatHoldId;
+}
+
+mutant TICKETSERVICE_GEN_ARP_152 {
+    description: the argument to get() is shifted by + 1, in reserveSeats()
+    operator:    argument-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        for (Integer seatId : heldSeats.get(seatHoldId)) {
+    replace:     for (Integer seatId : heldSeats.get(seatHoldId + 1)) {
+}
+
+mutant TICKETSERVICE_GEN_ARP_153 {
+    description: the argument to get() is shifted by - 1, in reserveSeats()
+    operator:    argument-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        for (Integer seatId : heldSeats.get(seatHoldId)) {
+    replace:     for (Integer seatId : heldSeats.get(seatHoldId - 1)) {
+}
+
+mutant TICKETSERVICE_GEN_MCR_154 {
+    description: .get( becomes .remove(, in reserveSeats()
+    operator:    method-call-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        for (Integer seatId : heldSeats.get(seatHoldId)) {
+    replace:     for (Integer seatId : heldSeats.remove(seatHoldId)) {
+}
+
+mutant TICKETSERVICE_GEN_SDL_155 {
+    description: the statement is removed, in reserveSeats()
+    operator:    statement-deletion
+    in:          reserveSeats
+    file:        Helper.java
+    find:        seats[seatId] = RESERVED;
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_SEI_156 {
+    description: a write to available is inserted after the statement, in reserveSeats()
+    operator:    side-effect-insertion
+    in:          reserveSeats
+    file:        Helper.java
+    find:        seats[seatId] = RESERVED;
+    replace:     seats[seatId] = RESERVED; available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_157 {
+    description: RESERVED becomes ROWS, in reserveSeats()
+    operator:    variable-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        seats[seatId] = RESERVED;
+    replace:     seats[seatId] = ROWS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_158 {
+    description: RESERVED becomes COLS, in reserveSeats()
+    operator:    variable-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        seats[seatId] = RESERVED;
+    replace:     seats[seatId] = COLS;
+}
+
+mutant TICKETSERVICE_GEN_VRO_159 {
+    description: RESERVED becomes FREE, in reserveSeats()
+    operator:    variable-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        seats[seatId] = RESERVED;
+    replace:     seats[seatId] = FREE;
+}
+
+mutant TICKETSERVICE_GEN_VRO_160 {
+    description: RESERVED becomes HELD, in reserveSeats()
+    operator:    variable-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        seats[seatId] = RESERVED;
+    replace:     seats[seatId] = HELD;
+}
+
+mutant TICKETSERVICE_GEN_VRO_161 {
+    description: RESERVED becomes available, in reserveSeats()
+    operator:    variable-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        seats[seatId] = RESERVED;
+    replace:     seats[seatId] = available;
+}
+
+mutant TICKETSERVICE_GEN_VRO_162 {
+    description: RESERVED becomes nextHoldId, in reserveSeats()
+    operator:    variable-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        seats[seatId] = RESERVED;
+    replace:     seats[seatId] = nextHoldId;
+}
+
+mutant TICKETSERVICE_GEN_SDL_163 {
+    description: the statement is removed, in reserveSeats()
+    operator:    statement-deletion
+    in:          reserveSeats
+    file:        Helper.java
+    find:        Reservations.put(seatHoldId, confirmationCode);
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_STR_164 {
+    description: the statement runs twice, in reserveSeats()
+    operator:    statement-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        Reservations.put(seatHoldId, confirmationCode);
+    replace:     Reservations.put(seatHoldId, confirmationCode); Reservations.put(seatHoldId, confirmationCode);
+}
+
+mutant TICKETSERVICE_GEN_ARP_165 {
+    description: the two arguments to put() are swapped, in reserveSeats()
+    operator:    argument-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        Reservations.put(seatHoldId, confirmationCode);
+    replace:     Reservations.put(confirmationCode, seatHoldId);
+}
+
+mutant TICKETSERVICE_GEN_MCR_166 {
+    description: .put( becomes .putIfAbsent(, in reserveSeats()
+    operator:    method-call-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        Reservations.put(seatHoldId, confirmationCode);
+    replace:     Reservations.putIfAbsent(seatHoldId, confirmationCode);
+}
+
+mutant TICKETSERVICE_GEN_SEI_167 {
+    description: a write to available is inserted after the statement, in reserveSeats()
+    operator:    side-effect-insertion
+    in:          reserveSeats
+    file:        Helper.java
+    find:        Reservations.put(seatHoldId, confirmationCode);
+    replace:     Reservations.put(seatHoldId, confirmationCode); available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_168 {
+    description: Reservations becomes Holds, in reserveSeats()
+    operator:    variable-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        Reservations.put(seatHoldId, confirmationCode);
+    replace:     Holds.put(seatHoldId, confirmationCode);
+}
+
+mutant TICKETSERVICE_GEN_SDL_169 {
+    description: the statement is removed, in reserveSeats()
+    operator:    statement-deletion
+    in:          reserveSeats
+    file:        Helper.java
+    find:        Holds.remove(seatHoldId);
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_STR_170 {
+    description: the statement runs twice, in reserveSeats()
+    operator:    statement-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        Holds.remove(seatHoldId);
+    replace:     Holds.remove(seatHoldId); Holds.remove(seatHoldId);
+}
+
+mutant TICKETSERVICE_GEN_ARP_171 {
+    description: the argument to remove() is shifted by + 1, in reserveSeats()
+    operator:    argument-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        Holds.remove(seatHoldId);
+    replace:     Holds.remove(seatHoldId + 1);
+}
+
+mutant TICKETSERVICE_GEN_ARP_172 {
+    description: the argument to remove() is shifted by - 1, in reserveSeats()
+    operator:    argument-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        Holds.remove(seatHoldId);
+    replace:     Holds.remove(seatHoldId - 1);
+}
+
+mutant TICKETSERVICE_GEN_MCR_173 {
+    description: .remove( becomes .get(, in reserveSeats()
+    operator:    method-call-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        Holds.remove(seatHoldId);
+    replace:     Holds.get(seatHoldId);
+}
+
+mutant TICKETSERVICE_GEN_SEI_174 {
+    description: a write to available is inserted after the statement, in reserveSeats()
+    operator:    side-effect-insertion
+    in:          reserveSeats
+    file:        Helper.java
+    find:        Holds.remove(seatHoldId);
+    replace:     Holds.remove(seatHoldId); available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_VRO_175 {
+    description: Holds becomes Reservations, in reserveSeats()
+    operator:    variable-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        Holds.remove(seatHoldId);
+    replace:     Reservations.remove(seatHoldId);
+}
+
+mutant TICKETSERVICE_GEN_SDL_176 {
+    description: the statement is removed, in reserveSeats()
+    operator:    statement-deletion
+    in:          reserveSeats
+    file:        Helper.java
+    find:        heldSeats.remove(seatHoldId);
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_STR_177 {
+    description: the statement runs twice, in reserveSeats()
+    operator:    statement-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        heldSeats.remove(seatHoldId);
+    replace:     heldSeats.remove(seatHoldId); heldSeats.remove(seatHoldId);
+}
+
+mutant TICKETSERVICE_GEN_ARP_178 {
+    description: the argument to remove() is shifted by + 1, in reserveSeats()
+    operator:    argument-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        heldSeats.remove(seatHoldId);
+    replace:     heldSeats.remove(seatHoldId + 1);
+}
+
+mutant TICKETSERVICE_GEN_ARP_179 {
+    description: the argument to remove() is shifted by - 1, in reserveSeats()
+    operator:    argument-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        heldSeats.remove(seatHoldId);
+    replace:     heldSeats.remove(seatHoldId - 1);
+}
+
+mutant TICKETSERVICE_GEN_MCR_180 {
+    description: .remove( becomes .get(, in reserveSeats()
+    operator:    method-call-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        heldSeats.remove(seatHoldId);
+    replace:     heldSeats.get(seatHoldId);
+}
+
+mutant TICKETSERVICE_GEN_SEI_181 {
+    description: a write to available is inserted after the statement, in reserveSeats()
+    operator:    side-effect-insertion
+    in:          reserveSeats
+    file:        Helper.java
+    find:        heldSeats.remove(seatHoldId);
+    replace:     heldSeats.remove(seatHoldId); available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_RVR_182 {
+    description: the answer becomes null, in reserveSeats()
+    operator:    return-value-replacement
+    in:          reserveSeats
+    file:        Helper.java
+    find:        return confirmationCode;
+    replace:     return null;
+}
+
+mutant TICKETSERVICE_GEN_SEI_183 {
+    description: a write to available is inserted before the return, in reserveSeats()
+    operator:    side-effect-insertion
+    in:          reserveSeats
+    file:        Helper.java
+    find:        return confirmationCode;
+    replace:     available = available + 1; return confirmationCode;
+}
+
+mutant TICKETSERVICE_GEN_SDL_184 {
+    description: the statement is removed, in mostValuableFreeSeats()
+    operator:    statement-deletion
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        List<Integer> picked = new ArrayList<Integer>();
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_SEI_185 {
+    description: a write to available is inserted after the statement, in mostValuableFreeSeats()
+    operator:    side-effect-insertion
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        List<Integer> picked = new ArrayList<Integer>();
+    replace:     List<Integer> picked = new ArrayList<Integer>(); available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_ROR_186 {
+    description: < becomes <=, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        for (int seatId = 0; seatId < seats.length; seatId++) {
+    replace:     for (int seatId = 0; seatId <= seats.length; seatId++) {
+}
+
+mutant TICKETSERVICE_GEN_ROR_187 {
+    description: < becomes >=, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        for (int seatId = 0; seatId < seats.length; seatId++) {
+    replace:     for (int seatId = 0; seatId >= seats.length; seatId++) {
+}
+
+mutant TICKETSERVICE_GEN_ROR_188 {
+    description: < becomes ==, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        for (int seatId = 0; seatId < seats.length; seatId++) {
+    replace:     for (int seatId = 0; seatId == seats.length; seatId++) {
+}
+
+mutant TICKETSERVICE_GEN_ROR_189 {
+    description: < becomes !=, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        for (int seatId = 0; seatId < seats.length; seatId++) {
+    replace:     for (int seatId = 0; seatId != seats.length; seatId++) {
+}
+
+mutant TICKETSERVICE_GEN_ROR_190 {
+    description: < becomes >, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        for (int seatId = 0; seatId < seats.length; seatId++) {
+    replace:     for (int seatId = 0; seatId > seats.length; seatId++) {
+}
+
+mutant TICKETSERVICE_GEN_CRP_191 {
+    description: the literal 0 becomes 1, in mostValuableFreeSeats()
+    operator:    constant-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        for (int seatId = 0; seatId < seats.length; seatId++) {
+    replace:     for (int seatId = 1; seatId < seats.length; seatId++) {
+}
+
+mutant TICKETSERVICE_GEN_CRP_192 {
+    description: the literal 0 becomes -1, in mostValuableFreeSeats()
+    operator:    constant-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        for (int seatId = 0; seatId < seats.length; seatId++) {
+    replace:     for (int seatId = -1; seatId < seats.length; seatId++) {
+}
+
+mutant TICKETSERVICE_GEN_LBR_193 {
+    description: the loop starts one later, in mostValuableFreeSeats()
+    operator:    loop-bound-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        for (int seatId = 0; seatId < seats.length; seatId++) {
+    replace:     for (int seatId = 0 + 1; seatId < seats.length; seatId++) {
+}
+
+mutant TICKETSERVICE_GEN_LBR_194 {
+    description: the loop starts one earlier, in mostValuableFreeSeats()
+    operator:    loop-bound-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        for (int seatId = 0; seatId < seats.length; seatId++) {
+    replace:     for (int seatId = 0 - 1; seatId < seats.length; seatId++) {
+}
+
+mutant TICKETSERVICE_GEN_ROR_195 {
+    description: == becomes <=, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (seats[seatId] == FREE) {
+    replace:     if (seats[seatId] <= FREE) {
+}
+
+mutant TICKETSERVICE_GEN_ROR_196 {
+    description: == becomes >=, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (seats[seatId] == FREE) {
+    replace:     if (seats[seatId] >= FREE) {
+}
+
+mutant TICKETSERVICE_GEN_ROR_197 {
+    description: == becomes !=, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (seats[seatId] == FREE) {
+    replace:     if (seats[seatId] != FREE) {
+}
+
+mutant TICKETSERVICE_GEN_ROR_198 {
+    description: == becomes <, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (seats[seatId] == FREE) {
+    replace:     if (seats[seatId] < FREE) {
+}
+
+mutant TICKETSERVICE_GEN_ROR_199 {
+    description: == becomes >, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (seats[seatId] == FREE) {
+    replace:     if (seats[seatId] > FREE) {
+}
+
+mutant TICKETSERVICE_GEN_COI_200 {
+    description: the guard is negated, in mostValuableFreeSeats()
+    operator:    conditional-operator-insertion
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (seats[seatId] == FREE) {
+    replace:     if (!(seats[seatId] == FREE)) {
+}
+
+mutant TICKETSERVICE_GEN_CTC_201 {
+    description: the branch is always taken, in mostValuableFreeSeats()
+    operator:    condition-to-constant
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (seats[seatId] == FREE) {
+    replace:     if (true) {
+}
+
+mutant TICKETSERVICE_GEN_CTC_202 {
+    description: the branch is never taken, in mostValuableFreeSeats()
+    operator:    condition-to-constant
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (seats[seatId] == FREE) {
+    replace:     if (false) {
+}
+
+mutant TICKETSERVICE_GEN_VRO_203 {
+    description: FREE becomes ROWS, in mostValuableFreeSeats()
+    operator:    variable-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (seats[seatId] == FREE) {
+    replace:     if (seats[seatId] == ROWS) {
+}
+
+mutant TICKETSERVICE_GEN_VRO_204 {
+    description: FREE becomes COLS, in mostValuableFreeSeats()
+    operator:    variable-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (seats[seatId] == FREE) {
+    replace:     if (seats[seatId] == COLS) {
+}
+
+mutant TICKETSERVICE_GEN_VRO_205 {
+    description: FREE becomes HELD, in mostValuableFreeSeats()
+    operator:    variable-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (seats[seatId] == FREE) {
+    replace:     if (seats[seatId] == HELD) {
+}
+
+mutant TICKETSERVICE_GEN_VRO_206 {
+    description: FREE becomes RESERVED, in mostValuableFreeSeats()
+    operator:    variable-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (seats[seatId] == FREE) {
+    replace:     if (seats[seatId] == RESERVED) {
+}
+
+mutant TICKETSERVICE_GEN_VRO_207 {
+    description: FREE becomes available, in mostValuableFreeSeats()
+    operator:    variable-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (seats[seatId] == FREE) {
+    replace:     if (seats[seatId] == available) {
+}
+
+mutant TICKETSERVICE_GEN_VRO_208 {
+    description: FREE becomes nextHoldId, in mostValuableFreeSeats()
+    operator:    variable-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (seats[seatId] == FREE) {
+    replace:     if (seats[seatId] == nextHoldId) {
+}
+
+mutant TICKETSERVICE_GEN_SDL_209 {
+    description: the statement is removed, in mostValuableFreeSeats()
+    operator:    statement-deletion
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        picked.add(seatId);
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_STR_210 {
+    description: the statement runs twice, in mostValuableFreeSeats()
+    operator:    statement-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        picked.add(seatId);
+    replace:     picked.add(seatId); picked.add(seatId);
+}
+
+mutant TICKETSERVICE_GEN_ARP_211 {
+    description: the argument to add() is shifted by + 1, in mostValuableFreeSeats()
+    operator:    argument-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        picked.add(seatId);
+    replace:     picked.add(seatId + 1);
+}
+
+mutant TICKETSERVICE_GEN_ARP_212 {
+    description: the argument to add() is shifted by - 1, in mostValuableFreeSeats()
+    operator:    argument-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        picked.add(seatId);
+    replace:     picked.add(seatId - 1);
+}
+
+mutant TICKETSERVICE_GEN_MCR_213 {
+    description: .add( becomes .contains(, in mostValuableFreeSeats()
+    operator:    method-call-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        picked.add(seatId);
+    replace:     picked.contains(seatId);
+}
+
+mutant TICKETSERVICE_GEN_SEI_214 {
+    description: a write to available is inserted after the statement, in mostValuableFreeSeats()
+    operator:    side-effect-insertion
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        picked.add(seatId);
+    replace:     picked.add(seatId); available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_ROR_215 {
+    description: == becomes <=, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (picked.size() == numSeats) return picked;
+    replace:     if (picked.size() <= numSeats) return picked;
+}
+
+mutant TICKETSERVICE_GEN_ROR_216 {
+    description: == becomes >=, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (picked.size() == numSeats) return picked;
+    replace:     if (picked.size() >= numSeats) return picked;
+}
+
+mutant TICKETSERVICE_GEN_ROR_217 {
+    description: == becomes !=, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (picked.size() == numSeats) return picked;
+    replace:     if (picked.size() != numSeats) return picked;
+}
+
+mutant TICKETSERVICE_GEN_ROR_218 {
+    description: == becomes <, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (picked.size() == numSeats) return picked;
+    replace:     if (picked.size() < numSeats) return picked;
+}
+
+mutant TICKETSERVICE_GEN_ROR_219 {
+    description: == becomes >, in mostValuableFreeSeats()
+    operator:    relational-operator-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (picked.size() == numSeats) return picked;
+    replace:     if (picked.size() > numSeats) return picked;
+}
+
+mutant TICKETSERVICE_GEN_SDL_220 {
+    description: the statement is removed, in mostValuableFreeSeats()
+    operator:    statement-deletion
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (picked.size() == numSeats) return picked;
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_MCR_221 {
+    description: .size() becomes .hashCode(), in mostValuableFreeSeats()
+    operator:    method-call-replacement
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (picked.size() == numSeats) return picked;
+    replace:     if (picked.hashCode() == numSeats) return picked;
+}
+
+mutant TICKETSERVICE_GEN_SEI_222 {
+    description: a write to available is inserted after the statement, in mostValuableFreeSeats()
+    operator:    side-effect-insertion
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        if (picked.size() == numSeats) return picked;
+    replace:     if (picked.size() == numSeats) return picked; available = available + 1;
+}
+
+mutant TICKETSERVICE_GEN_SDL_223 {
+    description: the statement is removed, in mostValuableFreeSeats()
+    operator:    statement-deletion
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        throw new IllegalStateException("Not enough seats available.");
+    replace:     
+}
+
+mutant TICKETSERVICE_GEN_SEI_224 {
+    description: a write to available is inserted after the statement, in mostValuableFreeSeats()
+    operator:    side-effect-insertion
+    in:          mostValuableFreeSeats
+    file:        Helper.java
+    find:        throw new IllegalStateException("Not enough seats available.");
+    replace:     throw new IllegalStateException("Not enough seats available."); available = available + 1;
+}
+

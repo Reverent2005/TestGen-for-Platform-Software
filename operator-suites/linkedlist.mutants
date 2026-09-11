@@ -1,0 +1,768 @@
+/*
+ * GENERATED MUTATION SUITE — linkedlist
+ *
+ * Produced by OperatorMutantGenerator from:
+ *   ../libraries/linkedlist/Helper.java
+ *
+ * DO NOT EDIT. Regenerate with ./run-operator-suites.sh linkedlist
+ *
+ * Every operator in MutationOperator is applied to every line of the library
+ * that admits it, so this file is what the specification is measured against
+ * when nobody is choosing the faults. It is the counterpart of the
+ * hand-written set in mutations/linkedlist.mutants:
+ * that one asks whether the suite catches the faults we thought of, this one
+ * asks what fraction of all faults of each KIND it catches.
+ *
+ * `expect` is absent throughout: a generated mutant carries no prediction,
+ * and some of these are equivalent to the original and cannot be killed by
+ * anyone. The run measures; it does not check a declaration.
+ */
+
+mutant LINKEDLIST_GEN_SDL_1 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        Integer value;
+    replace:     
+}
+
+mutant LINKEDLIST_GEN_SEI_2 {
+    description: a write to size is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        Integer value;
+    replace:     Integer value; size = size + 1;
+}
+
+mutant LINKEDLIST_GEN_SDL_3 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        Node next;
+    replace:     
+}
+
+mutant LINKEDLIST_GEN_SEI_4 {
+    description: a write to size is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        Node next;
+    replace:     Node next; size = size + 1;
+}
+
+mutant LINKEDLIST_GEN_SDL_5 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        public static List<Integer> L = new ArrayList<Integer>();
+    replace:     
+}
+
+mutant LINKEDLIST_GEN_SEI_6 {
+    description: a write to size is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        public static List<Integer> L = new ArrayList<Integer>();
+    replace:     public static List<Integer> L = new ArrayList<Integer>(); size = size + 1;
+}
+
+mutant LINKEDLIST_GEN_CRP_7 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int size = 0;
+    replace:     public static int size = 1;
+}
+
+mutant LINKEDLIST_GEN_CRP_8 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int size = 0;
+    replace:     public static int size = -1;
+}
+
+mutant LINKEDLIST_GEN_SDL_9 {
+    description: the statement is removed, in addFirst()
+    operator:    statement-deletion
+    in:          addFirst
+    file:        Helper.java
+    find:        node.next = first;
+    replace:     
+}
+
+mutant LINKEDLIST_GEN_SEI_10 {
+    description: a write to size is inserted after the statement, in addFirst()
+    operator:    side-effect-insertion
+    in:          addFirst
+    file:        Helper.java
+    find:        node.next = first;
+    replace:     node.next = first; size = size + 1;
+}
+
+mutant LINKEDLIST_GEN_SDL_11 {
+    description: the statement is removed, in addFirst()
+    operator:    statement-deletion
+    in:          addFirst
+    file:        Helper.java
+    find:        first = node;
+    replace:     
+}
+
+mutant LINKEDLIST_GEN_SEI_12 {
+    description: a write to size is inserted after the statement, in addFirst()
+    operator:    side-effect-insertion
+    in:          addFirst
+    file:        Helper.java
+    find:        first = node;
+    replace:     first = node; size = size + 1;
+}
+
+mutant LINKEDLIST_GEN_SDL_13 {
+    description: the statement is removed, in addFirst()
+    operator:    statement-deletion
+    in:          addFirst
+    file:        Helper.java
+    find:        refresh();
+    replace:     
+}
+
+mutant LINKEDLIST_GEN_SEI_14 {
+    description: a write to size is inserted after the statement, in addFirst()
+    operator:    side-effect-insertion
+    in:          addFirst
+    file:        Helper.java
+    find:        refresh();
+    replace:     refresh(); size = size + 1;
+}
+
+mutant LINKEDLIST_GEN_ROR_15 {
+    description: == becomes <=, in addLast()
+    operator:    relational-operator-replacement
+    in:          addLast
+    file:        Helper.java
+    find:        if (first == null) {
+    replace:     if (first <= null) {
+}
+
+mutant LINKEDLIST_GEN_ROR_16 {
+    description: == becomes >=, in addLast()
+    operator:    relational-operator-replacement
+    in:          addLast
+    file:        Helper.java
+    find:        if (first == null) {
+    replace:     if (first >= null) {
+}
+
+mutant LINKEDLIST_GEN_ROR_17 {
+    description: == becomes !=, in addLast()
+    operator:    relational-operator-replacement
+    in:          addLast
+    file:        Helper.java
+    find:        if (first == null) {
+    replace:     if (first != null) {
+}
+
+mutant LINKEDLIST_GEN_ROR_18 {
+    description: == becomes <, in addLast()
+    operator:    relational-operator-replacement
+    in:          addLast
+    file:        Helper.java
+    find:        if (first == null) {
+    replace:     if (first < null) {
+}
+
+mutant LINKEDLIST_GEN_ROR_19 {
+    description: == becomes >, in addLast()
+    operator:    relational-operator-replacement
+    in:          addLast
+    file:        Helper.java
+    find:        if (first == null) {
+    replace:     if (first > null) {
+}
+
+mutant LINKEDLIST_GEN_COI_20 {
+    description: the guard is negated, in addLast()
+    operator:    conditional-operator-insertion
+    in:          addLast
+    file:        Helper.java
+    find:        if (first == null) {
+    replace:     if (!(first == null)) {
+}
+
+mutant LINKEDLIST_GEN_CTC_21 {
+    description: the branch is always taken, in addLast()
+    operator:    condition-to-constant
+    in:          addLast
+    file:        Helper.java
+    find:        if (first == null) {
+    replace:     if (true) {
+}
+
+mutant LINKEDLIST_GEN_CTC_22 {
+    description: the branch is never taken, in addLast()
+    operator:    condition-to-constant
+    in:          addLast
+    file:        Helper.java
+    find:        if (first == null) {
+    replace:     if (false) {
+}
+
+mutant LINKEDLIST_GEN_ROR_23 {
+    description: != becomes <=, in addLast()
+    operator:    relational-operator-replacement
+    in:          addLast
+    file:        Helper.java
+    find:        while (cursor.next != null) {
+    replace:     while (cursor.next <= null) {
+}
+
+mutant LINKEDLIST_GEN_ROR_24 {
+    description: != becomes >=, in addLast()
+    operator:    relational-operator-replacement
+    in:          addLast
+    file:        Helper.java
+    find:        while (cursor.next != null) {
+    replace:     while (cursor.next >= null) {
+}
+
+mutant LINKEDLIST_GEN_ROR_25 {
+    description: != becomes ==, in addLast()
+    operator:    relational-operator-replacement
+    in:          addLast
+    file:        Helper.java
+    find:        while (cursor.next != null) {
+    replace:     while (cursor.next == null) {
+}
+
+mutant LINKEDLIST_GEN_ROR_26 {
+    description: != becomes <, in addLast()
+    operator:    relational-operator-replacement
+    in:          addLast
+    file:        Helper.java
+    find:        while (cursor.next != null) {
+    replace:     while (cursor.next < null) {
+}
+
+mutant LINKEDLIST_GEN_ROR_27 {
+    description: != becomes >, in addLast()
+    operator:    relational-operator-replacement
+    in:          addLast
+    file:        Helper.java
+    find:        while (cursor.next != null) {
+    replace:     while (cursor.next > null) {
+}
+
+mutant LINKEDLIST_GEN_COI_28 {
+    description: the guard is negated, in addLast()
+    operator:    conditional-operator-insertion
+    in:          addLast
+    file:        Helper.java
+    find:        while (cursor.next != null) {
+    replace:     while (!(cursor.next != null)) {
+}
+
+mutant LINKEDLIST_GEN_SDL_29 {
+    description: the statement is removed, in addLast()
+    operator:    statement-deletion
+    in:          addLast
+    file:        Helper.java
+    find:        cursor = cursor.next;
+    replace:     
+}
+
+mutant LINKEDLIST_GEN_SEI_30 {
+    description: a write to size is inserted after the statement, in addLast()
+    operator:    side-effect-insertion
+    in:          addLast
+    file:        Helper.java
+    find:        cursor = cursor.next;
+    replace:     cursor = cursor.next; size = size + 1;
+}
+
+mutant LINKEDLIST_GEN_SDL_31 {
+    description: the statement is removed, in addLast()
+    operator:    statement-deletion
+    in:          addLast
+    file:        Helper.java
+    find:        cursor.next = node;
+    replace:     
+}
+
+mutant LINKEDLIST_GEN_SEI_32 {
+    description: a write to size is inserted after the statement, in addLast()
+    operator:    side-effect-insertion
+    in:          addLast
+    file:        Helper.java
+    find:        cursor.next = node;
+    replace:     cursor.next = node; size = size + 1;
+}
+
+mutant LINKEDLIST_GEN_SDL_33 {
+    description: the statement is removed, in removeFirst()
+    operator:    statement-deletion
+    in:          removeFirst
+    file:        Helper.java
+    find:        first = first.next;
+    replace:     
+}
+
+mutant LINKEDLIST_GEN_SEI_34 {
+    description: a write to size is inserted after the statement, in removeFirst()
+    operator:    side-effect-insertion
+    in:          removeFirst
+    file:        Helper.java
+    find:        first = first.next;
+    replace:     first = first.next; size = size + 1;
+}
+
+mutant LINKEDLIST_GEN_UOI_35 {
+    description: the returned value is negated, in removeFirst()
+    operator:    unary-operator-insertion
+    in:          removeFirst
+    file:        Helper.java
+    find:        return removedValue;
+    replace:     return -(removedValue);
+}
+
+mutant LINKEDLIST_GEN_ABS_36 {
+    description: the returned value is forced negative, in removeFirst()
+    operator:    absolute-value-insertion
+    in:          removeFirst
+    file:        Helper.java
+    find:        return removedValue;
+    replace:     return -Math.abs(removedValue);
+}
+
+mutant LINKEDLIST_GEN_RVR_37 {
+    description: the answer becomes 0, in removeFirst()
+    operator:    return-value-replacement
+    in:          removeFirst
+    file:        Helper.java
+    find:        return removedValue;
+    replace:     return 0;
+}
+
+mutant LINKEDLIST_GEN_RVR_38 {
+    description: the answer becomes 1, in removeFirst()
+    operator:    return-value-replacement
+    in:          removeFirst
+    file:        Helper.java
+    find:        return removedValue;
+    replace:     return 1;
+}
+
+mutant LINKEDLIST_GEN_RVR_39 {
+    description: the answer becomes -1, in removeFirst()
+    operator:    return-value-replacement
+    in:          removeFirst
+    file:        Helper.java
+    find:        return removedValue;
+    replace:     return -1;
+}
+
+mutant LINKEDLIST_GEN_SEI_40 {
+    description: a write to size is inserted before the return, in removeFirst()
+    operator:    side-effect-insertion
+    in:          removeFirst
+    file:        Helper.java
+    find:        return removedValue;
+    replace:     size = size + 1; return removedValue;
+}
+
+mutant LINKEDLIST_GEN_CRP_41 {
+    description: the literal 0 becomes 1, in indexOf()
+    operator:    constant-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        int position = 0;
+    replace:     int position = 1;
+}
+
+mutant LINKEDLIST_GEN_CRP_42 {
+    description: the literal 0 becomes -1, in indexOf()
+    operator:    constant-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        int position = 0;
+    replace:     int position = -1;
+}
+
+mutant LINKEDLIST_GEN_ROR_43 {
+    description: != becomes <=, in indexOf()
+    operator:    relational-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        while (cursor != null) {
+    replace:     while (cursor <= null) {
+}
+
+mutant LINKEDLIST_GEN_ROR_44 {
+    description: != becomes >=, in indexOf()
+    operator:    relational-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        while (cursor != null) {
+    replace:     while (cursor >= null) {
+}
+
+mutant LINKEDLIST_GEN_ROR_45 {
+    description: != becomes ==, in indexOf()
+    operator:    relational-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        while (cursor != null) {
+    replace:     while (cursor == null) {
+}
+
+mutant LINKEDLIST_GEN_ROR_46 {
+    description: != becomes <, in indexOf()
+    operator:    relational-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        while (cursor != null) {
+    replace:     while (cursor < null) {
+}
+
+mutant LINKEDLIST_GEN_ROR_47 {
+    description: != becomes >, in indexOf()
+    operator:    relational-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        while (cursor != null) {
+    replace:     while (cursor > null) {
+}
+
+mutant LINKEDLIST_GEN_COI_48 {
+    description: the guard is negated, in indexOf()
+    operator:    conditional-operator-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        while (cursor != null) {
+    replace:     while (!(cursor != null)) {
+}
+
+mutant LINKEDLIST_GEN_COI_49 {
+    description: the guard is negated, in indexOf()
+    operator:    conditional-operator-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        if (cursor.value.equals(value)) {
+    replace:     if (!(cursor.value.equals(value))) {
+}
+
+mutant LINKEDLIST_GEN_CTC_50 {
+    description: the branch is always taken, in indexOf()
+    operator:    condition-to-constant
+    in:          indexOf
+    file:        Helper.java
+    find:        if (cursor.value.equals(value)) {
+    replace:     if (true) {
+}
+
+mutant LINKEDLIST_GEN_CTC_51 {
+    description: the branch is never taken, in indexOf()
+    operator:    condition-to-constant
+    in:          indexOf
+    file:        Helper.java
+    find:        if (cursor.value.equals(value)) {
+    replace:     if (false) {
+}
+
+mutant LINKEDLIST_GEN_ARP_52 {
+    description: the argument to equals() is shifted by + 1, in indexOf()
+    operator:    argument-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        if (cursor.value.equals(value)) {
+    replace:     if (cursor.value.equals(value + 1)) {
+}
+
+mutant LINKEDLIST_GEN_ARP_53 {
+    description: the argument to equals() is shifted by - 1, in indexOf()
+    operator:    argument-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        if (cursor.value.equals(value)) {
+    replace:     if (cursor.value.equals(value - 1)) {
+}
+
+mutant LINKEDLIST_GEN_UOI_54 {
+    description: the returned value is negated, in indexOf()
+    operator:    unary-operator-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        return position;
+    replace:     return -(position);
+}
+
+mutant LINKEDLIST_GEN_ABS_55 {
+    description: the returned value is forced negative, in indexOf()
+    operator:    absolute-value-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        return position;
+    replace:     return -Math.abs(position);
+}
+
+mutant LINKEDLIST_GEN_RVR_56 {
+    description: the answer becomes 0, in indexOf()
+    operator:    return-value-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return position;
+    replace:     return 0;
+}
+
+mutant LINKEDLIST_GEN_RVR_57 {
+    description: the answer becomes 1, in indexOf()
+    operator:    return-value-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return position;
+    replace:     return 1;
+}
+
+mutant LINKEDLIST_GEN_RVR_58 {
+    description: the answer becomes -1, in indexOf()
+    operator:    return-value-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return position;
+    replace:     return -1;
+}
+
+mutant LINKEDLIST_GEN_SEI_59 {
+    description: a write to size is inserted before the return, in indexOf()
+    operator:    side-effect-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        return position;
+    replace:     size = size + 1; return position;
+}
+
+mutant LINKEDLIST_GEN_AOR_60 {
+    description: + becomes -, in indexOf()
+    operator:    arithmetic-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        position = position + 1;
+    replace:     position = position - 1;
+}
+
+mutant LINKEDLIST_GEN_AOR_61 {
+    description: + becomes *, in indexOf()
+    operator:    arithmetic-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        position = position + 1;
+    replace:     position = position * 1;
+}
+
+mutant LINKEDLIST_GEN_AOR_62 {
+    description: + becomes /, in indexOf()
+    operator:    arithmetic-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        position = position + 1;
+    replace:     position = position / 1;
+}
+
+mutant LINKEDLIST_GEN_AOR_63 {
+    description: + becomes %, in indexOf()
+    operator:    arithmetic-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        position = position + 1;
+    replace:     position = position % 1;
+}
+
+mutant LINKEDLIST_GEN_AOI_64 {
+    description: the value assigned to position is shifted by + 1, in indexOf()
+    operator:    arithmetic-operator-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        position = position + 1;
+    replace:     position = position + 1 + 1;
+}
+
+mutant LINKEDLIST_GEN_AOI_65 {
+    description: the value assigned to position is shifted by - 1, in indexOf()
+    operator:    arithmetic-operator-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        position = position + 1;
+    replace:     position = position + 1 - 1;
+}
+
+mutant LINKEDLIST_GEN_UOI_66 {
+    description: the value assigned to position is negated, in indexOf()
+    operator:    unary-operator-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        position = position + 1;
+    replace:     position = -(position + 1);
+}
+
+mutant LINKEDLIST_GEN_ABS_67 {
+    description: the value assigned to position is forced negative, in indexOf()
+    operator:    absolute-value-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        position = position + 1;
+    replace:     position = -Math.abs(position + 1);
+}
+
+mutant LINKEDLIST_GEN_CRP_68 {
+    description: the literal 1 becomes 0, in indexOf()
+    operator:    constant-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        position = position + 1;
+    replace:     position = position + 0;
+}
+
+mutant LINKEDLIST_GEN_CRP_69 {
+    description: the literal 1 becomes -1, in indexOf()
+    operator:    constant-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        position = position + 1;
+    replace:     position = position + -1;
+}
+
+mutant LINKEDLIST_GEN_CRP_70 {
+    description: the literal 1 becomes 2, in indexOf()
+    operator:    constant-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        position = position + 1;
+    replace:     position = position + 2;
+}
+
+mutant LINKEDLIST_GEN_SDL_71 {
+    description: the statement is removed, in indexOf()
+    operator:    statement-deletion
+    in:          indexOf
+    file:        Helper.java
+    find:        position = position + 1;
+    replace:     
+}
+
+mutant LINKEDLIST_GEN_SEI_72 {
+    description: a write to size is inserted after the statement, in indexOf()
+    operator:    side-effect-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        position = position + 1;
+    replace:     position = position + 1; size = size + 1;
+}
+
+mutant LINKEDLIST_GEN_AOR_73 {
+    description: - becomes +, in indexOf()
+    operator:    arithmetic-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return +1;
+}
+
+mutant LINKEDLIST_GEN_AOR_74 {
+    description: - becomes *, in indexOf()
+    operator:    arithmetic-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return *1;
+}
+
+mutant LINKEDLIST_GEN_AOR_75 {
+    description: - becomes /, in indexOf()
+    operator:    arithmetic-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return /1;
+}
+
+mutant LINKEDLIST_GEN_AOR_76 {
+    description: - becomes %, in indexOf()
+    operator:    arithmetic-operator-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return %1;
+}
+
+mutant LINKEDLIST_GEN_UOI_77 {
+    description: the returned value is negated, in indexOf()
+    operator:    unary-operator-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return -(-1);
+}
+
+mutant LINKEDLIST_GEN_ABS_78 {
+    description: the returned value is forced negative, in indexOf()
+    operator:    absolute-value-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return -Math.abs(-1);
+}
+
+mutant LINKEDLIST_GEN_CRP_79 {
+    description: the literal 1 becomes 0, in indexOf()
+    operator:    constant-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return -0;
+}
+
+mutant LINKEDLIST_GEN_CRP_80 {
+    description: the literal 1 becomes -1, in indexOf()
+    operator:    constant-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return --1;
+}
+
+mutant LINKEDLIST_GEN_CRP_81 {
+    description: the literal 1 becomes 2, in indexOf()
+    operator:    constant-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return -2;
+}
+
+mutant LINKEDLIST_GEN_RVR_82 {
+    description: the answer becomes 0, in indexOf()
+    operator:    return-value-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return 0;
+}
+
+mutant LINKEDLIST_GEN_RVR_83 {
+    description: the answer becomes 1, in indexOf()
+    operator:    return-value-replacement
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     return 1;
+}
+
+mutant LINKEDLIST_GEN_SEI_84 {
+    description: a write to size is inserted before the return, in indexOf()
+    operator:    side-effect-insertion
+    in:          indexOf
+    file:        Helper.java
+    find:        return -1;
+    replace:     size = size + 1; return -1;
+}
+

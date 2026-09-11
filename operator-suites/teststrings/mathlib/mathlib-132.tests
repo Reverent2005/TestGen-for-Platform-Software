@@ -1,0 +1,10 @@
+test MathlibGenerated132 {
+    sequence: abs -> abs -> gcd;
+
+    inputs {
+        abs[0].x = 3;
+        abs[1].x = 2;
+        gcd[2].a = 18;
+        gcd[2].b = 1;
+    }
+}

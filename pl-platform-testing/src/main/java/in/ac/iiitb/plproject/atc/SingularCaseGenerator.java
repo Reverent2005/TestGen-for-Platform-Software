@@ -60,10 +60,16 @@ public class SingularCaseGenerator {
 
         // SERVER_OUTPUT captures outlive their block, so they are declared first.
         Map<String, String> localNameFor = declareCaptures(scan);
+        // The captures above are locals of main(); Java forbids a nested block from
+        // declaring a local of the same name, so a block that binds a CLIENT_INPUT
+        // called `taskId` while some later block CAPTURES a `taskId` has to assign to
+        // the outer one rather than declare its own.
+        Set<String> captureLocals = new LinkedHashSet<String>(localNameFor.values());
 
         out.append(INDENT).append(INDENT).append("try {\n");
         for (int i = 0; i < calls.size(); i++) {
-            emitBlock(i, calls.get(i), specAst, testString, scan, stateVars, localNameFor);
+            emitBlock(i, calls.get(i), specAst, testString, scan, stateVars, localNameFor,
+                      captureLocals);
         }
         out.append(INDENT).append(INDENT).append("} catch (PreconditionViolated stop) {\n");
         out.append(INDENT).append(INDENT).append(INDENT)
@@ -149,7 +155,8 @@ public class SingularCaseGenerator {
 
     private void emitBlock(int index, String functionName, JmlSpecAst specAst,
                            TestStringAst testString, PropagationScan scan,
-                           Set<String> stateVars, Map<String, String> localNameFor) {
+                           Set<String> stateVars, Map<String, String> localNameFor,
+                           Set<String> captureLocals) {
         JmlFunctionSpec spec = specAst.findSpecFor(functionName);
         FunctionSignature signature = spec.getSignature();
         List<Variable> params = (signature != null && signature.getParameters() != null)
@@ -186,8 +193,19 @@ public class SingularCaseGenerator {
             } else {
                 ConcreteInput input = bound.get(param.getName());
                 callArgs.add(param.getName());
-                out.append(body).append(param.getTypeName()).append(" ").append(param.getName())
-                   .append(" = ").append(input.getLiteral()).append("; // CLIENT_INPUT\n");
+                if (captureLocals.contains(param.getName())) {
+                    // A name that some later block captures into is already a local of
+                    // main(); re-declaring it here would not compile. This is a real
+                    // sequence — `cancelTask -> submit` calls a consumer before its
+                    // producer, so its taskId is a CLIENT_INPUT the caller invents —
+                    // and it is only reachable once test strings are generated rather
+                    // than hand-written.
+                    out.append(body).append(param.getName())
+                       .append(" = ").append(input.getLiteral()).append("; // CLIENT_INPUT\n");
+                } else {
+                    out.append(body).append(param.getTypeName()).append(" ").append(param.getName())
+                       .append(" = ").append(input.getLiteral()).append("; // CLIENT_INPUT\n");
+                }
             }
         }
 

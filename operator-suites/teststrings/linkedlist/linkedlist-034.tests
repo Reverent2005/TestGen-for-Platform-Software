@@ -1,0 +1,8 @@
+test LinkedlistGenerated34 {
+    sequence: indexOf -> indexOf;
+
+    inputs {
+        indexOf[0].value = 20;
+        indexOf[1].value = 1;
+    }
+}

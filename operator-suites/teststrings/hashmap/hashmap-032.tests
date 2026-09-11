@@ -1,0 +1,10 @@
+test HashmapGenerated32 {
+    sequence: put -> getOldValue -> getOldValue;
+
+    inputs {
+        put[0].key = "alpha";
+        put[0].value = 0;
+        getOldValue[1].key = "alpha";
+        getOldValue[2].key = "session";
+    }
+}

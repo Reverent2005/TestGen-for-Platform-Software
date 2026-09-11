@@ -1,0 +1,27 @@
+/*
+ * EXAMPLE 6 — MathLib, singular case.
+ *
+ * Four independent calls with inputs chosen so that a wrong answer is visible
+ * rather than accidentally right:
+ *
+ *   abs(-17)        a negative argument, so the sign really has to be flipped
+ *   gcd(48, 18)     6 — neither argument, neither 1, and not the difference
+ *   power(3, 4)     81 — base and exponent differ, so swapping them shows
+ *   factorial(5)    120
+ *
+ * Every parameter here is a CLIENT_INPUT: a pure function invents nothing, so
+ * this is the one example in which the inputs block binds every parameter of
+ * every block.
+ */
+test MathLibDryRun {
+    sequence: abs -> gcd -> power -> factorial;
+
+    inputs {
+        abs[0].x = -17;
+        gcd[1].a = 48;
+        gcd[1].b = 18;
+        power[2].base = 3;
+        power[2].exponent = 4;
+        factorial[3].n = 5;
+    }
+}

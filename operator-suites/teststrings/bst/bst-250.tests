@@ -1,0 +1,8 @@
+test BstGenerated250 {
+    sequence: insert -> insert;
+
+    inputs {
+        insert[0].key = 0;
+        insert[1].key = 3;
+    }
+}

@@ -1,0 +1,9 @@
+test MathlibGenerated163 {
+    sequence: power -> factorial;
+
+    inputs {
+        power[0].base = 3;
+        power[0].exponent = -17;
+        factorial[1].n = 2;
+    }
+}

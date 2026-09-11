@@ -1,0 +1,7 @@
+test LinkedlistGenerated10 {
+    sequence: removeFirst -> addLast;
+
+    inputs {
+        addLast[1].value = 1;
+    }
+}

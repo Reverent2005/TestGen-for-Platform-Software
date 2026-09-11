@@ -1,0 +1,12 @@
+test BstGenerated147 {
+    sequence: insert -> insert -> insert -> delete -> contains -> min -> delete;
+
+    inputs {
+        insert[0].key = 7;
+        insert[1].key = 70;
+        insert[2].key = 2;
+        delete[3].key = 30;
+        contains[4].key = 2;
+        delete[6].key = 2;
+    }
+}

@@ -10,7 +10,7 @@ Read `how_to_run.md` first for the JPF/SPF environment. This document is about t
 
 ---
 
-## 1. The three libraries at a glance
+## 1. The first three libraries at a glance
 
 | # | Library | Functions | Test string | What it exercises |
 |---|---------|-----------|-------------|-------------------|
@@ -24,6 +24,14 @@ value that may legitimately be `null`, and a value that has to be threaded into
 two later calls. Example 3 is structurally the `placeOrder -> shipOrder` REST
 pattern — the algorithm does not care whether the callee is a Java library or an
 HTTP API.
+
+Eleven more have been added since — `TicketService`, `IntArray`, `MathLib`,
+`Queue`, `SinglyLinkedList`, `StringSet`, `BinarySearchTree`, `MinHeap`, `Graph`,
+the custom `LruCache`, and `OrderService`, which is four classes rather than one
+— all of them following the file structure this document describes and nothing
+else. The full list, and what each one is for, is
+in [LIBRARY_DRY_RUNS.md](LIBRARY_DRY_RUNS.md); §8 below is the checklist for
+adding the next one.
 
 ---
 
@@ -356,7 +364,7 @@ java -cp target/classes in.ac.iiitb.plproject.atc.LibraryDryRunExamples
 # one at a time: stack | hashmap | taskqueue
 java -cp target/classes in.ac.iiitb.plproject.atc.LibraryDryRunExamples taskqueue
 
-# the regression suite (19 tests, includes golden-file comparison)
+# the regression suite (includes the golden-file comparison and the mutation run)
 mvn -o test
 ```
 
@@ -374,8 +382,11 @@ JPF as described in `how_to_run.md`.
 
 ### Results as of the last run
 
-`mvn -o test` — **19 tests, 0 failures.**
-`./verify-generated.sh` — all three compile, run and pass:
+`mvn -o test` — **404 tests, 0 failures** (one per pre/postcondition of every
+test case, plus the invariants and one per mutant).
+`./run-mutations.sh` — 135 mutants, 107 killed, **79.3%**, scored per library and
+per mutation operator; see [MUTATION_TESTING.md](MUTATION_TESTING.md).
+`./verify-generated.sh` — all fourteen compile, run and pass; the first is:
 
 ```
 ── example1-stack ──
@@ -421,11 +432,16 @@ JPF as described in `how_to_run.md`.
 
 ---
 
-## 8. Adding a fourth library
+## 8. Adding another library
 
 1. Write `libraries/<name>/Helper.java` — plain Java, `public static` fields for
    state, `public static` methods, package `in.ac.iiitb.plproject.atc.generated`,
-   and a `reset()` method.
+   and a `reset()` method. A library may be several classes: list every source in
+   the `Example`, façade first, and put the collaborators in the same package and
+   directory (`libraries/orderservice/` is the worked example). Only the façade is
+   ever called by the generated code, so every name the spec uses has to be a
+   field of it — alias the collaborators' collections rather than copying them,
+   and re-read their scalars after **every** call, queries included.
 2. Write `specs/<Library>.spec` — a `state { ... }` block naming those fields, one
    `spec` block per function, and `\result == <name>` in the postcondition of
    every function that returns a server-generated value.
@@ -436,18 +452,51 @@ JPF as described in `how_to_run.md`.
    title, the three paths, and an output directory) and add it to `ALL`.
 5. Run `java -cp target/classes in.ac.iiitb.plproject.atc.LibraryDryRunExamples <key>`,
    read the validator report and the STEP A trace before trusting the generated
-   code, then `./verify-generated.sh`.
+   code, then `./verify-generated.sh` from the repository root. The verify script
+   picks up whatever the driver wrote, so there is no list in it to update.
+6. Write `mutations/<key>.mutants` — at least one seeded fault per method. This
+   is not optional: `MutationScoreTest` fails if a registered library has no
+   mutation set, on the grounds that a suite nobody has tried to break is a suite
+   nobody has measured. Every mutant must declare an `operator` from the closed
+   vocabulary in `MutationOperator.java`, and `expect: survives` needs a `note`
+   saying why.
+7. Copy the three generated files into `pl-platform-testing/golden/<key>/` so
+   `LibraryDryRunInvariantsTest` has a drift baseline, then `mvn -o test`.
+8. Nothing to do for the generated suites — `./run-operator-suites.sh` picks up
+   any library the driver registers, generates ~260 test strings and a few hundred
+   operator mutants for it, and writes both to `operator-suites/`. Worth running
+   once for a new library even so: it is the fastest way to find out whether the
+   test string you wrote in step 3 is the only one that works. See
+   [operator.md](operator.md).
 
 If propagation does not fire where you expected it, the cause is almost always
 name-based matching: the scan links an upstream `\result == taskId` to a
 downstream parameter **only when the names are identical**. When the types match
 but the names do not, it says so as a warning — rename the parameter.
 
+Three things the grammar will not do, worth knowing before writing a spec rather
+than after:
+
+* **A return type cannot be generic.** `String`, `int`, `Integer`, `boolean` and
+  `int[]` all parse; `List<String>` does not. State variables *may* be generic —
+  `Map<String,List<String>> Adj` is fine, as long as there is no space inside the
+  angle brackets.
+* **A term the grammar does not understand is passed through verbatim**, with its
+  leading identifier qualified if it names state. That is what makes
+  `Holds.containsKey(seatHoldId)`, `A[index]` and `a % divisor` work. It also
+  means every *inner* identifier in such a term must be a parameter or a local:
+  nothing qualifies them, so `Recency.get(size-1)` would not compile.
+* **There is no conditional and no quantifier.** A clause that only holds
+  sometimes (`size' = size + 1` when the key was absent) has to be dropped, or
+  bought back by strengthening the precondition until it always holds —
+  `BinarySearchTree.spec` and `StringSet.spec` are the same trade-off written
+  both ways.
+
 ---
 
 ## 9. What had to be fixed in the framework to make this work
 
-Working through the three examples surfaced these; each fix is scoped to its bug.
+Working through the examples surfaced these; each fix is scoped to its bug.
 (Details in `LIBRARY_DRY_RUNS.md`.)
 
 1. `detectResultBindings` never fired — it matched `\result ==` against the
@@ -469,3 +518,9 @@ Working through the three examples surfaced these; each fix is scoped to its bug
    boxed parameter types.
 10. `TestStringParser` was documented in the README but absent — added, together
     with `TestStringValidator`.
+11. An equality whose operand *name* ended in `Map` or `Result` was emitted as
+    `left != null && right != null && left.equals(right)`, which does not compile
+    when the operand is a primitive — `int lastResult` in `MathLib.spec` is
+    exactly that shape. It now emits `java.util.Objects.equals(...)`, which is the
+    same comparison for a map and autoboxes a primitive. Recorded as E4 in
+    `pl-platform-testing/docs/errors/ERRORS_ENCOUNTERED.md`.

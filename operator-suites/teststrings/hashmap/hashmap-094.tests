@@ -1,0 +1,8 @@
+test HashmapGenerated94 {
+    sequence: remove -> remove;
+
+    inputs {
+        remove[0].key = "session";
+        remove[1].key = "alpha";
+    }
+}

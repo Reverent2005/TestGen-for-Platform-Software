@@ -1,0 +1,9 @@
+test StackGenerated34 {
+    sequence: push -> pop -> pop -> peek -> push -> push -> peek;
+
+    inputs {
+        push[0].elem = "gamma";
+        push[4].elem = "gamma";
+        push[5].elem = "gamma";
+    }
+}

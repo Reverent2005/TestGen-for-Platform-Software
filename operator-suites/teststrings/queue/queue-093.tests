@@ -1,0 +1,8 @@
+test QueueGenerated93 {
+    sequence: dequeue -> enqueue -> enqueue;
+
+    inputs {
+        enqueue[1].elem = "second";
+        enqueue[2].elem = "gamma";
+    }
+}

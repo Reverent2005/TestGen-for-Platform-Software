@@ -1,0 +1,8 @@
+test TaskqueueGenerated15 {
+    sequence: cancelTask -> getResult;
+
+    inputs {
+        cancelTask[0].taskId = 2;
+        getResult[1].taskId = 3;
+    }
+}

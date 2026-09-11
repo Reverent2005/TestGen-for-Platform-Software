@@ -438,8 +438,15 @@ public class AstHelper {
                             // Method call on left: compare with right
                             return "(" + left + " != null && " + right + " != null && " + left + ".equals(" + right + "))";
                         } else {
-                            // Map comparison: use .equals() with null checks
-                            return "(" + left + " != null && " + right + " != null && " + left + ".equals(" + right + "))";
+                            // A name-based guess that one side is a Map, with no method
+                            // call anywhere in sight.  The explicit null-check form cannot
+                            // be used here: the guess is made from the NAME alone, so it
+                            // fires on any name ending in "Map" or "Result" — including
+                            // `int lastResult`, for which `!= null` and `.equals(...)` do
+                            // not compile.  Objects.equals is the same comparison for a
+                            // Map (it delegates to Map.equals) and autoboxes a primitive,
+                            // so it is right for both readings of the name.
+                            return "(java.util.Objects.equals(" + left + ", " + right + "))";
                         }
                     } else {
                         // Use .equals() for object comparisons with null safety

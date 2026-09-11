@@ -1,0 +1,9 @@
+test BstGenerated252 {
+    sequence: min -> min -> delete -> delete -> delete;
+
+    inputs {
+        delete[2].key = 70;
+        delete[3].key = 2;
+        delete[4].key = 7;
+    }
+}

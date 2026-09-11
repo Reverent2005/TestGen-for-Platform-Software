@@ -1,0 +1,7 @@
+test ArraylibGenerated124 {
+    sequence: sum -> get -> sum;
+
+    inputs {
+        get[1].index = 3;
+    }
+}

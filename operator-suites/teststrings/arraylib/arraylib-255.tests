@@ -1,0 +1,9 @@
+test ArraylibGenerated255 {
+    sequence: indexOf -> set;
+
+    inputs {
+        indexOf[0].value = 7;
+        set[1].index = 1;
+        set[1].value = 1;
+    }
+}

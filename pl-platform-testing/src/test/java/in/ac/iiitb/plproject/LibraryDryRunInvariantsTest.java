@@ -38,11 +38,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Regression tests for the three library dry runs.
+ * Regression tests for the library dry runs.
  *
  * <p>They encode the cross-example invariants of the implementation spec's
  * Section 5, the per-example expected behaviours of Section 4, and a guard that
  * the ordinary functional pipeline is unaffected by the return-value handling.
+ *
+ * <p>The Section 4 tests name their example; the Section 5 ones walk
+ * {@link LibraryDryRunExamples#ALL}, so a newly registered library is held to
+ * every cross-example invariant — and to the golden-file comparison — the moment
+ * it is added.
  */
 @DisplayName("Library dry runs with return value handling")
 class LibraryDryRunInvariantsTest {
@@ -57,6 +62,7 @@ class LibraryDryRunInvariantsTest {
     private static LibraryDryRunExamples.Result stack()     { return results.get("stack"); }
     private static LibraryDryRunExamples.Result hashMap()   { return results.get("hashmap"); }
     private static LibraryDryRunExamples.Result taskQueue() { return results.get("taskqueue"); }
+    private static LibraryDryRunExamples.Result ticketService() { return results.get("ticketservice"); }
 
     // ─────────────────────────────────────────────────────────────────────────
     // SECTION 4 — per-example expected behaviour
@@ -145,6 +151,71 @@ class LibraryDryRunInvariantsTest {
         // result enters availableServerOutputs but is never forwarded onward.
         assertTrue(helper(taskQueue(), "cancelTask_helper").getParameters().stream()
                         .noneMatch(v -> v.getName().equals("result")));
+    }
+
+    @Test
+    @DisplayName("Example 4: a repeated read-only query captures independently in each block")
+    void ticketServiceRepeatedQueryCapturesIndependently() {
+        PropagationScan scan = ticketService().scan;
+
+        assertEquals(Arrays.asList("numSeatsAvailable", "findAndHoldSeats",
+                                   "reserveSeats", "numSeatsAvailable"), functionNames(scan));
+        assertEquals(new LinkedHashSet<>(Arrays.asList("freeCount", "seatHoldId", "confirmationCode")),
+                scan.getAllServerOutputs());
+
+        // numSeatsAvailable runs twice and neither capture feeds the other: it takes
+        // no parameters, so the scan must not forward the first freeCount into the second.
+        assertTrue(helper(ticketService(), "numSeatsAvailable_helper").getParameters().isEmpty());
+        assertTrue(ticketService().spfCode.contains(
+                "Integer freeCount_0 = instance.numSeatsAvailable_helper();"));
+        assertTrue(ticketService().spfCode.contains(
+                "Integer freeCount_3 = instance.numSeatsAvailable_helper();"));
+
+        // seatHoldId is the one value that does propagate, one hop, into reserveSeats.
+        assertEquals(setOf("seatHoldId"), scan.propagatedParamsOf("reserveSeats"));
+        assertSignature(ticketService(), "reserveSeats_helper",
+                "String reserveSeats_helper(Integer seatHoldId)");
+        for (String code : Arrays.asList(ticketService().spfCode, ticketService().junitCode)) {
+            assertTrue(code.contains("Integer seatHoldId = instance.findAndHoldSeats_helper();"), code);
+            assertTrue(code.contains(
+                    "String confirmationCode = instance.reserveSeats_helper(seatHoldId);"), code);
+        }
+    }
+
+    @Test
+    @DisplayName("Example 4: customerEmail is a CLIENT_INPUT in two blocks, not a propagated value")
+    void ticketServiceDoesNotPropagateASharedParameterName() {
+        // findAndHoldSeats and reserveSeats both declare a parameter called
+        // customerEmail. They are independent CLIENT_INPUTs that happen to share a
+        // name, so neither helper may take it as a parameter and the test string
+        // must bind it once per block.
+        for (AtcTestMethod helperMethod : ticketService().atcIr.getTestMethods()) {
+            for (Variable parameter : helperMethod.getParameters()) {
+                assertFalse(parameter.getName().equals("customerEmail"),
+                        helperMethod.getMethodName() + " must not take customerEmail as a parameter:"
+                                + " it is a CLIENT_INPUT, not a SERVER_OUTPUT");
+            }
+        }
+        assertEquals(2, countOccurrences(ticketService().singularCaseCode,
+                        "String customerEmail = \"alice@example.com\";"),
+                "findAndHoldSeats and reserveSeats must each declare their own customerEmail,"
+                        + " bound separately by the test string");
+        assertEquals(2, countOccurrences(ticketService().spfCode,
+                        "String customerEmail = Debug.makeSymbolicString(\"customerEmail\")"),
+                "the symbolic flavour declares a fresh customerEmail in each block that names it");
+    }
+
+    @Test
+    @DisplayName("Example 4: a postcondition may offset old state by a CLIENT_INPUT, not just a literal")
+    void ticketServicePostconditionUsesAClientInputInItsArithmetic() {
+        // Examples 1 to 3 only ever offset old state by a constant. Here the
+        // subtrahend is numSeats, a CLIENT_INPUT declared in the same block.
+        for (String code : Arrays.asList(ticketService().spfCode, ticketService().junitCode,
+                                         ticketService().singularCaseCode)) {
+            assertTrue(code.contains("int available_old = Helper.available;"), code);
+            assertTrue(code.contains(
+                    "java.util.Objects.equals(Helper.available, (available_old - numSeats))"), code);
+        }
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -418,6 +489,44 @@ class LibraryDryRunInvariantsTest {
         assertTrue(SpecToAstConverter.convertSpecToAst("spec f { signature: void f(); requires: true; ensures: true; }")
                         .getStateVars().isEmpty(),
                 "a spec file without a state block must behave exactly as before");
+    }
+
+    @Test
+    @DisplayName("A state block routes to the library path even when nothing returns a value")
+    void stateBlockAloneSelectsTheLibraryPath() throws IOException {
+        // Found by the generated test-string families: a sequence of nothing but
+        // void calls has no return-value handling, and the generator used to read
+        // that as "this is a purely functional spec" and take the original path —
+        // which does not qualify state names or snapshot \old(...). The result was
+        // `assert(java.util.Objects.equals(size, (\old(size) + 1)))` emitted into
+        // Java, which does not compile. Every checked-in test string happens to call
+        // something that returns a value, so nothing caught it until sequences were
+        // generated.
+        JmlSpecAst spec = stack().specAst;
+        TestStringAst onlyVoidCalls = TestStringParser.parse(
+                "test AllPushes {\n"
+              + "    sequence: push -> push;\n"
+              + "    inputs {\n"
+              + "        push[0].elem = \"alpha\";\n"
+              + "        push[1].elem = \"beta\";\n"
+              + "    }\n"
+              + "}\n");
+
+        PropagationScan scan = PropagationScan.scan(spec, onlyVoidCalls);
+        assertFalse(scan.hasReturnValueHandling(),
+                "a sequence of pushes produces and consumes no SERVER_OUTPUT");
+
+        in.ac.iiitb.plproject.atc.ir.AtcClass atc = new in.ac.iiitb.plproject.atc.NewGenATC()
+                .generateAtcFile(spec, onlyVoidCalls);
+        String spf = new in.ac.iiitb.plproject.atc.ir.AtcIrCodeGenerator()
+                .generateSymbolicJavaFile(atc);
+
+        // The library path is what qualifies state as Helper.<name> and turns an
+        // \old(...) into a snapshot taken before the call.
+        assertTrue(spf.contains("int size_old = Helper.size;"),
+                "the state snapshot must be a plain read of the library's field:\n" + spf);
+        assertFalse(spf.contains("\\old("),
+                "no JML token may survive into the emitted Java:\n" + spf);
     }
 
     @Test

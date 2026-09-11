@@ -1,0 +1,463 @@
+/*
+ * GENERATED MUTATION SUITE — taskqueue
+ *
+ * Produced by OperatorMutantGenerator from:
+ *   ../libraries/taskqueue/Helper.java
+ *
+ * DO NOT EDIT. Regenerate with ./run-operator-suites.sh taskqueue
+ *
+ * Every operator in MutationOperator is applied to every line of the library
+ * that admits it, so this file is what the specification is measured against
+ * when nobody is choosing the faults. It is the counterpart of the
+ * hand-written set in mutations/taskqueue.mutants:
+ * that one asks whether the suite catches the faults we thought of, this one
+ * asks what fraction of all faults of each KIND it catches.
+ *
+ * `expect` is absent throughout: a generated mutant carries no prediction,
+ * and some of these are equivalent to the original and cannot be killed by
+ * anyone. The run measures; it does not check a declaration.
+ */
+
+mutant TASKQUEUE_GEN_SDL_1 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        public static Map<Integer, String> Tasks = new HashMap<Integer, String>();
+    replace:     
+}
+
+mutant TASKQUEUE_GEN_SEI_2 {
+    description: a write to nextId is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        public static Map<Integer, String> Tasks = new HashMap<Integer, String>();
+    replace:     public static Map<Integer, String> Tasks = new HashMap<Integer, String>(); nextId = nextId + 1;
+}
+
+mutant TASKQUEUE_GEN_SDL_3 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        public static Map<Integer, String> Results = new HashMap<Integer, String>();
+    replace:     
+}
+
+mutant TASKQUEUE_GEN_SEI_4 {
+    description: a write to nextId is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        public static Map<Integer, String> Results = new HashMap<Integer, String>();
+    replace:     public static Map<Integer, String> Results = new HashMap<Integer, String>(); nextId = nextId + 1;
+}
+
+mutant TASKQUEUE_GEN_CRP_5 {
+    description: the literal 1 becomes 0, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int nextId = 1;
+    replace:     public static int nextId = 0;
+}
+
+mutant TASKQUEUE_GEN_CRP_6 {
+    description: the literal 1 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int nextId = 1;
+    replace:     public static int nextId = -1;
+}
+
+mutant TASKQUEUE_GEN_CRP_7 {
+    description: the literal 1 becomes 2, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int nextId = 1;
+    replace:     public static int nextId = 2;
+}
+
+mutant TASKQUEUE_GEN_SDL_8 {
+    description: the statement is removed, in submit()
+    operator:    statement-deletion
+    in:          submit
+    file:        Helper.java
+    find:        Tasks.put(taskId, payload);
+    replace:     
+}
+
+mutant TASKQUEUE_GEN_STR_9 {
+    description: the statement runs twice, in submit()
+    operator:    statement-replacement
+    in:          submit
+    file:        Helper.java
+    find:        Tasks.put(taskId, payload);
+    replace:     Tasks.put(taskId, payload); Tasks.put(taskId, payload);
+}
+
+mutant TASKQUEUE_GEN_ARP_10 {
+    description: the two arguments to put() are swapped, in submit()
+    operator:    argument-replacement
+    in:          submit
+    file:        Helper.java
+    find:        Tasks.put(taskId, payload);
+    replace:     Tasks.put(payload, taskId);
+}
+
+mutant TASKQUEUE_GEN_MCR_11 {
+    description: .put( becomes .putIfAbsent(, in submit()
+    operator:    method-call-replacement
+    in:          submit
+    file:        Helper.java
+    find:        Tasks.put(taskId, payload);
+    replace:     Tasks.putIfAbsent(taskId, payload);
+}
+
+mutant TASKQUEUE_GEN_SEI_12 {
+    description: a write to nextId is inserted after the statement, in submit()
+    operator:    side-effect-insertion
+    in:          submit
+    file:        Helper.java
+    find:        Tasks.put(taskId, payload);
+    replace:     Tasks.put(taskId, payload); nextId = nextId + 1;
+}
+
+mutant TASKQUEUE_GEN_VRO_13 {
+    description: Tasks becomes Results, in submit()
+    operator:    variable-replacement
+    in:          submit
+    file:        Helper.java
+    find:        Tasks.put(taskId, payload);
+    replace:     Results.put(taskId, payload);
+}
+
+mutant TASKQUEUE_GEN_AOR_14 {
+    description: + becomes -, in submit()
+    operator:    arithmetic-operator-replacement
+    in:          submit
+    file:        Helper.java
+    find:        nextId = nextId + 1;
+    replace:     nextId = nextId - 1;
+}
+
+mutant TASKQUEUE_GEN_AOR_15 {
+    description: + becomes *, in submit()
+    operator:    arithmetic-operator-replacement
+    in:          submit
+    file:        Helper.java
+    find:        nextId = nextId + 1;
+    replace:     nextId = nextId * 1;
+}
+
+mutant TASKQUEUE_GEN_AOR_16 {
+    description: + becomes /, in submit()
+    operator:    arithmetic-operator-replacement
+    in:          submit
+    file:        Helper.java
+    find:        nextId = nextId + 1;
+    replace:     nextId = nextId / 1;
+}
+
+mutant TASKQUEUE_GEN_AOR_17 {
+    description: + becomes %, in submit()
+    operator:    arithmetic-operator-replacement
+    in:          submit
+    file:        Helper.java
+    find:        nextId = nextId + 1;
+    replace:     nextId = nextId % 1;
+}
+
+mutant TASKQUEUE_GEN_AOI_18 {
+    description: the value assigned to nextId is shifted by + 1, in submit()
+    operator:    arithmetic-operator-insertion
+    in:          submit
+    file:        Helper.java
+    find:        nextId = nextId + 1;
+    replace:     nextId = nextId + 1 + 1;
+}
+
+mutant TASKQUEUE_GEN_AOI_19 {
+    description: the value assigned to nextId is shifted by - 1, in submit()
+    operator:    arithmetic-operator-insertion
+    in:          submit
+    file:        Helper.java
+    find:        nextId = nextId + 1;
+    replace:     nextId = nextId + 1 - 1;
+}
+
+mutant TASKQUEUE_GEN_UOI_20 {
+    description: the value assigned to nextId is negated, in submit()
+    operator:    unary-operator-insertion
+    in:          submit
+    file:        Helper.java
+    find:        nextId = nextId + 1;
+    replace:     nextId = -(nextId + 1);
+}
+
+mutant TASKQUEUE_GEN_ABS_21 {
+    description: the value assigned to nextId is forced negative, in submit()
+    operator:    absolute-value-insertion
+    in:          submit
+    file:        Helper.java
+    find:        nextId = nextId + 1;
+    replace:     nextId = -Math.abs(nextId + 1);
+}
+
+mutant TASKQUEUE_GEN_CRP_22 {
+    description: the literal 1 becomes 0, in submit()
+    operator:    constant-replacement
+    in:          submit
+    file:        Helper.java
+    find:        nextId = nextId + 1;
+    replace:     nextId = nextId + 0;
+}
+
+mutant TASKQUEUE_GEN_CRP_23 {
+    description: the literal 1 becomes -1, in submit()
+    operator:    constant-replacement
+    in:          submit
+    file:        Helper.java
+    find:        nextId = nextId + 1;
+    replace:     nextId = nextId + -1;
+}
+
+mutant TASKQUEUE_GEN_CRP_24 {
+    description: the literal 1 becomes 2, in submit()
+    operator:    constant-replacement
+    in:          submit
+    file:        Helper.java
+    find:        nextId = nextId + 1;
+    replace:     nextId = nextId + 2;
+}
+
+mutant TASKQUEUE_GEN_SDL_25 {
+    description: the statement is removed, in submit()
+    operator:    statement-deletion
+    in:          submit
+    file:        Helper.java
+    find:        nextId = nextId + 1;
+    replace:     
+}
+
+mutant TASKQUEUE_GEN_UOI_26 {
+    description: the returned value is negated, in submit()
+    operator:    unary-operator-insertion
+    in:          submit
+    file:        Helper.java
+    find:        return taskId;
+    replace:     return -(taskId);
+}
+
+mutant TASKQUEUE_GEN_ABS_27 {
+    description: the returned value is forced negative, in submit()
+    operator:    absolute-value-insertion
+    in:          submit
+    file:        Helper.java
+    find:        return taskId;
+    replace:     return -Math.abs(taskId);
+}
+
+mutant TASKQUEUE_GEN_RVR_28 {
+    description: the answer becomes 0, in submit()
+    operator:    return-value-replacement
+    in:          submit
+    file:        Helper.java
+    find:        return taskId;
+    replace:     return 0;
+}
+
+mutant TASKQUEUE_GEN_RVR_29 {
+    description: the answer becomes 1, in submit()
+    operator:    return-value-replacement
+    in:          submit
+    file:        Helper.java
+    find:        return taskId;
+    replace:     return 1;
+}
+
+mutant TASKQUEUE_GEN_RVR_30 {
+    description: the answer becomes -1, in submit()
+    operator:    return-value-replacement
+    in:          submit
+    file:        Helper.java
+    find:        return taskId;
+    replace:     return -1;
+}
+
+mutant TASKQUEUE_GEN_SEI_31 {
+    description: a write to nextId is inserted before the return, in submit()
+    operator:    side-effect-insertion
+    in:          submit
+    file:        Helper.java
+    find:        return taskId;
+    replace:     nextId = nextId + 1; return taskId;
+}
+
+mutant TASKQUEUE_GEN_ARP_32 {
+    description: the argument to get() is shifted by + 1, in getResult()
+    operator:    argument-replacement
+    in:          getResult
+    file:        Helper.java
+    find:        String result = "result-for-" + Tasks.get(taskId);
+    replace:     String result = "result-for-" + Tasks.get(taskId + 1);
+}
+
+mutant TASKQUEUE_GEN_ARP_33 {
+    description: the argument to get() is shifted by - 1, in getResult()
+    operator:    argument-replacement
+    in:          getResult
+    file:        Helper.java
+    find:        String result = "result-for-" + Tasks.get(taskId);
+    replace:     String result = "result-for-" + Tasks.get(taskId - 1);
+}
+
+mutant TASKQUEUE_GEN_MCR_34 {
+    description: .get( becomes .remove(, in getResult()
+    operator:    method-call-replacement
+    in:          getResult
+    file:        Helper.java
+    find:        String result = "result-for-" + Tasks.get(taskId);
+    replace:     String result = "result-for-" + Tasks.remove(taskId);
+}
+
+mutant TASKQUEUE_GEN_VRO_35 {
+    description: Tasks becomes Results, in getResult()
+    operator:    variable-replacement
+    in:          getResult
+    file:        Helper.java
+    find:        String result = "result-for-" + Tasks.get(taskId);
+    replace:     String result = "result-for-" + Results.get(taskId);
+}
+
+mutant TASKQUEUE_GEN_SDL_36 {
+    description: the statement is removed, in getResult()
+    operator:    statement-deletion
+    in:          getResult
+    file:        Helper.java
+    find:        Results.put(taskId, result);
+    replace:     
+}
+
+mutant TASKQUEUE_GEN_STR_37 {
+    description: the statement runs twice, in getResult()
+    operator:    statement-replacement
+    in:          getResult
+    file:        Helper.java
+    find:        Results.put(taskId, result);
+    replace:     Results.put(taskId, result); Results.put(taskId, result);
+}
+
+mutant TASKQUEUE_GEN_ARP_38 {
+    description: the two arguments to put() are swapped, in getResult()
+    operator:    argument-replacement
+    in:          getResult
+    file:        Helper.java
+    find:        Results.put(taskId, result);
+    replace:     Results.put(result, taskId);
+}
+
+mutant TASKQUEUE_GEN_MCR_39 {
+    description: .put( becomes .putIfAbsent(, in getResult()
+    operator:    method-call-replacement
+    in:          getResult
+    file:        Helper.java
+    find:        Results.put(taskId, result);
+    replace:     Results.putIfAbsent(taskId, result);
+}
+
+mutant TASKQUEUE_GEN_SEI_40 {
+    description: a write to nextId is inserted after the statement, in getResult()
+    operator:    side-effect-insertion
+    in:          getResult
+    file:        Helper.java
+    find:        Results.put(taskId, result);
+    replace:     Results.put(taskId, result); nextId = nextId + 1;
+}
+
+mutant TASKQUEUE_GEN_VRO_41 {
+    description: Results becomes Tasks, in getResult()
+    operator:    variable-replacement
+    in:          getResult
+    file:        Helper.java
+    find:        Results.put(taskId, result);
+    replace:     Tasks.put(taskId, result);
+}
+
+mutant TASKQUEUE_GEN_RVR_42 {
+    description: the answer becomes null, in getResult()
+    operator:    return-value-replacement
+    in:          getResult
+    file:        Helper.java
+    find:        return result;
+    replace:     return null;
+}
+
+mutant TASKQUEUE_GEN_SEI_43 {
+    description: a write to nextId is inserted before the return, in getResult()
+    operator:    side-effect-insertion
+    in:          getResult
+    file:        Helper.java
+    find:        return result;
+    replace:     nextId = nextId + 1; return result;
+}
+
+mutant TASKQUEUE_GEN_SDL_44 {
+    description: the statement is removed, in cancelTask()
+    operator:    statement-deletion
+    in:          cancelTask
+    file:        Helper.java
+    find:        Tasks.remove(taskId);
+    replace:     
+}
+
+mutant TASKQUEUE_GEN_STR_45 {
+    description: the statement runs twice, in cancelTask()
+    operator:    statement-replacement
+    in:          cancelTask
+    file:        Helper.java
+    find:        Tasks.remove(taskId);
+    replace:     Tasks.remove(taskId); Tasks.remove(taskId);
+}
+
+mutant TASKQUEUE_GEN_ARP_46 {
+    description: the argument to remove() is shifted by + 1, in cancelTask()
+    operator:    argument-replacement
+    in:          cancelTask
+    file:        Helper.java
+    find:        Tasks.remove(taskId);
+    replace:     Tasks.remove(taskId + 1);
+}
+
+mutant TASKQUEUE_GEN_ARP_47 {
+    description: the argument to remove() is shifted by - 1, in cancelTask()
+    operator:    argument-replacement
+    in:          cancelTask
+    file:        Helper.java
+    find:        Tasks.remove(taskId);
+    replace:     Tasks.remove(taskId - 1);
+}
+
+mutant TASKQUEUE_GEN_MCR_48 {
+    description: .remove( becomes .get(, in cancelTask()
+    operator:    method-call-replacement
+    in:          cancelTask
+    file:        Helper.java
+    find:        Tasks.remove(taskId);
+    replace:     Tasks.get(taskId);
+}
+
+mutant TASKQUEUE_GEN_SEI_49 {
+    description: a write to nextId is inserted after the statement, in cancelTask()
+    operator:    side-effect-insertion
+    in:          cancelTask
+    file:        Helper.java
+    find:        Tasks.remove(taskId);
+    replace:     Tasks.remove(taskId); nextId = nextId + 1;
+}
+
+mutant TASKQUEUE_GEN_VRO_50 {
+    description: Tasks becomes Results, in cancelTask()
+    operator:    variable-replacement
+    in:          cancelTask
+    file:        Helper.java
+    find:        Tasks.remove(taskId);
+    replace:     Results.remove(taskId);
+}
+

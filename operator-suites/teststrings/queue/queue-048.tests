@@ -1,0 +1,9 @@
+test QueueGenerated48 {
+    sequence: isEmpty -> dequeue -> enqueue -> dequeue -> isEmpty -> enqueue -> enqueue;
+
+    inputs {
+        enqueue[2].elem = "beta";
+        enqueue[5].elem = "second";
+        enqueue[6].elem = "beta";
+    }
+}

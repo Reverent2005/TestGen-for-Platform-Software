@@ -1,0 +1,1420 @@
+/*
+ * GENERATED MUTATION SUITE — mathlib
+ *
+ * Produced by OperatorMutantGenerator from:
+ *   ../libraries/mathlib/Helper.java
+ *
+ * DO NOT EDIT. Regenerate with ./run-operator-suites.sh mathlib
+ *
+ * Every operator in MutationOperator is applied to every line of the library
+ * that admits it, so this file is what the specification is measured against
+ * when nobody is choosing the faults. It is the counterpart of the
+ * hand-written set in mutations/mathlib.mutants:
+ * that one asks whether the suite catches the faults we thought of, this one
+ * asks what fraction of all faults of each KIND it catches.
+ *
+ * `expect` is absent throughout: a generated mutant carries no prediction,
+ * and some of these are equivalent to the original and cannot be killed by
+ * anyone. The run measures; it does not check a declaration.
+ */
+
+mutant MATHLIB_GEN_CRP_1 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int calls = 0;
+    replace:     public static int calls = 1;
+}
+
+mutant MATHLIB_GEN_CRP_2 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int calls = 0;
+    replace:     public static int calls = -1;
+}
+
+mutant MATHLIB_GEN_CRP_3 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int lastResult = 0;
+    replace:     public static int lastResult = 1;
+}
+
+mutant MATHLIB_GEN_CRP_4 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int lastResult = 0;
+    replace:     public static int lastResult = -1;
+}
+
+mutant MATHLIB_GEN_ROR_5 {
+    description: < becomes <=, in abs()
+    operator:    relational-operator-replacement
+    in:          abs
+    file:        Helper.java
+    find:        if (absValue < 0) {
+    replace:     if (absValue <= 0) {
+}
+
+mutant MATHLIB_GEN_ROR_6 {
+    description: < becomes >=, in abs()
+    operator:    relational-operator-replacement
+    in:          abs
+    file:        Helper.java
+    find:        if (absValue < 0) {
+    replace:     if (absValue >= 0) {
+}
+
+mutant MATHLIB_GEN_ROR_7 {
+    description: < becomes ==, in abs()
+    operator:    relational-operator-replacement
+    in:          abs
+    file:        Helper.java
+    find:        if (absValue < 0) {
+    replace:     if (absValue == 0) {
+}
+
+mutant MATHLIB_GEN_ROR_8 {
+    description: < becomes !=, in abs()
+    operator:    relational-operator-replacement
+    in:          abs
+    file:        Helper.java
+    find:        if (absValue < 0) {
+    replace:     if (absValue != 0) {
+}
+
+mutant MATHLIB_GEN_ROR_9 {
+    description: < becomes >, in abs()
+    operator:    relational-operator-replacement
+    in:          abs
+    file:        Helper.java
+    find:        if (absValue < 0) {
+    replace:     if (absValue > 0) {
+}
+
+mutant MATHLIB_GEN_COI_10 {
+    description: the guard is negated, in abs()
+    operator:    conditional-operator-insertion
+    in:          abs
+    file:        Helper.java
+    find:        if (absValue < 0) {
+    replace:     if (!(absValue < 0)) {
+}
+
+mutant MATHLIB_GEN_CRP_11 {
+    description: the literal 0 becomes 1, in abs()
+    operator:    constant-replacement
+    in:          abs
+    file:        Helper.java
+    find:        if (absValue < 0) {
+    replace:     if (absValue < 1) {
+}
+
+mutant MATHLIB_GEN_CRP_12 {
+    description: the literal 0 becomes -1, in abs()
+    operator:    constant-replacement
+    in:          abs
+    file:        Helper.java
+    find:        if (absValue < 0) {
+    replace:     if (absValue < -1) {
+}
+
+mutant MATHLIB_GEN_CTC_13 {
+    description: the branch is always taken, in abs()
+    operator:    condition-to-constant
+    in:          abs
+    file:        Helper.java
+    find:        if (absValue < 0) {
+    replace:     if (true) {
+}
+
+mutant MATHLIB_GEN_CTC_14 {
+    description: the branch is never taken, in abs()
+    operator:    condition-to-constant
+    in:          abs
+    file:        Helper.java
+    find:        if (absValue < 0) {
+    replace:     if (false) {
+}
+
+mutant MATHLIB_GEN_AOI_15 {
+    description: the value assigned to absValue is shifted by + 1, in abs()
+    operator:    arithmetic-operator-insertion
+    in:          abs
+    file:        Helper.java
+    find:        absValue = -absValue;
+    replace:     absValue = -absValue + 1;
+}
+
+mutant MATHLIB_GEN_AOI_16 {
+    description: the value assigned to absValue is shifted by - 1, in abs()
+    operator:    arithmetic-operator-insertion
+    in:          abs
+    file:        Helper.java
+    find:        absValue = -absValue;
+    replace:     absValue = -absValue - 1;
+}
+
+mutant MATHLIB_GEN_UOI_17 {
+    description: the value assigned to absValue is negated, in abs()
+    operator:    unary-operator-insertion
+    in:          abs
+    file:        Helper.java
+    find:        absValue = -absValue;
+    replace:     absValue = -(-absValue);
+}
+
+mutant MATHLIB_GEN_ABS_18 {
+    description: the value assigned to absValue is forced negative, in abs()
+    operator:    absolute-value-insertion
+    in:          abs
+    file:        Helper.java
+    find:        absValue = -absValue;
+    replace:     absValue = -Math.abs(-absValue);
+}
+
+mutant MATHLIB_GEN_SDL_19 {
+    description: the statement is removed, in abs()
+    operator:    statement-deletion
+    in:          abs
+    file:        Helper.java
+    find:        absValue = -absValue;
+    replace:     
+}
+
+mutant MATHLIB_GEN_SEI_20 {
+    description: a write to calls is inserted after the statement, in abs()
+    operator:    side-effect-insertion
+    in:          abs
+    file:        Helper.java
+    find:        absValue = -absValue;
+    replace:     absValue = -absValue; calls = calls + 1;
+}
+
+mutant MATHLIB_GEN_AOR_21 {
+    description: + becomes -, in abs()
+    operator:    arithmetic-operator-replacement
+    in:          abs
+    file:        Helper.java
+    find:        calls = calls + 1;
+    replace:     calls = calls - 1;
+}
+
+mutant MATHLIB_GEN_AOR_22 {
+    description: + becomes *, in abs()
+    operator:    arithmetic-operator-replacement
+    in:          abs
+    file:        Helper.java
+    find:        calls = calls + 1;
+    replace:     calls = calls * 1;
+}
+
+mutant MATHLIB_GEN_AOR_23 {
+    description: + becomes /, in abs()
+    operator:    arithmetic-operator-replacement
+    in:          abs
+    file:        Helper.java
+    find:        calls = calls + 1;
+    replace:     calls = calls / 1;
+}
+
+mutant MATHLIB_GEN_AOR_24 {
+    description: + becomes %, in abs()
+    operator:    arithmetic-operator-replacement
+    in:          abs
+    file:        Helper.java
+    find:        calls = calls + 1;
+    replace:     calls = calls % 1;
+}
+
+mutant MATHLIB_GEN_AOI_25 {
+    description: the value assigned to calls is shifted by + 1, in abs()
+    operator:    arithmetic-operator-insertion
+    in:          abs
+    file:        Helper.java
+    find:        calls = calls + 1;
+    replace:     calls = calls + 1 + 1;
+}
+
+mutant MATHLIB_GEN_AOI_26 {
+    description: the value assigned to calls is shifted by - 1, in abs()
+    operator:    arithmetic-operator-insertion
+    in:          abs
+    file:        Helper.java
+    find:        calls = calls + 1;
+    replace:     calls = calls + 1 - 1;
+}
+
+mutant MATHLIB_GEN_UOI_27 {
+    description: the value assigned to calls is negated, in abs()
+    operator:    unary-operator-insertion
+    in:          abs
+    file:        Helper.java
+    find:        calls = calls + 1;
+    replace:     calls = -(calls + 1);
+}
+
+mutant MATHLIB_GEN_ABS_28 {
+    description: the value assigned to calls is forced negative, in abs()
+    operator:    absolute-value-insertion
+    in:          abs
+    file:        Helper.java
+    find:        calls = calls + 1;
+    replace:     calls = -Math.abs(calls + 1);
+}
+
+mutant MATHLIB_GEN_CRP_29 {
+    description: the literal 1 becomes 0, in abs()
+    operator:    constant-replacement
+    in:          abs
+    file:        Helper.java
+    find:        calls = calls + 1;
+    replace:     calls = calls + 0;
+}
+
+mutant MATHLIB_GEN_CRP_30 {
+    description: the literal 1 becomes -1, in abs()
+    operator:    constant-replacement
+    in:          abs
+    file:        Helper.java
+    find:        calls = calls + 1;
+    replace:     calls = calls + -1;
+}
+
+mutant MATHLIB_GEN_CRP_31 {
+    description: the literal 1 becomes 2, in abs()
+    operator:    constant-replacement
+    in:          abs
+    file:        Helper.java
+    find:        calls = calls + 1;
+    replace:     calls = calls + 2;
+}
+
+mutant MATHLIB_GEN_SDL_32 {
+    description: the statement is removed, in abs()
+    operator:    statement-deletion
+    in:          abs
+    file:        Helper.java
+    find:        calls = calls + 1;
+    replace:     
+}
+
+mutant MATHLIB_GEN_VRO_33 {
+    description: calls becomes lastResult, in abs()
+    operator:    variable-replacement
+    in:          abs
+    file:        Helper.java
+    find:        calls = calls + 1;
+    replace:     lastResult = calls + 1;
+}
+
+mutant MATHLIB_GEN_VRO_34 {
+    description: calls becomes lastResult, in abs()
+    operator:    variable-replacement
+    in:          abs
+    file:        Helper.java
+    find:        calls = calls + 1;
+    replace:     calls = lastResult + 1;
+}
+
+mutant MATHLIB_GEN_AOI_35 {
+    description: the value assigned to lastResult is shifted by + 1, in abs()
+    operator:    arithmetic-operator-insertion
+    in:          abs
+    file:        Helper.java
+    find:        lastResult = absValue;
+    replace:     lastResult = absValue + 1;
+}
+
+mutant MATHLIB_GEN_AOI_36 {
+    description: the value assigned to lastResult is shifted by - 1, in abs()
+    operator:    arithmetic-operator-insertion
+    in:          abs
+    file:        Helper.java
+    find:        lastResult = absValue;
+    replace:     lastResult = absValue - 1;
+}
+
+mutant MATHLIB_GEN_UOI_37 {
+    description: the value assigned to lastResult is negated, in abs()
+    operator:    unary-operator-insertion
+    in:          abs
+    file:        Helper.java
+    find:        lastResult = absValue;
+    replace:     lastResult = -(absValue);
+}
+
+mutant MATHLIB_GEN_ABS_38 {
+    description: the value assigned to lastResult is forced negative, in abs()
+    operator:    absolute-value-insertion
+    in:          abs
+    file:        Helper.java
+    find:        lastResult = absValue;
+    replace:     lastResult = -Math.abs(absValue);
+}
+
+mutant MATHLIB_GEN_SDL_39 {
+    description: the statement is removed, in abs()
+    operator:    statement-deletion
+    in:          abs
+    file:        Helper.java
+    find:        lastResult = absValue;
+    replace:     
+}
+
+mutant MATHLIB_GEN_SEI_40 {
+    description: a write to calls is inserted after the statement, in abs()
+    operator:    side-effect-insertion
+    in:          abs
+    file:        Helper.java
+    find:        lastResult = absValue;
+    replace:     lastResult = absValue; calls = calls + 1;
+}
+
+mutant MATHLIB_GEN_VRO_41 {
+    description: lastResult becomes calls, in abs()
+    operator:    variable-replacement
+    in:          abs
+    file:        Helper.java
+    find:        lastResult = absValue;
+    replace:     calls = absValue;
+}
+
+mutant MATHLIB_GEN_UOI_42 {
+    description: the returned value is negated, in abs()
+    operator:    unary-operator-insertion
+    in:          abs
+    file:        Helper.java
+    find:        return absValue;
+    replace:     return -(absValue);
+}
+
+mutant MATHLIB_GEN_ABS_43 {
+    description: the returned value is forced negative, in abs()
+    operator:    absolute-value-insertion
+    in:          abs
+    file:        Helper.java
+    find:        return absValue;
+    replace:     return -Math.abs(absValue);
+}
+
+mutant MATHLIB_GEN_RVR_44 {
+    description: the answer becomes 0, in abs()
+    operator:    return-value-replacement
+    in:          abs
+    file:        Helper.java
+    find:        return absValue;
+    replace:     return 0;
+}
+
+mutant MATHLIB_GEN_RVR_45 {
+    description: the answer becomes 1, in abs()
+    operator:    return-value-replacement
+    in:          abs
+    file:        Helper.java
+    find:        return absValue;
+    replace:     return 1;
+}
+
+mutant MATHLIB_GEN_RVR_46 {
+    description: the answer becomes -1, in abs()
+    operator:    return-value-replacement
+    in:          abs
+    file:        Helper.java
+    find:        return absValue;
+    replace:     return -1;
+}
+
+mutant MATHLIB_GEN_SEI_47 {
+    description: a write to calls is inserted before the return, in abs()
+    operator:    side-effect-insertion
+    in:          abs
+    file:        Helper.java
+    find:        return absValue;
+    replace:     calls = calls + 1; return absValue;
+}
+
+mutant MATHLIB_GEN_ROR_48 {
+    description: != becomes <=, in gcd()
+    operator:    relational-operator-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        while (y != 0) {
+    replace:     while (y <= 0) {
+}
+
+mutant MATHLIB_GEN_ROR_49 {
+    description: != becomes >=, in gcd()
+    operator:    relational-operator-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        while (y != 0) {
+    replace:     while (y >= 0) {
+}
+
+mutant MATHLIB_GEN_ROR_50 {
+    description: != becomes ==, in gcd()
+    operator:    relational-operator-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        while (y != 0) {
+    replace:     while (y == 0) {
+}
+
+mutant MATHLIB_GEN_ROR_51 {
+    description: != becomes <, in gcd()
+    operator:    relational-operator-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        while (y != 0) {
+    replace:     while (y < 0) {
+}
+
+mutant MATHLIB_GEN_ROR_52 {
+    description: != becomes >, in gcd()
+    operator:    relational-operator-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        while (y != 0) {
+    replace:     while (y > 0) {
+}
+
+mutant MATHLIB_GEN_COI_53 {
+    description: the guard is negated, in gcd()
+    operator:    conditional-operator-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        while (y != 0) {
+    replace:     while (!(y != 0)) {
+}
+
+mutant MATHLIB_GEN_CRP_54 {
+    description: the literal 0 becomes 1, in gcd()
+    operator:    constant-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        while (y != 0) {
+    replace:     while (y != 1) {
+}
+
+mutant MATHLIB_GEN_CRP_55 {
+    description: the literal 0 becomes -1, in gcd()
+    operator:    constant-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        while (y != 0) {
+    replace:     while (y != -1) {
+}
+
+mutant MATHLIB_GEN_AOR_56 {
+    description: % becomes +, in gcd()
+    operator:    arithmetic-operator-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        int remainder = x % y;
+    replace:     int remainder = x + y;
+}
+
+mutant MATHLIB_GEN_AOR_57 {
+    description: % becomes -, in gcd()
+    operator:    arithmetic-operator-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        int remainder = x % y;
+    replace:     int remainder = x - y;
+}
+
+mutant MATHLIB_GEN_AOR_58 {
+    description: % becomes *, in gcd()
+    operator:    arithmetic-operator-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        int remainder = x % y;
+    replace:     int remainder = x * y;
+}
+
+mutant MATHLIB_GEN_AOR_59 {
+    description: % becomes /, in gcd()
+    operator:    arithmetic-operator-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        int remainder = x % y;
+    replace:     int remainder = x / y;
+}
+
+mutant MATHLIB_GEN_AOI_60 {
+    description: the value assigned to x is shifted by + 1, in gcd()
+    operator:    arithmetic-operator-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        x = y;
+    replace:     x = y + 1;
+}
+
+mutant MATHLIB_GEN_AOI_61 {
+    description: the value assigned to x is shifted by - 1, in gcd()
+    operator:    arithmetic-operator-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        x = y;
+    replace:     x = y - 1;
+}
+
+mutant MATHLIB_GEN_UOI_62 {
+    description: the value assigned to x is negated, in gcd()
+    operator:    unary-operator-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        x = y;
+    replace:     x = -(y);
+}
+
+mutant MATHLIB_GEN_ABS_63 {
+    description: the value assigned to x is forced negative, in gcd()
+    operator:    absolute-value-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        x = y;
+    replace:     x = -Math.abs(y);
+}
+
+mutant MATHLIB_GEN_SDL_64 {
+    description: the statement is removed, in gcd()
+    operator:    statement-deletion
+    in:          gcd
+    file:        Helper.java
+    find:        x = y;
+    replace:     
+}
+
+mutant MATHLIB_GEN_SEI_65 {
+    description: a write to calls is inserted after the statement, in gcd()
+    operator:    side-effect-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        x = y;
+    replace:     x = y; calls = calls + 1;
+}
+
+mutant MATHLIB_GEN_AOI_66 {
+    description: the value assigned to y is shifted by + 1, in gcd()
+    operator:    arithmetic-operator-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        y = remainder;
+    replace:     y = remainder + 1;
+}
+
+mutant MATHLIB_GEN_AOI_67 {
+    description: the value assigned to y is shifted by - 1, in gcd()
+    operator:    arithmetic-operator-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        y = remainder;
+    replace:     y = remainder - 1;
+}
+
+mutant MATHLIB_GEN_UOI_68 {
+    description: the value assigned to y is negated, in gcd()
+    operator:    unary-operator-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        y = remainder;
+    replace:     y = -(remainder);
+}
+
+mutant MATHLIB_GEN_ABS_69 {
+    description: the value assigned to y is forced negative, in gcd()
+    operator:    absolute-value-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        y = remainder;
+    replace:     y = -Math.abs(remainder);
+}
+
+mutant MATHLIB_GEN_SDL_70 {
+    description: the statement is removed, in gcd()
+    operator:    statement-deletion
+    in:          gcd
+    file:        Helper.java
+    find:        y = remainder;
+    replace:     
+}
+
+mutant MATHLIB_GEN_SEI_71 {
+    description: a write to calls is inserted after the statement, in gcd()
+    operator:    side-effect-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        y = remainder;
+    replace:     y = remainder; calls = calls + 1;
+}
+
+mutant MATHLIB_GEN_AOI_72 {
+    description: the value assigned to lastResult is shifted by + 1, in gcd()
+    operator:    arithmetic-operator-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        lastResult = x;
+    replace:     lastResult = x + 1;
+}
+
+mutant MATHLIB_GEN_AOI_73 {
+    description: the value assigned to lastResult is shifted by - 1, in gcd()
+    operator:    arithmetic-operator-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        lastResult = x;
+    replace:     lastResult = x - 1;
+}
+
+mutant MATHLIB_GEN_UOI_74 {
+    description: the value assigned to lastResult is negated, in gcd()
+    operator:    unary-operator-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        lastResult = x;
+    replace:     lastResult = -(x);
+}
+
+mutant MATHLIB_GEN_ABS_75 {
+    description: the value assigned to lastResult is forced negative, in gcd()
+    operator:    absolute-value-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        lastResult = x;
+    replace:     lastResult = -Math.abs(x);
+}
+
+mutant MATHLIB_GEN_SDL_76 {
+    description: the statement is removed, in gcd()
+    operator:    statement-deletion
+    in:          gcd
+    file:        Helper.java
+    find:        lastResult = x;
+    replace:     
+}
+
+mutant MATHLIB_GEN_SEI_77 {
+    description: a write to calls is inserted after the statement, in gcd()
+    operator:    side-effect-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        lastResult = x;
+    replace:     lastResult = x; calls = calls + 1;
+}
+
+mutant MATHLIB_GEN_VRO_78 {
+    description: lastResult becomes calls, in gcd()
+    operator:    variable-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        lastResult = x;
+    replace:     calls = x;
+}
+
+mutant MATHLIB_GEN_UOI_79 {
+    description: the returned value is negated, in gcd()
+    operator:    unary-operator-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        return x;
+    replace:     return -(x);
+}
+
+mutant MATHLIB_GEN_ABS_80 {
+    description: the returned value is forced negative, in gcd()
+    operator:    absolute-value-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        return x;
+    replace:     return -Math.abs(x);
+}
+
+mutant MATHLIB_GEN_RVR_81 {
+    description: the answer becomes 0, in gcd()
+    operator:    return-value-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        return x;
+    replace:     return 0;
+}
+
+mutant MATHLIB_GEN_RVR_82 {
+    description: the answer becomes 1, in gcd()
+    operator:    return-value-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        return x;
+    replace:     return 1;
+}
+
+mutant MATHLIB_GEN_RVR_83 {
+    description: the answer becomes -1, in gcd()
+    operator:    return-value-replacement
+    in:          gcd
+    file:        Helper.java
+    find:        return x;
+    replace:     return -1;
+}
+
+mutant MATHLIB_GEN_SEI_84 {
+    description: a write to calls is inserted before the return, in gcd()
+    operator:    side-effect-insertion
+    in:          gcd
+    file:        Helper.java
+    find:        return x;
+    replace:     calls = calls + 1; return x;
+}
+
+mutant MATHLIB_GEN_CRP_85 {
+    description: the literal 1 becomes 0, in power()
+    operator:    constant-replacement
+    in:          power
+    file:        Helper.java
+    find:        int powerValue = 1;
+    replace:     int powerValue = 0;
+}
+
+mutant MATHLIB_GEN_CRP_86 {
+    description: the literal 1 becomes -1, in power()
+    operator:    constant-replacement
+    in:          power
+    file:        Helper.java
+    find:        int powerValue = 1;
+    replace:     int powerValue = -1;
+}
+
+mutant MATHLIB_GEN_CRP_87 {
+    description: the literal 1 becomes 2, in power()
+    operator:    constant-replacement
+    in:          power
+    file:        Helper.java
+    find:        int powerValue = 1;
+    replace:     int powerValue = 2;
+}
+
+mutant MATHLIB_GEN_ROR_88 {
+    description: < becomes <=, in power()
+    operator:    relational-operator-replacement
+    in:          power
+    file:        Helper.java
+    find:        for (int i = 0; i < exponent; i++) {
+    replace:     for (int i = 0; i <= exponent; i++) {
+}
+
+mutant MATHLIB_GEN_ROR_89 {
+    description: < becomes >=, in power()
+    operator:    relational-operator-replacement
+    in:          power
+    file:        Helper.java
+    find:        for (int i = 0; i < exponent; i++) {
+    replace:     for (int i = 0; i >= exponent; i++) {
+}
+
+mutant MATHLIB_GEN_ROR_90 {
+    description: < becomes ==, in power()
+    operator:    relational-operator-replacement
+    in:          power
+    file:        Helper.java
+    find:        for (int i = 0; i < exponent; i++) {
+    replace:     for (int i = 0; i == exponent; i++) {
+}
+
+mutant MATHLIB_GEN_ROR_91 {
+    description: < becomes !=, in power()
+    operator:    relational-operator-replacement
+    in:          power
+    file:        Helper.java
+    find:        for (int i = 0; i < exponent; i++) {
+    replace:     for (int i = 0; i != exponent; i++) {
+}
+
+mutant MATHLIB_GEN_ROR_92 {
+    description: < becomes >, in power()
+    operator:    relational-operator-replacement
+    in:          power
+    file:        Helper.java
+    find:        for (int i = 0; i < exponent; i++) {
+    replace:     for (int i = 0; i > exponent; i++) {
+}
+
+mutant MATHLIB_GEN_CRP_93 {
+    description: the literal 0 becomes 1, in power()
+    operator:    constant-replacement
+    in:          power
+    file:        Helper.java
+    find:        for (int i = 0; i < exponent; i++) {
+    replace:     for (int i = 1; i < exponent; i++) {
+}
+
+mutant MATHLIB_GEN_CRP_94 {
+    description: the literal 0 becomes -1, in power()
+    operator:    constant-replacement
+    in:          power
+    file:        Helper.java
+    find:        for (int i = 0; i < exponent; i++) {
+    replace:     for (int i = -1; i < exponent; i++) {
+}
+
+mutant MATHLIB_GEN_LBR_95 {
+    description: the loop starts one later, in power()
+    operator:    loop-bound-replacement
+    in:          power
+    file:        Helper.java
+    find:        for (int i = 0; i < exponent; i++) {
+    replace:     for (int i = 0 + 1; i < exponent; i++) {
+}
+
+mutant MATHLIB_GEN_LBR_96 {
+    description: the loop starts one earlier, in power()
+    operator:    loop-bound-replacement
+    in:          power
+    file:        Helper.java
+    find:        for (int i = 0; i < exponent; i++) {
+    replace:     for (int i = 0 - 1; i < exponent; i++) {
+}
+
+mutant MATHLIB_GEN_AOR_97 {
+    description: * becomes +, in power()
+    operator:    arithmetic-operator-replacement
+    in:          power
+    file:        Helper.java
+    find:        powerValue = powerValue * base;
+    replace:     powerValue = powerValue + base;
+}
+
+mutant MATHLIB_GEN_AOR_98 {
+    description: * becomes -, in power()
+    operator:    arithmetic-operator-replacement
+    in:          power
+    file:        Helper.java
+    find:        powerValue = powerValue * base;
+    replace:     powerValue = powerValue - base;
+}
+
+mutant MATHLIB_GEN_AOR_99 {
+    description: * becomes /, in power()
+    operator:    arithmetic-operator-replacement
+    in:          power
+    file:        Helper.java
+    find:        powerValue = powerValue * base;
+    replace:     powerValue = powerValue / base;
+}
+
+mutant MATHLIB_GEN_AOR_100 {
+    description: * becomes %, in power()
+    operator:    arithmetic-operator-replacement
+    in:          power
+    file:        Helper.java
+    find:        powerValue = powerValue * base;
+    replace:     powerValue = powerValue % base;
+}
+
+mutant MATHLIB_GEN_AOI_101 {
+    description: the value assigned to powerValue is shifted by + 1, in power()
+    operator:    arithmetic-operator-insertion
+    in:          power
+    file:        Helper.java
+    find:        powerValue = powerValue * base;
+    replace:     powerValue = powerValue * base + 1;
+}
+
+mutant MATHLIB_GEN_AOI_102 {
+    description: the value assigned to powerValue is shifted by - 1, in power()
+    operator:    arithmetic-operator-insertion
+    in:          power
+    file:        Helper.java
+    find:        powerValue = powerValue * base;
+    replace:     powerValue = powerValue * base - 1;
+}
+
+mutant MATHLIB_GEN_UOI_103 {
+    description: the value assigned to powerValue is negated, in power()
+    operator:    unary-operator-insertion
+    in:          power
+    file:        Helper.java
+    find:        powerValue = powerValue * base;
+    replace:     powerValue = -(powerValue * base);
+}
+
+mutant MATHLIB_GEN_ABS_104 {
+    description: the value assigned to powerValue is forced negative, in power()
+    operator:    absolute-value-insertion
+    in:          power
+    file:        Helper.java
+    find:        powerValue = powerValue * base;
+    replace:     powerValue = -Math.abs(powerValue * base);
+}
+
+mutant MATHLIB_GEN_SDL_105 {
+    description: the statement is removed, in power()
+    operator:    statement-deletion
+    in:          power
+    file:        Helper.java
+    find:        powerValue = powerValue * base;
+    replace:     
+}
+
+mutant MATHLIB_GEN_SEI_106 {
+    description: a write to calls is inserted after the statement, in power()
+    operator:    side-effect-insertion
+    in:          power
+    file:        Helper.java
+    find:        powerValue = powerValue * base;
+    replace:     powerValue = powerValue * base; calls = calls + 1;
+}
+
+mutant MATHLIB_GEN_AOI_107 {
+    description: the value assigned to lastResult is shifted by + 1, in power()
+    operator:    arithmetic-operator-insertion
+    in:          power
+    file:        Helper.java
+    find:        lastResult = powerValue;
+    replace:     lastResult = powerValue + 1;
+}
+
+mutant MATHLIB_GEN_AOI_108 {
+    description: the value assigned to lastResult is shifted by - 1, in power()
+    operator:    arithmetic-operator-insertion
+    in:          power
+    file:        Helper.java
+    find:        lastResult = powerValue;
+    replace:     lastResult = powerValue - 1;
+}
+
+mutant MATHLIB_GEN_UOI_109 {
+    description: the value assigned to lastResult is negated, in power()
+    operator:    unary-operator-insertion
+    in:          power
+    file:        Helper.java
+    find:        lastResult = powerValue;
+    replace:     lastResult = -(powerValue);
+}
+
+mutant MATHLIB_GEN_ABS_110 {
+    description: the value assigned to lastResult is forced negative, in power()
+    operator:    absolute-value-insertion
+    in:          power
+    file:        Helper.java
+    find:        lastResult = powerValue;
+    replace:     lastResult = -Math.abs(powerValue);
+}
+
+mutant MATHLIB_GEN_SDL_111 {
+    description: the statement is removed, in power()
+    operator:    statement-deletion
+    in:          power
+    file:        Helper.java
+    find:        lastResult = powerValue;
+    replace:     
+}
+
+mutant MATHLIB_GEN_SEI_112 {
+    description: a write to calls is inserted after the statement, in power()
+    operator:    side-effect-insertion
+    in:          power
+    file:        Helper.java
+    find:        lastResult = powerValue;
+    replace:     lastResult = powerValue; calls = calls + 1;
+}
+
+mutant MATHLIB_GEN_VRO_113 {
+    description: lastResult becomes calls, in power()
+    operator:    variable-replacement
+    in:          power
+    file:        Helper.java
+    find:        lastResult = powerValue;
+    replace:     calls = powerValue;
+}
+
+mutant MATHLIB_GEN_UOI_114 {
+    description: the returned value is negated, in power()
+    operator:    unary-operator-insertion
+    in:          power
+    file:        Helper.java
+    find:        return powerValue;
+    replace:     return -(powerValue);
+}
+
+mutant MATHLIB_GEN_ABS_115 {
+    description: the returned value is forced negative, in power()
+    operator:    absolute-value-insertion
+    in:          power
+    file:        Helper.java
+    find:        return powerValue;
+    replace:     return -Math.abs(powerValue);
+}
+
+mutant MATHLIB_GEN_RVR_116 {
+    description: the answer becomes 0, in power()
+    operator:    return-value-replacement
+    in:          power
+    file:        Helper.java
+    find:        return powerValue;
+    replace:     return 0;
+}
+
+mutant MATHLIB_GEN_RVR_117 {
+    description: the answer becomes 1, in power()
+    operator:    return-value-replacement
+    in:          power
+    file:        Helper.java
+    find:        return powerValue;
+    replace:     return 1;
+}
+
+mutant MATHLIB_GEN_RVR_118 {
+    description: the answer becomes -1, in power()
+    operator:    return-value-replacement
+    in:          power
+    file:        Helper.java
+    find:        return powerValue;
+    replace:     return -1;
+}
+
+mutant MATHLIB_GEN_SEI_119 {
+    description: a write to calls is inserted before the return, in power()
+    operator:    side-effect-insertion
+    in:          power
+    file:        Helper.java
+    find:        return powerValue;
+    replace:     calls = calls + 1; return powerValue;
+}
+
+mutant MATHLIB_GEN_CRP_120 {
+    description: the literal 1 becomes 0, in factorial()
+    operator:    constant-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        int factValue = 1;
+    replace:     int factValue = 0;
+}
+
+mutant MATHLIB_GEN_CRP_121 {
+    description: the literal 1 becomes -1, in factorial()
+    operator:    constant-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        int factValue = 1;
+    replace:     int factValue = -1;
+}
+
+mutant MATHLIB_GEN_CRP_122 {
+    description: the literal 1 becomes 2, in factorial()
+    operator:    constant-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        int factValue = 1;
+    replace:     int factValue = 2;
+}
+
+mutant MATHLIB_GEN_ROR_123 {
+    description: <= becomes >=, in factorial()
+    operator:    relational-operator-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        for (int i = 2; i <= n; i++) {
+    replace:     for (int i = 2; i >= n; i++) {
+}
+
+mutant MATHLIB_GEN_ROR_124 {
+    description: <= becomes ==, in factorial()
+    operator:    relational-operator-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        for (int i = 2; i <= n; i++) {
+    replace:     for (int i = 2; i == n; i++) {
+}
+
+mutant MATHLIB_GEN_ROR_125 {
+    description: <= becomes !=, in factorial()
+    operator:    relational-operator-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        for (int i = 2; i <= n; i++) {
+    replace:     for (int i = 2; i != n; i++) {
+}
+
+mutant MATHLIB_GEN_ROR_126 {
+    description: <= becomes <, in factorial()
+    operator:    relational-operator-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        for (int i = 2; i <= n; i++) {
+    replace:     for (int i = 2; i < n; i++) {
+}
+
+mutant MATHLIB_GEN_ROR_127 {
+    description: <= becomes >, in factorial()
+    operator:    relational-operator-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        for (int i = 2; i <= n; i++) {
+    replace:     for (int i = 2; i > n; i++) {
+}
+
+mutant MATHLIB_GEN_CRP_128 {
+    description: the literal 2 becomes 0, in factorial()
+    operator:    constant-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        for (int i = 2; i <= n; i++) {
+    replace:     for (int i = 0; i <= n; i++) {
+}
+
+mutant MATHLIB_GEN_CRP_129 {
+    description: the literal 2 becomes 1, in factorial()
+    operator:    constant-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        for (int i = 2; i <= n; i++) {
+    replace:     for (int i = 1; i <= n; i++) {
+}
+
+mutant MATHLIB_GEN_CRP_130 {
+    description: the literal 2 becomes -1, in factorial()
+    operator:    constant-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        for (int i = 2; i <= n; i++) {
+    replace:     for (int i = -1; i <= n; i++) {
+}
+
+mutant MATHLIB_GEN_CRP_131 {
+    description: the literal 2 becomes 3, in factorial()
+    operator:    constant-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        for (int i = 2; i <= n; i++) {
+    replace:     for (int i = 3; i <= n; i++) {
+}
+
+mutant MATHLIB_GEN_LBR_132 {
+    description: the loop starts one later, in factorial()
+    operator:    loop-bound-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        for (int i = 2; i <= n; i++) {
+    replace:     for (int i = 2 + 1; i <= n; i++) {
+}
+
+mutant MATHLIB_GEN_LBR_133 {
+    description: the loop starts one earlier, in factorial()
+    operator:    loop-bound-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        for (int i = 2; i <= n; i++) {
+    replace:     for (int i = 2 - 1; i <= n; i++) {
+}
+
+mutant MATHLIB_GEN_AOR_134 {
+    description: * becomes +, in factorial()
+    operator:    arithmetic-operator-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        factValue = factValue * i;
+    replace:     factValue = factValue + i;
+}
+
+mutant MATHLIB_GEN_AOR_135 {
+    description: * becomes -, in factorial()
+    operator:    arithmetic-operator-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        factValue = factValue * i;
+    replace:     factValue = factValue - i;
+}
+
+mutant MATHLIB_GEN_AOR_136 {
+    description: * becomes /, in factorial()
+    operator:    arithmetic-operator-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        factValue = factValue * i;
+    replace:     factValue = factValue / i;
+}
+
+mutant MATHLIB_GEN_AOR_137 {
+    description: * becomes %, in factorial()
+    operator:    arithmetic-operator-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        factValue = factValue * i;
+    replace:     factValue = factValue % i;
+}
+
+mutant MATHLIB_GEN_AOI_138 {
+    description: the value assigned to factValue is shifted by + 1, in factorial()
+    operator:    arithmetic-operator-insertion
+    in:          factorial
+    file:        Helper.java
+    find:        factValue = factValue * i;
+    replace:     factValue = factValue * i + 1;
+}
+
+mutant MATHLIB_GEN_AOI_139 {
+    description: the value assigned to factValue is shifted by - 1, in factorial()
+    operator:    arithmetic-operator-insertion
+    in:          factorial
+    file:        Helper.java
+    find:        factValue = factValue * i;
+    replace:     factValue = factValue * i - 1;
+}
+
+mutant MATHLIB_GEN_UOI_140 {
+    description: the value assigned to factValue is negated, in factorial()
+    operator:    unary-operator-insertion
+    in:          factorial
+    file:        Helper.java
+    find:        factValue = factValue * i;
+    replace:     factValue = -(factValue * i);
+}
+
+mutant MATHLIB_GEN_ABS_141 {
+    description: the value assigned to factValue is forced negative, in factorial()
+    operator:    absolute-value-insertion
+    in:          factorial
+    file:        Helper.java
+    find:        factValue = factValue * i;
+    replace:     factValue = -Math.abs(factValue * i);
+}
+
+mutant MATHLIB_GEN_SDL_142 {
+    description: the statement is removed, in factorial()
+    operator:    statement-deletion
+    in:          factorial
+    file:        Helper.java
+    find:        factValue = factValue * i;
+    replace:     
+}
+
+mutant MATHLIB_GEN_SEI_143 {
+    description: a write to calls is inserted after the statement, in factorial()
+    operator:    side-effect-insertion
+    in:          factorial
+    file:        Helper.java
+    find:        factValue = factValue * i;
+    replace:     factValue = factValue * i; calls = calls + 1;
+}
+
+mutant MATHLIB_GEN_AOI_144 {
+    description: the value assigned to lastResult is shifted by + 1, in factorial()
+    operator:    arithmetic-operator-insertion
+    in:          factorial
+    file:        Helper.java
+    find:        lastResult = factValue;
+    replace:     lastResult = factValue + 1;
+}
+
+mutant MATHLIB_GEN_AOI_145 {
+    description: the value assigned to lastResult is shifted by - 1, in factorial()
+    operator:    arithmetic-operator-insertion
+    in:          factorial
+    file:        Helper.java
+    find:        lastResult = factValue;
+    replace:     lastResult = factValue - 1;
+}
+
+mutant MATHLIB_GEN_UOI_146 {
+    description: the value assigned to lastResult is negated, in factorial()
+    operator:    unary-operator-insertion
+    in:          factorial
+    file:        Helper.java
+    find:        lastResult = factValue;
+    replace:     lastResult = -(factValue);
+}
+
+mutant MATHLIB_GEN_ABS_147 {
+    description: the value assigned to lastResult is forced negative, in factorial()
+    operator:    absolute-value-insertion
+    in:          factorial
+    file:        Helper.java
+    find:        lastResult = factValue;
+    replace:     lastResult = -Math.abs(factValue);
+}
+
+mutant MATHLIB_GEN_SDL_148 {
+    description: the statement is removed, in factorial()
+    operator:    statement-deletion
+    in:          factorial
+    file:        Helper.java
+    find:        lastResult = factValue;
+    replace:     
+}
+
+mutant MATHLIB_GEN_SEI_149 {
+    description: a write to calls is inserted after the statement, in factorial()
+    operator:    side-effect-insertion
+    in:          factorial
+    file:        Helper.java
+    find:        lastResult = factValue;
+    replace:     lastResult = factValue; calls = calls + 1;
+}
+
+mutant MATHLIB_GEN_VRO_150 {
+    description: lastResult becomes calls, in factorial()
+    operator:    variable-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        lastResult = factValue;
+    replace:     calls = factValue;
+}
+
+mutant MATHLIB_GEN_UOI_151 {
+    description: the returned value is negated, in factorial()
+    operator:    unary-operator-insertion
+    in:          factorial
+    file:        Helper.java
+    find:        return factValue;
+    replace:     return -(factValue);
+}
+
+mutant MATHLIB_GEN_ABS_152 {
+    description: the returned value is forced negative, in factorial()
+    operator:    absolute-value-insertion
+    in:          factorial
+    file:        Helper.java
+    find:        return factValue;
+    replace:     return -Math.abs(factValue);
+}
+
+mutant MATHLIB_GEN_RVR_153 {
+    description: the answer becomes 0, in factorial()
+    operator:    return-value-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        return factValue;
+    replace:     return 0;
+}
+
+mutant MATHLIB_GEN_RVR_154 {
+    description: the answer becomes 1, in factorial()
+    operator:    return-value-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        return factValue;
+    replace:     return 1;
+}
+
+mutant MATHLIB_GEN_RVR_155 {
+    description: the answer becomes -1, in factorial()
+    operator:    return-value-replacement
+    in:          factorial
+    file:        Helper.java
+    find:        return factValue;
+    replace:     return -1;
+}
+
+mutant MATHLIB_GEN_SEI_156 {
+    description: a write to calls is inserted before the return, in factorial()
+    operator:    side-effect-insertion
+    in:          factorial
+    file:        Helper.java
+    find:        return factValue;
+    replace:     calls = calls + 1; return factValue;
+}
+

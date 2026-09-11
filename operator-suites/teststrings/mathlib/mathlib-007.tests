@@ -1,0 +1,13 @@
+test MathlibGenerated7 {
+    sequence: abs -> abs -> gcd -> power -> factorial;
+
+    inputs {
+        abs[0].x = 3;
+        abs[1].x = 1;
+        gcd[2].a = 18;
+        gcd[2].b = 2;
+        power[3].base = 5;
+        power[3].exponent = 4;
+        factorial[4].n = 5;
+    }
+}

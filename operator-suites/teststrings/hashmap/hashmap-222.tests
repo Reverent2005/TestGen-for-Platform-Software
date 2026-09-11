@@ -1,0 +1,10 @@
+test HashmapGenerated222 {
+    sequence: put -> put;
+
+    inputs {
+        put[0].key = "session";
+        put[0].value = 1;
+        put[1].key = "session";
+        put[1].value = 7;
+    }
+}

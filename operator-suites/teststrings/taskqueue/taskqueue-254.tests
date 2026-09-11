@@ -1,0 +1,9 @@
+test TaskqueueGenerated254 {
+    sequence: submit -> getResult -> cancelTask -> submit -> submit -> cancelTask -> cancelTask;
+
+    inputs {
+        submit[0].payload = "gamma";
+        submit[3].payload = "render-report";
+        submit[4].payload = "gamma";
+    }
+}

@@ -1,0 +1,86 @@
+# generated mutants — linkedlist
+# id	status	operator	method	file	killed-by-family	detail
+LINKEDLIST_GEN_SDL_1	INVALID	statement-deletion	-	Helper.java	-	the mutated library does not compile: Helper.java:32: cannot find symbol
+LINKEDLIST_GEN_SEI_2	INVALID	side-effect-insertion	-	Helper.java	-	the mutated library does not compile: Helper.java:30: <identifier> expected
+LINKEDLIST_GEN_SDL_3	INVALID	statement-deletion	-	Helper.java	-	the mutated library does not compile: Helper.java:45: cannot find symbol
+LINKEDLIST_GEN_SEI_4	INVALID	side-effect-insertion	-	Helper.java	-	the mutated library does not compile: Helper.java:31: <identifier> expected
+LINKEDLIST_GEN_SDL_5	INVALID	statement-deletion	-	Helper.java	-	the mutated library does not compile: GeneratedATCs.java:13: cannot find symbol
+LINKEDLIST_GEN_SEI_6	INVALID	side-effect-insertion	-	Helper.java	-	the mutated library does not compile: Helper.java:37: <identifier> expected
+LINKEDLIST_GEN_CRP_7	KILLED	constant-replacement	-	Helper.java	-	killed by a generated assertion in GeneratedATCs_JUnit
+LINKEDLIST_GEN_CRP_8	KILLED	constant-replacement	-	Helper.java	-	killed by a generated assertion in GeneratedATCs_JUnit
+LINKEDLIST_GEN_SDL_9	SURVIVED	statement-deletion	addFirst	Helper.java	linkedlist-005: addLast -> addFirst	every generated condition still holds
+LINKEDLIST_GEN_SEI_10	SURVIVED	side-effect-insertion	addFirst	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_SDL_11	KILLED	statement-deletion	addFirst	Helper.java	-	killed by block 0  addFirst  ensures  head == value
+LINKEDLIST_GEN_SEI_12	SURVIVED	side-effect-insertion	addFirst	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_SDL_13	KILLED	statement-deletion	addFirst	Helper.java	-	killed by block 0  addFirst  ensures  head == value
+LINKEDLIST_GEN_SEI_14	KILLED	side-effect-insertion	addFirst	Helper.java	-	killed by block 0  addFirst  ensures  size == \old(size) + 1
+LINKEDLIST_GEN_ROR_15	INVALID	relational-operator-replacement	addLast	Helper.java	-	the mutated library does not compile: Helper.java:53: bad operand types for binary operator '<='
+LINKEDLIST_GEN_ROR_16	INVALID	relational-operator-replacement	addLast	Helper.java	-	the mutated library does not compile: Helper.java:53: bad operand types for binary operator '>='
+LINKEDLIST_GEN_ROR_17	KILLED	relational-operator-replacement	addLast	Helper.java	-	killed by block 1  addLast  ensures  size == \old(size) + 1
+LINKEDLIST_GEN_ROR_18	INVALID	relational-operator-replacement	addLast	Helper.java	-	the mutated library does not compile: Helper.java:53: bad operand types for binary operator '<'
+LINKEDLIST_GEN_ROR_19	INVALID	relational-operator-replacement	addLast	Helper.java	-	the mutated library does not compile: Helper.java:53: bad operand types for binary operator '>'
+LINKEDLIST_GEN_COI_20	KILLED	conditional-operator-insertion	addLast	Helper.java	-	killed by block 1  addLast  ensures  size == \old(size) + 1
+LINKEDLIST_GEN_CTC_21	KILLED	condition-to-constant	addLast	Helper.java	-	killed by block 1  addLast  ensures  size == \old(size) + 1
+LINKEDLIST_GEN_CTC_22	SURVIVED	condition-to-constant	addLast	Helper.java	linkedlist-003: addLast -> removeFirst	every generated condition still holds
+LINKEDLIST_GEN_ROR_23	INVALID	relational-operator-replacement	addLast	Helper.java	-	the mutated library does not compile: Helper.java:57: bad operand types for binary operator '<='
+LINKEDLIST_GEN_ROR_24	INVALID	relational-operator-replacement	addLast	Helper.java	-	the mutated library does not compile: Helper.java:57: bad operand types for binary operator '>='
+LINKEDLIST_GEN_ROR_25	KILLED	relational-operator-replacement	addLast	Helper.java	-	killed by the singular case (exit 1)
+LINKEDLIST_GEN_ROR_26	INVALID	relational-operator-replacement	addLast	Helper.java	-	the mutated library does not compile: Helper.java:57: bad operand types for binary operator '<'
+LINKEDLIST_GEN_ROR_27	INVALID	relational-operator-replacement	addLast	Helper.java	-	the mutated library does not compile: Helper.java:57: bad operand types for binary operator '>'
+LINKEDLIST_GEN_COI_28	KILLED	conditional-operator-insertion	addLast	Helper.java	-	killed by the singular case (exit 1)
+LINKEDLIST_GEN_SDL_29	SURVIVED	statement-deletion	addLast	Helper.java	linkedlist-002: addFirst -> addLast -> addLast -> removeFirst -> removeFirst -> indexOf	every generated condition still holds
+LINKEDLIST_GEN_SEI_30	SURVIVED	side-effect-insertion	addLast	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_SDL_31	KILLED	statement-deletion	addLast	Helper.java	-	killed by block 1  addLast  ensures  tail == value
+LINKEDLIST_GEN_SEI_32	SURVIVED	side-effect-insertion	addLast	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_SDL_33	KILLED	statement-deletion	removeFirst	Helper.java	-	killed by block 2  removeFirst  ensures  size == \old(size) - 1
+LINKEDLIST_GEN_SEI_34	SURVIVED	side-effect-insertion	removeFirst	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_UOI_35	KILLED	unary-operator-insertion	removeFirst	Helper.java	-	killed by block 2  removeFirst  ensures  removedValue == \old(head)
+LINKEDLIST_GEN_ABS_36	KILLED	absolute-value-insertion	removeFirst	Helper.java	-	killed by block 2  removeFirst  ensures  removedValue == \old(head)
+LINKEDLIST_GEN_RVR_37	KILLED	return-value-replacement	removeFirst	Helper.java	-	killed by block 2  removeFirst  ensures  removedValue == \old(head)
+LINKEDLIST_GEN_RVR_38	KILLED	return-value-replacement	removeFirst	Helper.java	-	killed by block 2  removeFirst  ensures  removedValue == \old(head)
+LINKEDLIST_GEN_RVR_39	KILLED	return-value-replacement	removeFirst	Helper.java	-	killed by block 2  removeFirst  ensures  removedValue == \old(head)
+LINKEDLIST_GEN_SEI_40	KILLED	side-effect-insertion	removeFirst	Helper.java	-	killed by block 2  removeFirst  ensures  size == \old(size) - 1
+LINKEDLIST_GEN_CRP_41	KILLED	constant-replacement	indexOf	Helper.java	-	killed by block 3  indexOf  ensures  position < size
+LINKEDLIST_GEN_CRP_42	SURVIVED	constant-replacement	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_ROR_43	INVALID	relational-operator-replacement	indexOf	Helper.java	-	the mutated library does not compile: Helper.java:82: bad operand types for binary operator '<='
+LINKEDLIST_GEN_ROR_44	INVALID	relational-operator-replacement	indexOf	Helper.java	-	the mutated library does not compile: Helper.java:82: bad operand types for binary operator '>='
+LINKEDLIST_GEN_ROR_45	SURVIVED	relational-operator-replacement	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_ROR_46	INVALID	relational-operator-replacement	indexOf	Helper.java	-	the mutated library does not compile: Helper.java:82: bad operand types for binary operator '<'
+LINKEDLIST_GEN_ROR_47	INVALID	relational-operator-replacement	indexOf	Helper.java	-	the mutated library does not compile: Helper.java:82: bad operand types for binary operator '>'
+LINKEDLIST_GEN_COI_48	SURVIVED	conditional-operator-insertion	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_COI_49	SURVIVED	conditional-operator-insertion	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_CTC_50	SURVIVED	condition-to-constant	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_CTC_51	SURVIVED	condition-to-constant	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_ARP_52	SURVIVED	argument-replacement	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_ARP_53	SURVIVED	argument-replacement	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_UOI_54	SURVIVED	unary-operator-insertion	indexOf	Helper.java	linkedlist-040: addLast -> addLast -> addFirst -> indexOf -> addFirst -> addLast	every generated condition still holds
+LINKEDLIST_GEN_ABS_55	SURVIVED	absolute-value-insertion	indexOf	Helper.java	linkedlist-040: addLast -> addLast -> addFirst -> indexOf -> addFirst -> addLast	every generated condition still holds
+LINKEDLIST_GEN_RVR_56	SURVIVED	return-value-replacement	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_RVR_57	KILLED	return-value-replacement	indexOf	Helper.java	-	killed by block 3  indexOf  ensures  position < size
+LINKEDLIST_GEN_RVR_58	SURVIVED	return-value-replacement	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_SEI_59	SURVIVED	side-effect-insertion	indexOf	Helper.java	linkedlist-012: addFirst -> indexOf -> addLast	every generated condition still holds
+LINKEDLIST_GEN_AOR_60	SURVIVED	arithmetic-operator-replacement	indexOf	Helper.java	linkedlist-040: addLast -> addLast -> addFirst -> indexOf -> addFirst -> addLast	every generated condition still holds
+LINKEDLIST_GEN_AOR_61	SURVIVED	arithmetic-operator-replacement	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_AOR_62	SURVIVED	arithmetic-operator-replacement	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_AOR_63	SURVIVED	arithmetic-operator-replacement	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_AOI_64	SURVIVED	arithmetic-operator-insertion	indexOf	Helper.java	linkedlist-017: addFirst -> addFirst -> addLast -> removeFirst -> indexOf	every generated condition still holds
+LINKEDLIST_GEN_AOI_65	SURVIVED	arithmetic-operator-insertion	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_UOI_66	SURVIVED	unary-operator-insertion	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_ABS_67	SURVIVED	absolute-value-insertion	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_CRP_68	SURVIVED	constant-replacement	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_CRP_69	SURVIVED	constant-replacement	indexOf	Helper.java	linkedlist-040: addLast -> addLast -> addFirst -> indexOf -> addFirst -> addLast	every generated condition still holds
+LINKEDLIST_GEN_CRP_70	SURVIVED	constant-replacement	indexOf	Helper.java	linkedlist-017: addFirst -> addFirst -> addLast -> removeFirst -> indexOf	every generated condition still holds
+LINKEDLIST_GEN_SDL_71	SURVIVED	statement-deletion	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_SEI_72	SURVIVED	side-effect-insertion	indexOf	Helper.java	linkedlist-012: addFirst -> indexOf -> addLast	every generated condition still holds
+LINKEDLIST_GEN_AOR_73	SURVIVED	arithmetic-operator-replacement	indexOf	Helper.java	linkedlist-002: addFirst -> addLast -> addLast -> removeFirst -> removeFirst -> indexOf	every generated condition still holds
+LINKEDLIST_GEN_AOR_74	INVALID	arithmetic-operator-replacement	indexOf	Helper.java	-	the mutated library does not compile: Helper.java:89: illegal start of expression
+LINKEDLIST_GEN_AOR_75	INVALID	arithmetic-operator-replacement	indexOf	Helper.java	-	the mutated library does not compile: Helper.java:89: illegal start of expression
+LINKEDLIST_GEN_AOR_76	INVALID	arithmetic-operator-replacement	indexOf	Helper.java	-	the mutated library does not compile: Helper.java:89: illegal start of expression
+LINKEDLIST_GEN_UOI_77	SURVIVED	unary-operator-insertion	indexOf	Helper.java	linkedlist-002: addFirst -> addLast -> addLast -> removeFirst -> removeFirst -> indexOf	every generated condition still holds
+LINKEDLIST_GEN_ABS_78	SURVIVED	absolute-value-insertion	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_CRP_79	SURVIVED	constant-replacement	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_CRP_80	INVALID	constant-replacement	indexOf	Helper.java	-	the mutated library does not compile: Helper.java:89: unexpected type
+LINKEDLIST_GEN_CRP_81	SURVIVED	constant-replacement	indexOf	Helper.java	linkedlist-002: addFirst -> addLast -> addLast -> removeFirst -> removeFirst -> indexOf	every generated condition still holds
+LINKEDLIST_GEN_RVR_82	SURVIVED	return-value-replacement	indexOf	Helper.java	-	every generated condition still holds
+LINKEDLIST_GEN_RVR_83	SURVIVED	return-value-replacement	indexOf	Helper.java	linkedlist-002: addFirst -> addLast -> addLast -> removeFirst -> removeFirst -> indexOf	every generated condition still holds
+LINKEDLIST_GEN_SEI_84	SURVIVED	side-effect-insertion	indexOf	Helper.java	linkedlist-012: addFirst -> indexOf -> addLast	every generated condition still holds

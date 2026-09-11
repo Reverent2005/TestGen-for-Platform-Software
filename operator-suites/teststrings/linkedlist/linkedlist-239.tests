@@ -1,0 +1,8 @@
+test LinkedlistGenerated239 {
+    sequence: addFirst -> indexOf;
+
+    inputs {
+        addFirst[0].value = 7;
+        indexOf[1].value = 2;
+    }
+}

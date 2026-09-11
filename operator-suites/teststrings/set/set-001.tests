@@ -1,0 +1,9 @@
+test SetGenerated1 {
+    sequence: add -> add -> remove;
+
+    inputs {
+        add[0].elem = "beta";
+        add[1].elem = "gamma";
+        remove[2].elem = "gamma";
+    }
+}

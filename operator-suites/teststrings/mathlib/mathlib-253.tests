@@ -1,0 +1,8 @@
+test MathlibGenerated253 {
+    sequence: factorial -> factorial;
+
+    inputs {
+        factorial[0].n = 2;
+        factorial[1].n = 2;
+    }
+}

@@ -1,0 +1,20 @@
+/*
+ * EXAMPLE 8 — SinglyLinkedList<Integer>, singular case.
+ *
+ * 10 goes on the front, 20 on the back, so the two ends hold different values and
+ * a library that appended both to the same end fails one of the two ensures
+ * clauses.  removeFirst must then hand back 10 — the value \old(head) named — and
+ * the surviving 20 must be found at position 0 by indexOf.
+ *
+ * removeFirst binds nothing in the inputs block: it takes no parameters, and what
+ * it returns is a SERVER_OUTPUT.
+ */
+test LinkedListDryRun {
+    sequence: addFirst -> addLast -> removeFirst -> indexOf;
+
+    inputs {
+        addFirst[0].value = 10;
+        addLast[1].value = 20;
+        indexOf[3].value = 20;
+    }
+}

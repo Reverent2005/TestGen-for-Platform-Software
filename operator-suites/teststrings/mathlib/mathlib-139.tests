@@ -1,0 +1,17 @@
+test MathlibGenerated139 {
+    sequence: abs -> gcd -> gcd -> gcd -> factorial -> factorial -> gcd;
+
+    inputs {
+        abs[0].x = 2;
+        gcd[1].a = 5;
+        gcd[1].b = 1;
+        gcd[2].a = 3;
+        gcd[2].b = 0;
+        gcd[3].a = 4;
+        gcd[3].b = 4;
+        factorial[4].n = 1;
+        factorial[5].n = 48;
+        gcd[6].a = 18;
+        gcd[6].b = -17;
+    }
+}

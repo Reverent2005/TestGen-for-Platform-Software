@@ -1,0 +1,7 @@
+test BstGenerated219 {
+    sequence: contains -> min;
+
+    inputs {
+        contains[0].key = 70;
+    }
+}

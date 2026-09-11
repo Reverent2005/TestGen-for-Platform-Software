@@ -1,0 +1,27 @@
+/*
+ * EXAMPLE 4 — TicketService, singular case.
+ *
+ * The venue starts with 12 free seats, so the run reads the count, holds three
+ * of them, commits that hold, and reads the count again.  Bracketing the hold
+ * with the same query is the point: numSeatsAvailable appears twice, produces a
+ * SERVER_OUTPUT in each block, and the two captures must stay independent — the
+ * first must not be threaded into the second.
+ *
+ * seatHoldId is NOT bound here.  The venue assigns it, so the caller cannot know
+ * it before the call; it is captured from findAndHoldSeats and threaded into
+ * reserveSeats by the propagation scan.  Binding it would be rejected by the
+ * validator.
+ *
+ * customerEmail IS bound twice, once per block that names it, because it is a
+ * CLIENT_INPUT in both.  Both bindings carry the same address on purpose:
+ * reserveSeats' precondition requires the claimer to be the original holder.
+ */
+test TicketServiceDryRun {
+    sequence: numSeatsAvailable -> findAndHoldSeats -> reserveSeats -> numSeatsAvailable;
+
+    inputs {
+        findAndHoldSeats[1].numSeats = 3;
+        findAndHoldSeats[1].customerEmail = "alice@example.com";
+        reserveSeats[2].customerEmail = "alice@example.com";
+    }
+}

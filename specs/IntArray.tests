@@ -1,0 +1,25 @@
+/*
+ * EXAMPLE 5 — IntArray, singular case.
+ *
+ * Two cells are written, one of them is read back, the whole array is summed and
+ * finally the value written into cell 1 is looked up again.  The two writes carry
+ * different values so the run distinguishes "get returned the cell asked for"
+ * from "get returned something", and indexOf is asked for the value written
+ * SECOND so a search that always reports the first cell is visible.
+ *
+ * Neither get, sum nor indexOf binds its return value here: elem, total and
+ * position are SERVER_OUTPUTs, and the validator rejects any attempt to pin one
+ * down.  sum takes no parameters at all, so block 3 appears in no binding.
+ */
+test IntArrayDryRun {
+    sequence: set -> set -> get -> sum -> indexOf;
+
+    inputs {
+        set[0].index = 0;
+        set[0].value = 7;
+        set[1].index = 1;
+        set[1].value = 11;
+        get[2].index = 1;
+        indexOf[4].value = 11;
+    }
+}

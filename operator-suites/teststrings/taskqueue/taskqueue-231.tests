@@ -1,0 +1,8 @@
+test TaskqueueGenerated231 {
+    sequence: submit -> submit;
+
+    inputs {
+        submit[0].payload = "alpha";
+        submit[1].payload = "alpha";
+    }
+}

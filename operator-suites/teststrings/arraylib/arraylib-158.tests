@@ -1,0 +1,9 @@
+test ArraylibGenerated158 {
+    sequence: get -> sum -> set -> sum -> sum;
+
+    inputs {
+        get[0].index = 0;
+        set[2].index = 7;
+        set[2].value = 7;
+    }
+}

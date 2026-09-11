@@ -1,0 +1,8 @@
+test StackGenerated154 {
+    sequence: push -> push -> pop -> peek -> pop -> peek;
+
+    inputs {
+        push[0].elem = "beta";
+        push[1].elem = "alpha";
+    }
+}

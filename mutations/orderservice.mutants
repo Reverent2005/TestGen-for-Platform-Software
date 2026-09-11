@@ -1,0 +1,168 @@
+/*
+ * MUTATION SET — EXAMPLE 14, OrderService
+ * Library under test: libraries/orderservice/{Helper,Catalogue,Ledger,Audit}.java
+ * Test string:        specs/OrderService.tests
+ *                     (restock -> placeOrder -> ship -> stockLevel)
+ *
+ * The only multi-class library in the set, and the only mutation set that uses
+ * the `file:` field.  Without it a mutant can only be seeded into the class the
+ * generated ATC calls; with it, a fault can be planted in a collaborator the
+ * specification never names — and the question this whole example exists to ask
+ * is whether a spec written against a façade still catches one.
+ *
+ * It does, and the reason is the conservation law.  stockUnits is Catalogue's
+ * counter and orderedUnits is Ledger's; neither class can see the other, so a
+ * fault in either one moves half of the pair and the conjunction notices.  Audit
+ * is a class further out still — Helper never calls it — and `events` reaches it
+ * the same way.
+ *
+ * Distance from the façade, and what it costs:
+ *
+ *   Helper      (0 hops)   3 mutants, 3 killed
+ *   Catalogue   (1 hop)    5 mutants, 4 killed
+ *   Ledger      (1 hop)    4 mutants, 3 killed
+ *   Audit       (2 hops)   2 mutants, 2 killed
+ *
+ * Distance costs nothing.  Both survivors are gaps in what the specification
+ * says, not in how far away the fault was: one is about a counter the spec never
+ * relates to the map beside it, and the other is the propagated-id gap Example 3
+ * already records.
+ */
+
+// ── the façade: its own sequencing ───────────────────────────────────────────
+
+mutant ORDER_PLACEORDER_SKIPS_CATALOGUE {
+    description: placeOrder records the order but never takes the units off the shelf
+    operator:    statement-deletion
+    file:        Helper.java
+    in:          placeOrder
+    find:        Catalogue.take(sku, quantity);
+    replace:
+}
+
+mutant ORDER_SHIP_TOUCHES_STOCK {
+    description: shipping an order also takes a unit off the shelf, which it has no business doing
+    operator:    side-effect-insertion
+    file:        Helper.java
+    in:          ship
+    find:        Ledger.ship(orderId);
+    replace:     Ledger.ship(orderId); Catalogue.take("widget", 1);
+}
+
+mutant ORDER_STOCKLEVEL_LOGS {
+    description: reading the stock level writes to the audit trail, so a query stops being a query
+    operator:    side-effect-insertion
+    file:        Helper.java
+    in:          stockLevel
+    find:        int level = Catalogue.level(sku);
+    replace:     int level = Catalogue.level(sku); Audit.record("peek");
+}
+
+// ── Catalogue: one hop from the façade ───────────────────────────────────────
+
+mutant CATALOGUE_TAKE_NOT_DEBITED {
+    description: taking stock updates the shelf but not the unit counter
+    operator:    statement-deletion
+    file:        Catalogue.java
+    in:          take
+    find:        units = units - quantity;
+    replace:
+}
+
+mutant CATALOGUE_TAKE_CREDITS_INSTEAD {
+    description: taking stock adds units instead of removing them
+    operator:    arithmetic-operator-replacement
+    file:        Catalogue.java
+    in:          take
+    find:        units = units - quantity;
+    replace:     units = units + quantity;
+}
+
+mutant CATALOGUE_RESTOCK_NOT_COUNTED {
+    description: restocking fills the shelf but never counts the units
+    operator:    statement-deletion
+    file:        Catalogue.java
+    in:          restock
+    find:        units = units + quantity;
+    replace:
+}
+
+mutant CATALOGUE_LEVEL_NEGATED {
+    description: the level of a stocked SKU comes back negative
+    operator:    absolute-value-insertion
+    file:        Catalogue.java
+    in:          level
+    find:        return held == null ? 0 : held;
+    replace:     return held == null ? 0 : -Math.abs(held);
+}
+
+mutant CATALOGUE_TAKE_LEAVES_SHELF {
+    description: taking stock debits the counter but leaves the shelf untouched
+    operator:    argument-replacement
+    file:        Catalogue.java
+    in:          take
+    find:        Stock.put(sku, level(sku) - quantity);
+    replace:     Stock.put(sku, level(sku));
+    expect:      survives
+    note:        the conservation law is stated over the two COUNTERS, stockUnits and orderedUnits, and this fault keeps both of them right — it is the map that goes stale. Nothing in OrderService.spec relates Stock's contents to stockUnits, and stockLevel reads the same map it compares against, so the two agree with each other while both are wrong. Saying it properly needs \old over a compound expression, which is limitation 6.
+}
+
+// ── Ledger: one hop from the façade, and the class that calls Audit ──────────
+
+mutant LEDGER_OPEN_NOT_COMMITTED {
+    description: opening an order files it but never accounts for its units
+    operator:    statement-deletion
+    file:        Ledger.java
+    in:          open
+    find:        committed = committed + quantity;
+    replace:
+}
+
+mutant LEDGER_OPEN_REUSES_ID {
+    description: the order-id counter never advances, so every order gets the same id
+    operator:    statement-deletion
+    file:        Ledger.java
+    in:          open
+    find:        nextOrderId = nextOrderId + 1;
+    replace:
+}
+
+mutant LEDGER_SHIP_KEEPS_ORDER_OPEN {
+    description: shipping copies the order into Shipped but leaves it open as well
+    operator:    method-call-replacement
+    file:        Ledger.java
+    in:          ship
+    find:        String sku = Open.remove(orderId);
+    replace:     String sku = Open.get(orderId);
+}
+
+mutant LEDGER_OPEN_ID_OFF_BY_ONE {
+    description: the id issued is one ahead of the counter that is then advanced
+    operator:    arithmetic-operator-insertion
+    file:        Ledger.java
+    in:          open
+    find:        int orderId = nextOrderId;
+    replace:     int orderId = nextOrderId + 1;
+    expect:      survives
+    note:        orderId is propagated, so shifting it moves the whole sequence together: the id that is filed is the id that is returned and the id that ship() is later handed. This is the same gap TASKQUEUE_ID_OFF_BY_ONE records, reached here through a collaborator instead of the façade — the spec never says an id relates to the counter, only that the counter advances by one.
+}
+
+// ── Audit: two hops from the façade, called only by Ledger ───────────────────
+
+mutant AUDIT_RECORD_NOT_COUNTED {
+    description: the trail is appended to but the event counter never moves
+    operator:    statement-deletion
+    file:        Audit.java
+    in:          record
+    find:        events = events + 1;
+    replace:
+}
+
+mutant AUDIT_RECORD_DOUBLE_COUNTS {
+    description: every recorded event counts twice
+    operator:    constant-replacement
+    file:        Audit.java
+    in:          record
+    find:        events = events + 1;
+    replace:     events = events + 2;
+}

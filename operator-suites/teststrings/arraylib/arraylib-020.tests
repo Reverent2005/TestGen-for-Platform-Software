@@ -1,0 +1,7 @@
+test ArraylibGenerated20 {
+    sequence: sum -> sum -> indexOf -> sum -> sum;
+
+    inputs {
+        indexOf[2].value = 7;
+    }
+}

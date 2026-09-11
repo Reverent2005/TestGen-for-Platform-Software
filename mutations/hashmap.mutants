@@ -1,0 +1,107 @@
+/*
+ * MUTATION SET — EXAMPLE 2, HashMap<String,Integer>
+ * Library under test: libraries/hashmap/Helper.java
+ * Test string:        specs/HashMapLib.tests   (put -> put -> getOldValue -> remove)
+ *
+ * Both puts use the same key, so this set probes two things at once: whether the
+ * generated conditions catch damage to M and size, and whether they say anything
+ * at all about oldVal — the nullable SERVER_OUTPUT the spec deliberately leaves
+ * unconstrained.  A mutant that only corrupts oldVal is expected to survive; that
+ * survival is the evidence for Section 5's invariant 2, not a gap to be closed.
+ */
+
+mutant HASHMAP_PUT_STORES_WRONG_VALUE {
+    description: put stores one more than the value it was given
+    operator:    arithmetic-operator-insertion
+    in:          put
+    find:        Integer oldVal = M.put(key, value);
+    replace:     Integer oldVal = M.put(key, value + 1);
+}
+
+mutant HASHMAP_PUT_SIZE_NOT_UPDATED {
+    description: put inserts into the map but never refreshes size
+    operator:    statement-deletion
+    in:          put
+    find:        size = M.size();
+    replace:
+}
+
+mutant HASHMAP_PUT_SIZE_OFF_BY_ONE {
+    description: put overcounts, reporting one more entry than the map holds
+    operator:    arithmetic-operator-insertion
+    in:          put
+    find:        size = M.size();
+    replace:     size = M.size() + 1;
+}
+
+mutant HASHMAP_PUT_OLDVAL_FABRICATED {
+    description: put returns the new value as the previous one instead of the displaced entry
+    operator:    return-value-replacement
+    in:          put
+    find:        Integer oldVal = M.put(key, value);
+    replace:     Integer oldVal = M.put(key, value); oldVal = value;
+    expect:      survives
+    note:        oldVal is a nullable SERVER_OUTPUT the spec places no constraint on, so no generated assertion mentions it (Section 5, invariant 2). This survivor is the evidence for that invariant.
+}
+
+mutant HASHMAP_GET_RETURNS_NULL {
+    description: getOldValue always reports the key as absent
+    operator:    return-value-replacement
+    in:          getOldValue
+    find:        return M.get(key);
+    replace:     return null;
+}
+
+mutant HASHMAP_GET_MUTATES_STATE {
+    description: getOldValue is no longer read-only — it bumps size on the way out
+    operator:    side-effect-insertion
+    in:          getOldValue
+    find:        return M.get(key);
+    replace:     size = size + 1; return M.get(key);
+}
+
+mutant HASHMAP_REMOVE_DOES_NOTHING {
+    description: remove updates size but leaves the entry in the map
+    operator:    statement-deletion
+    in:          remove
+    find:        M.remove(key);
+    replace:
+}
+
+mutant HASHMAP_REMOVE_SIZE_OFF_BY_ONE {
+    description: remove undercounts, reporting one fewer entry than the map holds
+    operator:    arithmetic-operator-insertion
+    in:          remove
+    find:        size = M.size();
+    replace:     size = M.size() - 1;
+}
+
+mutant HASHMAP_REMOVE_CLEARS_MAP {
+    description: remove discards every entry instead of just the one key
+    operator:    method-call-replacement
+    in:          remove
+    find:        M.remove(key);
+    replace:     M.clear();
+    expect:      survives
+    note:        the test string only ever holds one key, so removing that key and clearing the map are the same operation. A second, untouched key would kill this.
+}
+
+/*
+ * ── operator coverage ────────────────────────────────────────────────────────
+ */
+
+mutant HASHMAP_PUT_SIZE_NEGATED {
+    description: put files the negation of the map's size
+    operator:    unary-operator-insertion
+    in:          put
+    find:        size = M.size();
+    replace:     size = -M.size();
+}
+
+mutant HASHMAP_GET_RETURNS_KEYS_INSTEAD {
+    description: getOldValue answers with the map's size rather than the value stored
+    operator:    return-value-replacement
+    in:          getOldValue
+    find:        return M.get(key);
+    replace:     return M.size();
+}

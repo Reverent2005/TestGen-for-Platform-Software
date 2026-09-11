@@ -1,0 +1,12 @@
+test SetGenerated146 {
+    sequence: contains -> contains -> add -> contains -> remove -> add;
+
+    inputs {
+        contains[0].elem = "beta";
+        contains[1].elem = "gamma";
+        add[2].elem = "alpha";
+        contains[3].elem = "alpha";
+        remove[4].elem = "beta";
+        add[5].elem = "alpha";
+    }
+}

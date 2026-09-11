@@ -1,0 +1,9 @@
+test QueueGenerated251 {
+    sequence: dequeue -> enqueue -> front -> enqueue -> enqueue;
+
+    inputs {
+        enqueue[1].elem = "beta";
+        enqueue[3].elem = "first";
+        enqueue[4].elem = "first";
+    }
+}

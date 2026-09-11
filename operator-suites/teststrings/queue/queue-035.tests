@@ -1,0 +1,7 @@
+test QueueGenerated35 {
+    sequence: isEmpty -> dequeue -> front -> enqueue;
+
+    inputs {
+        enqueue[3].elem = "first";
+    }
+}

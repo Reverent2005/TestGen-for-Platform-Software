@@ -1,0 +1,8 @@
+test QueueGenerated51 {
+    sequence: front -> front -> front -> enqueue -> enqueue -> dequeue;
+
+    inputs {
+        enqueue[3].elem = "first";
+        enqueue[4].elem = "gamma";
+    }
+}

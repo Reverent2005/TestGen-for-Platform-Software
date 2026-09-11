@@ -1,0 +1,53 @@
+# generated mutants — stack
+# id	status	operator	method	file	killed-by-family	detail
+STACK_GEN_SDL_1	INVALID	statement-deletion	-	Helper.java	-	the mutated library does not compile: Helper.java:31: cannot find symbol
+STACK_GEN_SEI_2	INVALID	side-effect-insertion	-	Helper.java	-	the mutated library does not compile: Helper.java:25: <identifier> expected
+STACK_GEN_CRP_3	KILLED	constant-replacement	-	Helper.java	-	killed by a generated assertion in GeneratedATCs_JUnit
+STACK_GEN_CRP_4	KILLED	constant-replacement	-	Helper.java	-	killed by a generated assertion in GeneratedATCs_JUnit
+STACK_GEN_SDL_5	KILLED	statement-deletion	push	Helper.java	-	killed by block 0  push  ensures  size == \old(size) + 1
+STACK_GEN_STR_6	KILLED	statement-replacement	push	Helper.java	-	killed by block 0  push  ensures  size == \old(size) + 1
+STACK_GEN_ARP_7	SURVIVED	argument-replacement	push	Helper.java	stack-005: push -> push -> peek -> pop	every generated condition still holds
+STACK_GEN_ARP_8	INVALID	argument-replacement	push	Helper.java	-	the mutated library does not compile: Helper.java:31: bad operand types for binary operator '-'
+STACK_GEN_MCR_9	KILLED	method-call-replacement	push	Helper.java	-	killed by block 0  push  ensures  size == \old(size) + 1
+STACK_GEN_SEI_10	SURVIVED	side-effect-insertion	push	Helper.java	-	every generated condition still holds
+STACK_GEN_AOI_11	KILLED	arithmetic-operator-insertion	push	Helper.java	-	killed by block 0  push  ensures  size == \old(size) + 1
+STACK_GEN_AOI_12	KILLED	arithmetic-operator-insertion	push	Helper.java	-	killed by block 0  push  ensures  size == \old(size) + 1
+STACK_GEN_UOI_13	KILLED	unary-operator-insertion	push	Helper.java	-	killed by block 0  push  ensures  size == \old(size) + 1
+STACK_GEN_ABS_14	KILLED	absolute-value-insertion	push	Helper.java	-	killed by block 0  push  ensures  size == \old(size) + 1
+STACK_GEN_SDL_15	KILLED	statement-deletion	push	Helper.java	-	killed by block 0  push  ensures  size == \old(size) + 1
+STACK_GEN_MCR_16	KILLED	method-call-replacement	push	Helper.java	-	killed by block 0  push  ensures  size == \old(size) + 1
+STACK_GEN_SDL_17	KILLED	statement-deletion	push	Helper.java	-	killed by block 0  push  ensures  top == elem
+STACK_GEN_SEI_18	KILLED	side-effect-insertion	push	Helper.java	-	killed by block 0  push  ensures  size == \old(size) + 1
+STACK_GEN_AOR_19	KILLED	arithmetic-operator-replacement	pop	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_AOR_20	KILLED	arithmetic-operator-replacement	pop	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_AOR_21	KILLED	arithmetic-operator-replacement	pop	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_AOR_22	SURVIVED	arithmetic-operator-replacement	pop	Helper.java	-	every generated condition still holds
+STACK_GEN_CRP_23	KILLED	constant-replacement	pop	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_CRP_24	KILLED	constant-replacement	pop	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_CRP_25	SURVIVED	constant-replacement	pop	Helper.java	stack-037: push -> peek -> pop -> push	every generated condition still holds
+STACK_GEN_MCR_26	KILLED	method-call-replacement	pop	Helper.java	-	killed by block 2  pop  ensures  size == \old(size) - 1
+STACK_GEN_MCR_27	KILLED	method-call-replacement	pop	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_AOR_28	KILLED	arithmetic-operator-replacement	pop	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_AOR_29	KILLED	arithmetic-operator-replacement	pop	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_AOR_30	KILLED	arithmetic-operator-replacement	pop	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_AOR_31	SURVIVED	arithmetic-operator-replacement	pop	Helper.java	stack-004: push -> push -> push -> pop -> peek	every generated condition still holds
+STACK_GEN_CRP_32	KILLED	constant-replacement	pop	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_CRP_33	KILLED	constant-replacement	pop	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_CRP_34	KILLED	constant-replacement	pop	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_SDL_35	KILLED	statement-deletion	pop	Helper.java	-	killed by block 3  peek  ensures  peekedElem == top
+STACK_GEN_MCR_36	SURVIVED	method-call-replacement	pop	Helper.java	stack-037: push -> peek -> pop -> push	every generated condition still holds
+STACK_GEN_MCR_37	KILLED	method-call-replacement	pop	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_MCR_38	KILLED	method-call-replacement	pop	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_RVR_39	SURVIVED	return-value-replacement	pop	Helper.java	-	every generated condition still holds
+STACK_GEN_SEI_40	KILLED	side-effect-insertion	pop	Helper.java	-	killed by block 2  pop  ensures  size == \old(size) - 1
+STACK_GEN_AOR_41	KILLED	arithmetic-operator-replacement	peek	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_AOR_42	KILLED	arithmetic-operator-replacement	peek	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_AOR_43	KILLED	arithmetic-operator-replacement	peek	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_AOR_44	SURVIVED	arithmetic-operator-replacement	peek	Helper.java	stack-004: push -> push -> push -> pop -> peek	every generated condition still holds
+STACK_GEN_CRP_45	KILLED	constant-replacement	peek	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_CRP_46	KILLED	constant-replacement	peek	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_CRP_47	KILLED	constant-replacement	peek	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_RVR_48	KILLED	return-value-replacement	peek	Helper.java	-	killed by block 3  peek  ensures  peekedElem == top
+STACK_GEN_MCR_49	KILLED	method-call-replacement	peek	Helper.java	-	killed by the singular case (exit 1)
+STACK_GEN_MCR_50	SURVIVED	method-call-replacement	peek	Helper.java	stack-005: push -> push -> peek -> pop	every generated condition still holds
+STACK_GEN_SEI_51	KILLED	side-effect-insertion	peek	Helper.java	-	killed by block 3  peek  ensures  size == \old(size)

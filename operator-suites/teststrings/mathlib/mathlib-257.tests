@@ -1,0 +1,14 @@
+test MathlibGenerated257 {
+    sequence: abs -> power -> abs -> gcd -> power;
+
+    inputs {
+        abs[0].x = 7;
+        power[1].base = -17;
+        power[1].exponent = -17;
+        abs[2].x = 0;
+        gcd[3].a = 18;
+        gcd[3].b = 0;
+        power[4].base = 0;
+        power[4].exponent = 5;
+    }
+}

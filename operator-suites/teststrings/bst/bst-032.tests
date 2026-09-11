@@ -1,0 +1,9 @@
+test BstGenerated32 {
+    sequence: min -> insert -> delete -> insert -> min;
+
+    inputs {
+        insert[1].key = 3;
+        delete[2].key = 70;
+        insert[3].key = 30;
+    }
+}

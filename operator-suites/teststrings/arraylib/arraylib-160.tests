@@ -1,0 +1,9 @@
+test ArraylibGenerated160 {
+    sequence: indexOf -> indexOf -> indexOf;
+
+    inputs {
+        indexOf[0].value = 2;
+        indexOf[1].value = 0;
+        indexOf[2].value = 1;
+    }
+}

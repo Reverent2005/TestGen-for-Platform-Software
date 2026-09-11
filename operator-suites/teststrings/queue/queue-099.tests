@@ -1,0 +1,6 @@
+test QueueGenerated99 {
+    sequence: isEmpty -> isEmpty -> isEmpty -> dequeue;
+
+    inputs {
+    }
+}

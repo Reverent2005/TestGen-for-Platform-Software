@@ -1,0 +1,122 @@
+/*
+ * MUTATION SET — EXAMPLE 6, MathLib
+ * Library under test: libraries/mathlib/Helper.java
+ * Test string:        specs/MathLib.tests   (abs -> gcd -> power -> factorial)
+ *
+ * A pure function has no state to constrain, so everything here rests on the
+ * PROPERTY each postcondition asserts about the answer.  The two survivors show
+ * precisely where the properties stop: gcd is specified as a common divisor
+ * rather than the greatest one, and power only by its sign.
+ */
+
+mutant MATH_ABS_NO_FLIP {
+    description: abs returns its argument unchanged, sign and all
+    operator:    statement-deletion
+    in:          abs
+    find:        absValue = -absValue;
+    replace:
+}
+
+mutant MATH_ABS_NOT_COUNTED {
+    description: abs answers correctly but does not count itself as a call
+    operator:    statement-deletion
+    in:          abs
+    find:        calls = calls + 1;
+    replace:
+}
+
+mutant MATH_GCD_NO_LOOP {
+    description: gcd starts from a zero divisor, so it never iterates and returns its first argument
+    operator:    constant-replacement
+    in:          gcd
+    find:        int y = b;
+    replace:     int y = 0;
+}
+
+mutant MATH_GCD_IGNORES_FIRST_ARG {
+    description: gcd computes with 1 in place of a, so it always answers 1
+    operator:    constant-replacement
+    in:          gcd
+    find:        int x = a;
+    replace:     int x = 1;
+    expect:      survives
+    note:        MathLib.spec says the answer divides both arguments and is positive, not that it is the GREATEST divisor that does — the grammar cannot quantify over the divisors it beats. 1 divides everything, and lastResult agrees with the answer, so every conjunct holds.
+}
+
+mutant MATH_POWER_ONE_TOO_FEW {
+    description: power multiplies one time too few, answering base^(exponent-1)
+    operator:    loop-bound-replacement
+    in:          power
+    find:        for (int i = 0; i < exponent; i++) {
+    replace:     for (int i = 1; i < exponent; i++) {
+    expect:      survives
+    note:        power is specified by powerValue > 0, which 27 satisfies as well as 81. The spec cannot say base^exponent without an exponentiation operator in the grammar, and lastResult is set from the same wrong value, so the internal-consistency clause agrees too.
+}
+
+mutant MATH_POWER_ZERO_BASE_CASE {
+    description: power starts its accumulator at 0, so every answer is 0
+    operator:    constant-replacement
+    in:          power
+    find:        int powerValue = 1;
+    replace:     int powerValue = 0;
+}
+
+mutant MATH_FACTORIAL_ZERO_BASE_CASE {
+    description: factorial starts its accumulator at 0, so every answer is 0
+    operator:    constant-replacement
+    in:          factorial
+    find:        int factValue = 1;
+    replace:     int factValue = 0;
+}
+
+mutant MATH_LASTRESULT_STALE {
+    description: power answers correctly but leaves lastResult on the previous call's value
+    operator:    statement-deletion
+    in:          power
+    find:        lastResult = powerValue;
+    replace:
+}
+
+/*
+ * ── operator coverage ────────────────────────────────────────────────────────
+ * The operator faults a maths library is the natural home for: an arithmetic
+ * operator replaced, a comparison narrowed, a sign forced, a unary minus put in.
+ * Two of the four survive, and for the same reason as MATH_POWER_ONE_TOO_FEW —
+ * a property of the answer is not the answer.
+ */
+
+mutant MATH_POWER_ADDS_INSTEAD {
+    description: power adds the base each time round instead of multiplying by it
+    operator:    arithmetic-operator-replacement
+    in:          power
+    find:        powerValue = powerValue * base;
+    replace:     powerValue = powerValue + base;
+    expect:      survives
+    note:        13 satisfies powerValue > 0 exactly as well as 81 does, and lastResult is set from the same wrong value, so the internal-consistency clause agrees too. Only an exponentiation operator in the grammar would separate them.
+}
+
+mutant MATH_FACTORIAL_STOPS_EARLY {
+    description: factorial's loop stops one short, so it answers (n-1)!
+    operator:    relational-operator-replacement
+    in:          factorial
+    find:        for (int i = 2; i <= n; i++) {
+    replace:     for (int i = 2; i < n; i++) {
+    expect:      survives
+    note:        24 satisfies factValue >= 1 as well as 120 does. Factorial has the same shape of gap as power: the grammar can bound the answer but not compute it.
+}
+
+mutant MATH_ABS_RECORDS_NEGATED {
+    description: abs answers correctly but files the negation of the answer
+    operator:    absolute-value-insertion
+    in:          abs
+    find:        lastResult = absValue;
+    replace:     lastResult = -Math.abs(absValue);
+}
+
+mutant MATH_GCD_RECORDS_NEGATED {
+    description: gcd answers correctly but files the negation of the answer
+    operator:    unary-operator-insertion
+    in:          gcd
+    find:        lastResult = x;
+    replace:     lastResult = -x;
+}

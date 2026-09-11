@@ -1,0 +1,6 @@
+test QueueGenerated83 {
+    sequence: dequeue -> dequeue -> front -> isEmpty;
+
+    inputs {
+    }
+}

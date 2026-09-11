@@ -1,0 +1,20 @@
+/*
+ * EXAMPLE 11 — MinHeap<Integer>, singular case.
+ *
+ * 9 is inserted first, then 4, then 7.  The order matters: the smallest value
+ * arrives SECOND, so it has to sift up past a value already in the heap, and the
+ * third insertion then has to leave it alone.  A heap that only ever appended
+ * would answer 9 to peekMin and fail on the spot.
+ *
+ * Neither peekMin nor extractMin binds anything here — they take no parameters,
+ * and the value each returns is the heap's answer, not the caller's.
+ */
+test MinHeapDryRun {
+    sequence: insert -> insert -> insert -> peekMin -> extractMin;
+
+    inputs {
+        insert[0].value = 9;
+        insert[1].value = 4;
+        insert[2].value = 7;
+    }
+}

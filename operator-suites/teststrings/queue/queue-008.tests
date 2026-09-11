@@ -1,0 +1,6 @@
+test QueueGenerated8 {
+    sequence: dequeue -> front -> front -> isEmpty;
+
+    inputs {
+    }
+}

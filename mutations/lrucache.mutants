@@ -1,0 +1,84 @@
+/*
+ * MUTATION SET — EXAMPLE 13, LruCache (the custom library)
+ * Library under test: libraries/lrucache/Helper.java
+ * Test string:        specs/LruCache.tests   (put -> put -> put -> get -> restore)
+ *
+ * Two of these are killed by a PRECONDITION rather than by a postcondition, which
+ * happens nowhere else in the example set.  Both faults corrupt the value the
+ * cache hands back — the key it evicted — and the sequence then carries that
+ * value into a later block, where it no longer satisfies that block's contract.
+ * A propagated SERVER_OUTPUT makes the later blocks into an oracle for the
+ * earlier one, which is the whole reason this library was written.
+ */
+
+mutant LRU_NEVER_EVICTS {
+    description: put admits every key without ever making room, so the cache outgrows its capacity
+    operator:    condition-to-constant
+    in:          put
+    find:        if (!C.containsKey(key) && C.size() >= capacity) {
+    replace:     if (false) {
+}
+
+mutant LRU_EVICTS_MOST_RECENT {
+    description: put evicts the most recently used entry instead of the least
+    operator:    argument-replacement
+    in:          put
+    find:        evictedKey = Recency.remove(0);
+    replace:     evictedKey = Recency.remove(Recency.size() - 1);
+}
+
+mutant LRU_PUT_HIDES_EVICTION {
+    description: put evicts an entry but reports nothing, so the caller cannot restore it
+    operator:    return-value-replacement
+    in:          put
+    find:        return evictedKey;
+    replace:     return null;
+}
+
+mutant LRU_GET_DOES_NOT_PROMOTE {
+    description: get returns the value but leaves the recency order untouched
+    operator:    statement-deletion
+    in:          get
+    find:        touch(key);
+    replace:
+}
+
+mutant LRU_PUT_DOES_NOT_PROMOTE {
+    description: put stores the entry but never marks it as the most recently used
+    operator:    statement-deletion
+    in:          put
+    find:        touch(key);
+    replace:
+}
+
+mutant LRU_RESTORE_LOSES_VALUE {
+    description: restore puts the key back with an empty value
+    operator:    argument-replacement
+    in:          restore
+    find:        put(evictedKey, value);
+    replace:     put(evictedKey, "");
+    expect:      survives
+    note:        LruCache.spec says restore puts the key back and makes it most recently used; it never says the value comes back with it, because the caller supplies that value and no state variable records what it was. Adding `C.get(evictedKey) == value` to restore's ensures kills this.
+}
+
+/*
+ * ── operator coverage ────────────────────────────────────────────────────────
+ * The admission test is one comparison and one connective, and both of them are
+ * load-bearing: the cache's whole contract is that it never outgrows its capacity.
+ */
+
+mutant LRU_EVICTS_ONE_TOO_LATE {
+    description: the cache makes room only once it is already over capacity
+    operator:    relational-operator-replacement
+    in:          put
+    find:        if (!C.containsKey(key) && C.size() >= capacity) {
+    replace:     if (!C.containsKey(key) && C.size() > capacity) {
+}
+
+mutant LRU_EVICTS_ON_EVERY_MISS {
+    description: any miss triggers an eviction, whether or not the cache is full
+    operator:    conditional-operator-replacement
+    in:          put
+    find:        if (!C.containsKey(key) && C.size() >= capacity) {
+    replace:     if (!C.containsKey(key) || C.size() >= capacity) {
+}

@@ -1,0 +1,6 @@
+test QueueGenerated232 {
+    sequence: isEmpty -> isEmpty -> dequeue;
+
+    inputs {
+    }
+}

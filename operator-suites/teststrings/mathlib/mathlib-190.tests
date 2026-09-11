@@ -1,0 +1,9 @@
+test MathlibGenerated190 {
+    sequence: abs -> power;
+
+    inputs {
+        abs[0].x = 0;
+        power[1].base = 1;
+        power[1].exponent = 0;
+    }
+}

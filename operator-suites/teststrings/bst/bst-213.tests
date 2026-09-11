@@ -1,0 +1,9 @@
+test BstGenerated213 {
+    sequence: delete -> contains -> delete -> min;
+
+    inputs {
+        delete[0].key = 0;
+        contains[1].key = 3;
+        delete[2].key = 7;
+    }
+}

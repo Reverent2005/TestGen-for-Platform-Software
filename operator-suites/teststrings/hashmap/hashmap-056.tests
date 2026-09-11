@@ -1,0 +1,9 @@
+test HashmapGenerated56 {
+    sequence: getOldValue -> put;
+
+    inputs {
+        getOldValue[0].key = "gamma";
+        put[1].key = "beta";
+        put[1].value = 7;
+    }
+}

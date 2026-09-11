@@ -1,0 +1,110 @@
+/*
+ * MUTATION SET — EXAMPLE 3, TaskQueue
+ * Library under test: libraries/taskqueue/Helper.java
+ * Test string:        specs/TaskQueue.tests   (submit -> getResult -> cancelTask)
+ *
+ * This is the multi-hop propagation example: taskId is invented by submit and
+ * threaded into the two blocks after it.  A mutation to the id itself therefore
+ * moves the whole sequence together, which is exactly the known limitation the
+ * spec file records — nextId is an auto-incrementing global the solver never
+ * pins down.  TASKQUEUE_ID_OFF_BY_ONE exists to make that limitation measurable
+ * rather than merely documented.
+ */
+
+mutant TASKQUEUE_NEXTID_NOT_INCREMENTED {
+    description: submit hands out the same id forever
+    operator:    statement-deletion
+    in:          submit
+    find:        nextId = nextId + 1;
+    replace:
+}
+
+mutant TASKQUEUE_NEXTID_DOUBLE_STEP {
+    description: submit advances the id counter by two instead of one
+    operator:    constant-replacement
+    in:          submit
+    find:        nextId = nextId + 1;
+    replace:     nextId = nextId + 2;
+}
+
+mutant TASKQUEUE_TASK_NOT_STORED {
+    description: submit issues an id but never records the task under it
+    operator:    statement-deletion
+    in:          submit
+    find:        Tasks.put(taskId, payload);
+    replace:
+}
+
+mutant TASKQUEUE_ID_OFF_BY_ONE {
+    description: submit issues the id one ahead of the counter it then advances
+    operator:    arithmetic-operator-insertion
+    in:          submit
+    find:        Integer taskId = nextId;
+    replace:     Integer taskId = nextId + 1;
+    expect:      survives
+    note:        taskId is propagated, so shifting it moves every block of the sequence together and the conditions still line up. This is exactly the known limitation TaskQueue.spec records: nextId is an auto-incrementing global the solver never pins down.
+}
+
+mutant TASKQUEUE_RESULT_NOT_RECORDED {
+    description: getResult computes the result but never files it under the task
+    operator:    statement-deletion
+    in:          getResult
+    find:        Results.put(taskId, result);
+    replace:
+}
+
+mutant TASKQUEUE_RESULT_WRONG_KEY {
+    description: getResult files the result under the neighbouring task id
+    operator:    argument-replacement
+    in:          getResult
+    find:        Results.put(taskId, result);
+    replace:     Results.put(taskId + 1, result);
+}
+
+mutant TASKQUEUE_RESULT_IS_NULL {
+    description: getResult files an empty result rather than the task's payload
+    operator:    return-value-replacement
+    in:          getResult
+    find:        String result = "result-for-" + Tasks.get(taskId);
+    replace:     String result = null;
+    expect:      survives
+    note:        result is a SERVER_OUTPUT captured but never consumed; getResult's postcondition constrains only that Results has an entry under taskId, not what that entry holds.
+}
+
+mutant TASKQUEUE_CANCEL_DOES_NOTHING {
+    description: cancelTask returns without cancelling anything
+    operator:    statement-deletion
+    in:          cancelTask
+    find:        Tasks.remove(taskId);
+    replace:
+}
+
+mutant TASKQUEUE_CANCEL_WRONG_MAP {
+    description: cancelTask clears the result instead of the task
+    operator:    method-call-replacement
+    in:          cancelTask
+    find:        Tasks.remove(taskId);
+    replace:     Results.remove(taskId);
+}
+
+/*
+ * ── operator coverage ────────────────────────────────────────────────────────
+ */
+
+mutant TASKQUEUE_ID_COUNTER_GOES_BACKWARDS {
+    description: submitting a task decrements the id counter instead of advancing it
+    operator:    arithmetic-operator-replacement
+    in:          submit
+    find:        nextId = nextId + 1;
+    replace:     nextId = nextId - 1;
+}
+
+mutant TASKQUEUE_SUBMIT_ID_NEGATED {
+    description: the id issued is the negation of the counter
+    operator:    unary-operator-insertion
+    in:          submit
+    find:        Integer taskId = nextId;
+    replace:     Integer taskId = -nextId;
+    expect:      survives
+    note:        taskId is propagated, so a negated id is filed under the negated id and handed to every later block unchanged. TaskQueue.spec says the counter advances and that Tasks has an entry under whatever came back; it never relates the two, which is the gap TASKQUEUE_ID_OFF_BY_ONE already records.
+}

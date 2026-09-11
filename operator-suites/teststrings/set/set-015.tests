@@ -1,0 +1,8 @@
+test SetGenerated15 {
+    sequence: add -> add;
+
+    inputs {
+        add[0].elem = "beta";
+        add[1].elem = "gamma";
+    }
+}

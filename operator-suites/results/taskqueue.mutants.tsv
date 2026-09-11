@@ -1,0 +1,52 @@
+# generated mutants — taskqueue
+# id	status	operator	method	file	killed-by-family	detail
+TASKQUEUE_GEN_SDL_1	INVALID	statement-deletion	-	Helper.java	-	the mutated library does not compile: GeneratedATCs.java:14: cannot find symbol
+TASKQUEUE_GEN_SEI_2	INVALID	side-effect-insertion	-	Helper.java	-	the mutated library does not compile: Helper.java:25: <identifier> expected
+TASKQUEUE_GEN_SDL_3	INVALID	statement-deletion	-	Helper.java	-	the mutated library does not compile: GeneratedATCs.java:23: cannot find symbol
+TASKQUEUE_GEN_SEI_4	INVALID	side-effect-insertion	-	Helper.java	-	the mutated library does not compile: Helper.java:26: <identifier> expected
+TASKQUEUE_GEN_CRP_5	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_CRP_6	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_CRP_7	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_SDL_8	KILLED	statement-deletion	submit	Helper.java	-	killed by block 0  submit  ensures  Tasks.containsKey(taskId)
+TASKQUEUE_GEN_STR_9	SURVIVED	statement-replacement	submit	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_ARP_10	INVALID	argument-replacement	submit	Helper.java	-	the mutated library does not compile: Helper.java:38: incompatible types: java.lang.String cannot be converted to java.lang.Integer
+TASKQUEUE_GEN_MCR_11	SURVIVED	method-call-replacement	submit	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_SEI_12	KILLED	side-effect-insertion	submit	Helper.java	-	killed by block 0  submit  ensures  nextId == \old(nextId) + 1
+TASKQUEUE_GEN_VRO_13	KILLED	variable-replacement	submit	Helper.java	-	killed by block 0  submit  ensures  Tasks.containsKey(taskId)
+TASKQUEUE_GEN_AOR_14	KILLED	arithmetic-operator-replacement	submit	Helper.java	-	killed by block 0  submit  ensures  nextId == \old(nextId) + 1
+TASKQUEUE_GEN_AOR_15	KILLED	arithmetic-operator-replacement	submit	Helper.java	-	killed by block 0  submit  ensures  nextId == \old(nextId) + 1
+TASKQUEUE_GEN_AOR_16	KILLED	arithmetic-operator-replacement	submit	Helper.java	-	killed by block 0  submit  ensures  nextId == \old(nextId) + 1
+TASKQUEUE_GEN_AOR_17	KILLED	arithmetic-operator-replacement	submit	Helper.java	-	killed by block 0  submit  ensures  nextId == \old(nextId) + 1
+TASKQUEUE_GEN_AOI_18	KILLED	arithmetic-operator-insertion	submit	Helper.java	-	killed by block 0  submit  ensures  nextId == \old(nextId) + 1
+TASKQUEUE_GEN_AOI_19	KILLED	arithmetic-operator-insertion	submit	Helper.java	-	killed by block 0  submit  ensures  nextId == \old(nextId) + 1
+TASKQUEUE_GEN_UOI_20	KILLED	unary-operator-insertion	submit	Helper.java	-	killed by block 0  submit  ensures  nextId == \old(nextId) + 1
+TASKQUEUE_GEN_ABS_21	KILLED	absolute-value-insertion	submit	Helper.java	-	killed by block 0  submit  ensures  nextId == \old(nextId) + 1
+TASKQUEUE_GEN_CRP_22	KILLED	constant-replacement	submit	Helper.java	-	killed by block 0  submit  ensures  nextId == \old(nextId) + 1
+TASKQUEUE_GEN_CRP_23	KILLED	constant-replacement	submit	Helper.java	-	killed by block 0  submit  ensures  nextId == \old(nextId) + 1
+TASKQUEUE_GEN_CRP_24	KILLED	constant-replacement	submit	Helper.java	-	killed by block 0  submit  ensures  nextId == \old(nextId) + 1
+TASKQUEUE_GEN_SDL_25	KILLED	statement-deletion	submit	Helper.java	-	killed by block 0  submit  ensures  nextId == \old(nextId) + 1
+TASKQUEUE_GEN_UOI_26	KILLED	unary-operator-insertion	submit	Helper.java	-	killed by block 0  submit  ensures  Tasks.containsKey(taskId)
+TASKQUEUE_GEN_ABS_27	KILLED	absolute-value-insertion	submit	Helper.java	-	killed by block 0  submit  ensures  Tasks.containsKey(taskId)
+TASKQUEUE_GEN_RVR_28	KILLED	return-value-replacement	submit	Helper.java	-	killed by block 0  submit  ensures  Tasks.containsKey(taskId)
+TASKQUEUE_GEN_RVR_29	SURVIVED	return-value-replacement	submit	Helper.java	taskqueue-038: submit -> submit -> cancelTask -> submit -> submit -> cancelTask -> submit	every generated condition still holds
+TASKQUEUE_GEN_RVR_30	KILLED	return-value-replacement	submit	Helper.java	-	killed by block 0  submit  ensures  Tasks.containsKey(taskId)
+TASKQUEUE_GEN_SEI_31	KILLED	side-effect-insertion	submit	Helper.java	-	killed by block 0  submit  ensures  nextId == \old(nextId) + 1
+TASKQUEUE_GEN_ARP_32	SURVIVED	argument-replacement	getResult	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_ARP_33	SURVIVED	argument-replacement	getResult	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_MCR_34	KILLED	method-call-replacement	getResult	Helper.java	-	killed by block 2  cancelTask  requires  Tasks.containsKey(taskId)
+TASKQUEUE_GEN_VRO_35	SURVIVED	variable-replacement	getResult	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_SDL_36	KILLED	statement-deletion	getResult	Helper.java	-	killed by block 1  getResult  ensures  Results.containsKey(taskId)
+TASKQUEUE_GEN_STR_37	SURVIVED	statement-replacement	getResult	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_ARP_38	INVALID	argument-replacement	getResult	Helper.java	-	the mutated library does not compile: Helper.java:49: incompatible types: java.lang.String cannot be converted to java.lang.Integer
+TASKQUEUE_GEN_MCR_39	SURVIVED	method-call-replacement	getResult	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_SEI_40	SURVIVED	side-effect-insertion	getResult	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_VRO_41	KILLED	variable-replacement	getResult	Helper.java	-	killed by block 1  getResult  ensures  Results.containsKey(taskId)
+TASKQUEUE_GEN_RVR_42	SURVIVED	return-value-replacement	getResult	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_SEI_43	SURVIVED	side-effect-insertion	getResult	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_SDL_44	KILLED	statement-deletion	cancelTask	Helper.java	-	killed by block 2  cancelTask  ensures  !Tasks.containsKey(taskId)
+TASKQUEUE_GEN_STR_45	SURVIVED	statement-replacement	cancelTask	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_ARP_46	KILLED	argument-replacement	cancelTask	Helper.java	-	killed by block 2  cancelTask  ensures  !Tasks.containsKey(taskId)
+TASKQUEUE_GEN_ARP_47	KILLED	argument-replacement	cancelTask	Helper.java	-	killed by block 2  cancelTask  ensures  !Tasks.containsKey(taskId)
+TASKQUEUE_GEN_MCR_48	KILLED	method-call-replacement	cancelTask	Helper.java	-	killed by block 2  cancelTask  ensures  !Tasks.containsKey(taskId)
+TASKQUEUE_GEN_SEI_49	SURVIVED	side-effect-insertion	cancelTask	Helper.java	-	every generated condition still holds
+TASKQUEUE_GEN_VRO_50	KILLED	variable-replacement	cancelTask	Helper.java	-	killed by block 2  cancelTask  ensures  !Tasks.containsKey(taskId)

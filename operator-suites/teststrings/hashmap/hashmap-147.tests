@@ -1,0 +1,8 @@
+test HashmapGenerated147 {
+    sequence: getOldValue -> remove;
+
+    inputs {
+        getOldValue[0].key = "gamma";
+        remove[1].key = "alpha";
+    }
+}

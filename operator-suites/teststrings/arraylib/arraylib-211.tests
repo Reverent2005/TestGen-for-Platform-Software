@@ -1,0 +1,8 @@
+test ArraylibGenerated211 {
+    sequence: get -> sum -> get;
+
+    inputs {
+        get[0].index = 7;
+        get[2].index = 1;
+    }
+}

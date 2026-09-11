@@ -1,0 +1,21 @@
+/*
+ * EXAMPLE 9 — StringSet, singular case.
+ *
+ * "alpha" is added twice and then looked up and removed.  The duplicate add is
+ * the reason the sequence has four blocks rather than three: it is the block that
+ * must NOT change the size, and running it is what shows that the spec's silence
+ * about add's size clause is deliberate rather than an oversight.
+ *
+ * `added` is not bound here, and could not be: whether the element was new is
+ * the set's answer, not the caller's.
+ */
+test StringSetDryRun {
+    sequence: add -> add -> contains -> remove;
+
+    inputs {
+        add[0].elem = "alpha";
+        add[1].elem = "alpha";
+        contains[2].elem = "alpha";
+        remove[3].elem = "alpha";
+    }
+}

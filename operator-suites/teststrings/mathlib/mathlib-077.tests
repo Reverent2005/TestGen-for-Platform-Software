@@ -1,0 +1,16 @@
+test MathlibGenerated77 {
+    sequence: gcd -> gcd -> gcd -> gcd -> abs -> abs;
+
+    inputs {
+        gcd[0].a = 3;
+        gcd[0].b = -17;
+        gcd[1].a = 7;
+        gcd[1].b = 48;
+        gcd[2].a = 7;
+        gcd[2].b = 7;
+        gcd[3].a = -17;
+        gcd[3].b = 48;
+        abs[4].x = -17;
+        abs[5].x = 7;
+    }
+}

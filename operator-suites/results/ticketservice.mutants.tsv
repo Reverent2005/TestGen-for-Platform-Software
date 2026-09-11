@@ -1,0 +1,226 @@
+# generated mutants — ticketservice
+# id	status	operator	method	file	killed-by-family	detail
+TICKETSERVICE_GEN_CRP_1	KILLED	constant-replacement	-	Helper.java	-	killed by block 1  findAndHoldSeats  requires  numSeats > 0 && customerEmail != null && available >= numSeats
+TICKETSERVICE_GEN_CRP_2	SURVIVED	constant-replacement	-	Helper.java	ticketservice-052: numSeatsAvailable -> numSeatsAvailable -> findAndHoldSeats -> findAndHoldSeats -> reserveSeats -> findAndHoldSeats -> numSeatsAvailable	every generated condition still holds
+TICKETSERVICE_GEN_CRP_3	KILLED	constant-replacement	-	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_CRP_4	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_CRP_5	SURVIVED	constant-replacement	-	Helper.java	ticketservice-136: findAndHoldSeats -> numSeatsAvailable -> findAndHoldSeats -> numSeatsAvailable -> findAndHoldSeats -> numSeatsAvailable	every generated condition still holds
+TICKETSERVICE_GEN_CRP_6	KILLED	constant-replacement	-	Helper.java	-	killed by block 1  findAndHoldSeats  requires  numSeats > 0 && customerEmail != null && available >= numSeats
+TICKETSERVICE_GEN_CRP_7	SURVIVED	constant-replacement	-	Helper.java	ticketservice-052: numSeatsAvailable -> numSeatsAvailable -> findAndHoldSeats -> findAndHoldSeats -> reserveSeats -> findAndHoldSeats -> numSeatsAvailable	every generated condition still holds
+TICKETSERVICE_GEN_CRP_8	KILLED	constant-replacement	-	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_CRP_9	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_CRP_10	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_CRP_11	KILLED	constant-replacement	-	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_CRP_12	KILLED	constant-replacement	-	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_CRP_13	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_CRP_14	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_CRP_15	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_CRP_16	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_CRP_17	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_CRP_18	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_CRP_19	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_SDL_20	INVALID	statement-deletion	-	Helper.java	-	the mutated library does not compile: GeneratedATCs.java:25: cannot find symbol
+TICKETSERVICE_GEN_SEI_21	INVALID	side-effect-insertion	-	Helper.java	-	the mutated library does not compile: Helper.java:64: <identifier> expected
+TICKETSERVICE_GEN_SDL_22	INVALID	statement-deletion	-	Helper.java	-	the mutated library does not compile: GeneratedATCs.java:36: cannot find symbol
+TICKETSERVICE_GEN_SEI_23	INVALID	side-effect-insertion	-	Helper.java	-	the mutated library does not compile: Helper.java:65: <identifier> expected
+TICKETSERVICE_GEN_AOR_24	SURVIVED	arithmetic-operator-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_AOR_25	SURVIVED	arithmetic-operator-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_AOR_26	SURVIVED	arithmetic-operator-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_AOR_27	SURVIVED	arithmetic-operator-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_28	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_29	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_30	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_31	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_32	INVALID	variable-replacement	-	Helper.java	-	the mutated library does not compile: Helper.java:66: self-reference in initializer
+TICKETSERVICE_GEN_VRO_33	INVALID	variable-replacement	-	Helper.java	-	the mutated library does not compile: Helper.java:66: illegal forward reference
+TICKETSERVICE_GEN_VRO_34	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_35	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_36	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_37	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_38	INVALID	variable-replacement	-	Helper.java	-	the mutated library does not compile: Helper.java:66: self-reference in initializer
+TICKETSERVICE_GEN_VRO_39	INVALID	variable-replacement	-	Helper.java	-	the mutated library does not compile: Helper.java:66: illegal forward reference
+TICKETSERVICE_GEN_CRP_40	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_CRP_41	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_CRP_42	SURVIVED	constant-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_AOR_43	SURVIVED	arithmetic-operator-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_AOR_44	KILLED	arithmetic-operator-replacement	-	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_AOR_45	SURVIVED	arithmetic-operator-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_AOR_46	SURVIVED	arithmetic-operator-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_47	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_48	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_49	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_50	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_51	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_52	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_53	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_54	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_55	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_56	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_57	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_58	SURVIVED	variable-replacement	-	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_SDL_59	INVALID	statement-deletion	-	Helper.java	-	the mutated library does not compile: Helper.java:82: illegal start of expression
+TICKETSERVICE_GEN_SEI_60	INVALID	side-effect-insertion	-	Helper.java	-	the mutated library does not compile: Helper.java:74: <identifier> expected
+TICKETSERVICE_GEN_UOI_61	KILLED	unary-operator-insertion	numSeatsAvailable	Helper.java	-	killed by block 0  numSeatsAvailable  ensures  freeCount == available
+TICKETSERVICE_GEN_ABS_62	KILLED	absolute-value-insertion	numSeatsAvailable	Helper.java	-	killed by block 0  numSeatsAvailable  ensures  freeCount == available
+TICKETSERVICE_GEN_RVR_63	KILLED	return-value-replacement	numSeatsAvailable	Helper.java	-	killed by block 0  numSeatsAvailable  ensures  freeCount == available
+TICKETSERVICE_GEN_RVR_64	KILLED	return-value-replacement	numSeatsAvailable	Helper.java	-	killed by block 0  numSeatsAvailable  ensures  freeCount == available
+TICKETSERVICE_GEN_RVR_65	KILLED	return-value-replacement	numSeatsAvailable	Helper.java	-	killed by block 0  numSeatsAvailable  ensures  freeCount == available
+TICKETSERVICE_GEN_SEI_66	KILLED	side-effect-insertion	numSeatsAvailable	Helper.java	-	killed by block 0  numSeatsAvailable  ensures  available == \old(available)
+TICKETSERVICE_GEN_VRO_67	KILLED	variable-replacement	numSeatsAvailable	Helper.java	-	killed by block 0  numSeatsAvailable  ensures  freeCount == available
+TICKETSERVICE_GEN_VRO_68	KILLED	variable-replacement	numSeatsAvailable	Helper.java	-	killed by block 0  numSeatsAvailable  ensures  freeCount == available
+TICKETSERVICE_GEN_VRO_69	KILLED	variable-replacement	numSeatsAvailable	Helper.java	-	killed by block 0  numSeatsAvailable  ensures  freeCount == available
+TICKETSERVICE_GEN_VRO_70	KILLED	variable-replacement	numSeatsAvailable	Helper.java	-	killed by block 0  numSeatsAvailable  ensures  freeCount == available
+TICKETSERVICE_GEN_VRO_71	KILLED	variable-replacement	numSeatsAvailable	Helper.java	-	killed by block 0  numSeatsAvailable  ensures  freeCount == available
+TICKETSERVICE_GEN_VRO_72	KILLED	variable-replacement	numSeatsAvailable	Helper.java	-	killed by block 0  numSeatsAvailable  ensures  freeCount == available
+TICKETSERVICE_GEN_SDL_73	INVALID	statement-deletion	findAndHoldSeats	Helper.java	-	the mutated library does not compile: Helper.java:96: cannot find symbol
+TICKETSERVICE_GEN_SEI_74	KILLED	side-effect-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_SDL_75	SURVIVED	statement-deletion	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_SEI_76	KILLED	side-effect-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_VRO_77	SURVIVED	variable-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_78	SURVIVED	variable-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_79	SURVIVED	variable-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_80	SURVIVED	variable-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_81	SURVIVED	variable-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_82	SURVIVED	variable-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_83	SURVIVED	variable-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_84	SURVIVED	variable-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_85	SURVIVED	variable-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_86	SURVIVED	variable-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_87	SURVIVED	variable-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_88	SURVIVED	variable-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_AOR_89	KILLED	arithmetic-operator-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_AOR_90	KILLED	arithmetic-operator-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_AOR_91	KILLED	arithmetic-operator-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_AOR_92	KILLED	arithmetic-operator-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_AOI_93	KILLED	arithmetic-operator-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_AOI_94	KILLED	arithmetic-operator-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_UOI_95	KILLED	unary-operator-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_ABS_96	KILLED	absolute-value-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_CRP_97	KILLED	constant-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_CRP_98	KILLED	constant-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_CRP_99	KILLED	constant-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_SDL_100	KILLED	statement-deletion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_SEI_101	KILLED	side-effect-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_VRO_102	INVALID	variable-replacement	findAndHoldSeats	Helper.java	-	the mutated library does not compile: Helper.java:100: cannot assign a value to final variable ROWS
+TICKETSERVICE_GEN_VRO_103	INVALID	variable-replacement	findAndHoldSeats	Helper.java	-	the mutated library does not compile: Helper.java:100: cannot assign a value to final variable COLS
+TICKETSERVICE_GEN_VRO_104	INVALID	variable-replacement	findAndHoldSeats	Helper.java	-	the mutated library does not compile: Helper.java:100: cannot assign a value to final variable FREE
+TICKETSERVICE_GEN_VRO_105	INVALID	variable-replacement	findAndHoldSeats	Helper.java	-	the mutated library does not compile: Helper.java:100: cannot assign a value to final variable HELD
+TICKETSERVICE_GEN_VRO_106	INVALID	variable-replacement	findAndHoldSeats	Helper.java	-	the mutated library does not compile: Helper.java:100: cannot assign a value to final variable RESERVED
+TICKETSERVICE_GEN_VRO_107	KILLED	variable-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_VRO_108	KILLED	variable-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_VRO_109	KILLED	variable-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_VRO_110	KILLED	variable-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_VRO_111	SURVIVED	variable-replacement	findAndHoldSeats	Helper.java	ticketservice-052: numSeatsAvailable -> numSeatsAvailable -> findAndHoldSeats -> findAndHoldSeats -> reserveSeats -> findAndHoldSeats -> numSeatsAvailable	every generated condition still holds
+TICKETSERVICE_GEN_VRO_112	KILLED	variable-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_VRO_113	KILLED	variable-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  nextHoldId == \old(nextHoldId) + 1
+TICKETSERVICE_GEN_SDL_114	KILLED	statement-deletion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  Holds.containsKey(seatHoldId)
+TICKETSERVICE_GEN_STR_115	SURVIVED	statement-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_ARP_116	INVALID	argument-replacement	findAndHoldSeats	Helper.java	-	the mutated library does not compile: Helper.java:101: incompatible types: java.lang.String cannot be converted to java.lang.Integer
+TICKETSERVICE_GEN_MCR_117	SURVIVED	method-call-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_SEI_118	KILLED	side-effect-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_VRO_119	KILLED	variable-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  Holds.containsKey(seatHoldId)
+TICKETSERVICE_GEN_SDL_120	KILLED	statement-deletion	findAndHoldSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_STR_121	SURVIVED	statement-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_ARP_122	INVALID	argument-replacement	findAndHoldSeats	Helper.java	-	the mutated library does not compile: Helper.java:102: incompatible types: java.util.List<java.lang.Integer> cannot be converted to java.lang.Integer
+TICKETSERVICE_GEN_MCR_123	SURVIVED	method-call-replacement	findAndHoldSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_SEI_124	KILLED	side-effect-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_AOR_125	KILLED	arithmetic-operator-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_AOR_126	KILLED	arithmetic-operator-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_AOR_127	KILLED	arithmetic-operator-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_AOR_128	KILLED	arithmetic-operator-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_AOI_129	KILLED	arithmetic-operator-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_AOI_130	KILLED	arithmetic-operator-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_UOI_131	KILLED	unary-operator-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_ABS_132	KILLED	absolute-value-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_SDL_133	KILLED	statement-deletion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_VRO_134	INVALID	variable-replacement	findAndHoldSeats	Helper.java	-	the mutated library does not compile: Helper.java:103: cannot assign a value to final variable ROWS
+TICKETSERVICE_GEN_VRO_135	INVALID	variable-replacement	findAndHoldSeats	Helper.java	-	the mutated library does not compile: Helper.java:103: cannot assign a value to final variable COLS
+TICKETSERVICE_GEN_VRO_136	INVALID	variable-replacement	findAndHoldSeats	Helper.java	-	the mutated library does not compile: Helper.java:103: cannot assign a value to final variable FREE
+TICKETSERVICE_GEN_VRO_137	INVALID	variable-replacement	findAndHoldSeats	Helper.java	-	the mutated library does not compile: Helper.java:103: cannot assign a value to final variable HELD
+TICKETSERVICE_GEN_VRO_138	INVALID	variable-replacement	findAndHoldSeats	Helper.java	-	the mutated library does not compile: Helper.java:103: cannot assign a value to final variable RESERVED
+TICKETSERVICE_GEN_VRO_139	KILLED	variable-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_VRO_140	KILLED	variable-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_VRO_141	KILLED	variable-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_VRO_142	KILLED	variable-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_VRO_143	KILLED	variable-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_VRO_144	KILLED	variable-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_VRO_145	KILLED	variable-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_UOI_146	KILLED	unary-operator-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  Holds.containsKey(seatHoldId)
+TICKETSERVICE_GEN_ABS_147	KILLED	absolute-value-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  Holds.containsKey(seatHoldId)
+TICKETSERVICE_GEN_RVR_148	KILLED	return-value-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  Holds.containsKey(seatHoldId)
+TICKETSERVICE_GEN_RVR_149	SURVIVED	return-value-replacement	findAndHoldSeats	Helper.java	ticketservice-052: numSeatsAvailable -> numSeatsAvailable -> findAndHoldSeats -> findAndHoldSeats -> reserveSeats -> findAndHoldSeats -> numSeatsAvailable	every generated condition still holds
+TICKETSERVICE_GEN_RVR_150	KILLED	return-value-replacement	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  Holds.containsKey(seatHoldId)
+TICKETSERVICE_GEN_SEI_151	KILLED	side-effect-insertion	findAndHoldSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_ARP_152	KILLED	argument-replacement	reserveSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_ARP_153	KILLED	argument-replacement	reserveSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_MCR_154	SURVIVED	method-call-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_SDL_155	SURVIVED	statement-deletion	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_SEI_156	KILLED	side-effect-insertion	reserveSeats	Helper.java	-	killed by block 2  reserveSeats  ensures  available == \old(available)
+TICKETSERVICE_GEN_VRO_157	SURVIVED	variable-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_158	SURVIVED	variable-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_159	SURVIVED	variable-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_160	SURVIVED	variable-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_161	SURVIVED	variable-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_VRO_162	SURVIVED	variable-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_SDL_163	KILLED	statement-deletion	reserveSeats	Helper.java	-	killed by block 2  reserveSeats  ensures  Reservations.containsKey(seatHoldId)
+TICKETSERVICE_GEN_STR_164	SURVIVED	statement-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_ARP_165	INVALID	argument-replacement	reserveSeats	Helper.java	-	the mutated library does not compile: Helper.java:121: incompatible types: java.lang.String cannot be converted to java.lang.Integer
+TICKETSERVICE_GEN_MCR_166	SURVIVED	method-call-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_SEI_167	KILLED	side-effect-insertion	reserveSeats	Helper.java	-	killed by block 2  reserveSeats  ensures  available == \old(available)
+TICKETSERVICE_GEN_VRO_168	KILLED	variable-replacement	reserveSeats	Helper.java	-	killed by block 2  reserveSeats  ensures  Reservations.containsKey(seatHoldId)
+TICKETSERVICE_GEN_SDL_169	KILLED	statement-deletion	reserveSeats	Helper.java	-	killed by block 2  reserveSeats  ensures  !Holds.containsKey(seatHoldId)
+TICKETSERVICE_GEN_STR_170	SURVIVED	statement-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_ARP_171	KILLED	argument-replacement	reserveSeats	Helper.java	-	killed by block 2  reserveSeats  ensures  !Holds.containsKey(seatHoldId)
+TICKETSERVICE_GEN_ARP_172	KILLED	argument-replacement	reserveSeats	Helper.java	-	killed by block 2  reserveSeats  ensures  !Holds.containsKey(seatHoldId)
+TICKETSERVICE_GEN_MCR_173	KILLED	method-call-replacement	reserveSeats	Helper.java	-	killed by block 2  reserveSeats  ensures  !Holds.containsKey(seatHoldId)
+TICKETSERVICE_GEN_SEI_174	KILLED	side-effect-insertion	reserveSeats	Helper.java	-	killed by block 2  reserveSeats  ensures  available == \old(available)
+TICKETSERVICE_GEN_VRO_175	KILLED	variable-replacement	reserveSeats	Helper.java	-	killed by block 2  reserveSeats  ensures  Reservations.containsKey(seatHoldId)
+TICKETSERVICE_GEN_SDL_176	SURVIVED	statement-deletion	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_STR_177	SURVIVED	statement-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_ARP_178	SURVIVED	argument-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_ARP_179	SURVIVED	argument-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_MCR_180	SURVIVED	method-call-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_SEI_181	KILLED	side-effect-insertion	reserveSeats	Helper.java	-	killed by block 2  reserveSeats  ensures  available == \old(available)
+TICKETSERVICE_GEN_RVR_182	SURVIVED	return-value-replacement	reserveSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_SEI_183	KILLED	side-effect-insertion	reserveSeats	Helper.java	-	killed by block 2  reserveSeats  ensures  available == \old(available)
+TICKETSERVICE_GEN_SDL_184	INVALID	statement-deletion	mostValuableFreeSeats	Helper.java	-	the mutated library does not compile: Helper.java:136: cannot find symbol
+TICKETSERVICE_GEN_SEI_185	KILLED	side-effect-insertion	mostValuableFreeSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_ROR_186	SURVIVED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_ROR_187	KILLED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_ROR_188	KILLED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_ROR_189	SURVIVED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_ROR_190	KILLED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_CRP_191	SURVIVED	constant-replacement	mostValuableFreeSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_CRP_192	KILLED	constant-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_LBR_193	SURVIVED	loop-bound-replacement	mostValuableFreeSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_LBR_194	KILLED	loop-bound-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_ROR_195	SURVIVED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_ROR_196	SURVIVED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_ROR_197	KILLED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_ROR_198	KILLED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_ROR_199	KILLED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_COI_200	KILLED	conditional-operator-insertion	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_CTC_201	SURVIVED	condition-to-constant	mostValuableFreeSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_CTC_202	KILLED	condition-to-constant	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_VRO_203	KILLED	variable-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_VRO_204	KILLED	variable-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_VRO_205	KILLED	variable-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_VRO_206	KILLED	variable-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_VRO_207	KILLED	variable-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_VRO_208	KILLED	variable-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_SDL_209	KILLED	statement-deletion	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_STR_210	KILLED	statement-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_ARP_211	SURVIVED	argument-replacement	mostValuableFreeSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_ARP_212	KILLED	argument-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_MCR_213	KILLED	method-call-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_SEI_214	KILLED	side-effect-insertion	mostValuableFreeSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_ROR_215	SURVIVED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_ROR_216	SURVIVED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_ROR_217	SURVIVED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_ROR_218	SURVIVED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	ticketservice-052: numSeatsAvailable -> numSeatsAvailable -> findAndHoldSeats -> findAndHoldSeats -> reserveSeats -> findAndHoldSeats -> numSeatsAvailable	every generated condition still holds
+TICKETSERVICE_GEN_ROR_219	SURVIVED	relational-operator-replacement	mostValuableFreeSeats	Helper.java	-	every generated condition still holds
+TICKETSERVICE_GEN_SDL_220	KILLED	statement-deletion	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_MCR_221	KILLED	method-call-replacement	mostValuableFreeSeats	Helper.java	-	killed by the singular case (exit 1)
+TICKETSERVICE_GEN_SEI_222	KILLED	side-effect-insertion	mostValuableFreeSeats	Helper.java	-	killed by block 1  findAndHoldSeats  ensures  available == \old(available) - numSeats
+TICKETSERVICE_GEN_SDL_223	INVALID	statement-deletion	mostValuableFreeSeats	Helper.java	-	the mutated library does not compile: Helper.java:141: missing return statement
+TICKETSERVICE_GEN_SEI_224	INVALID	side-effect-insertion	mostValuableFreeSeats	Helper.java	-	the mutated library does not compile: Helper.java:140: unreachable statement

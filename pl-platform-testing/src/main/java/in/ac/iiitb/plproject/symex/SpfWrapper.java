@@ -341,6 +341,24 @@ public class SpfWrapper {
     public LibraryRunResult runLibraryExample(AtcClass atcClass, String outputDir,
                                               String helperSourcePath,
                                               String singularCaseCode) throws IOException {
+        return runLibraryExample(atcClass, outputDir,
+                helperSourcePath == null ? java.util.Collections.<String>emptyList()
+                                         : java.util.Collections.singletonList(helperSourcePath),
+                singularCaseCode);
+    }
+
+    /**
+     * The multi-class form: every listed source is copied in beside the generated
+     * code, keeping its own file name.
+     *
+     * <p>A library that is several classes calling each other is still one library
+     * under test — the generated ATC only ever calls the façade, {@code Helper} —
+     * but all of its classes have to be there for the generated code to compile and
+     * run.  The first path is the façade; the rest are its collaborators.
+     */
+    public LibraryRunResult runLibraryExample(AtcClass atcClass, String outputDir,
+                                              java.util.List<String> librarySourcePaths,
+                                              String singularCaseCode) throws IOException {
         AtcClass symbolicIr = transformer.transform(atcClass);
         String spfCode = codeGenerator.generateSymbolicJavaFile(symbolicIr);
         String junitCode = codeGenerator.generateJUnitFile(atcClass);
@@ -355,14 +373,19 @@ public class SpfWrapper {
             writeFile(new java.io.File(packageDir, "SingularCase.java"), singularCaseCode);
         }
 
-        if (helperSourcePath != null) {
-            java.io.File helperSource = new java.io.File(helperSourcePath);
-            if (!helperSource.isFile()) {
-                throw new IOException("library source not found: " + helperSource.getAbsolutePath());
+        if (librarySourcePaths != null) {
+            for (String librarySourcePath : librarySourcePaths) {
+                java.io.File librarySource = new java.io.File(librarySourcePath);
+                if (!librarySource.isFile()) {
+                    throw new IOException("library source not found: "
+                            + librarySource.getAbsolutePath());
+                }
+                // The file keeps its own name: a collaborator class has to land in a
+                // file javac will look for it in, and only the façade is Helper.java.
+                java.nio.file.Files.copy(librarySource.toPath(),
+                        new java.io.File(packageDir, librarySource.getName()).toPath(),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
             }
-            java.nio.file.Files.copy(helperSource.toPath(),
-                    new java.io.File(packageDir, "Helper.java").toPath(),
-                    java.nio.file.StandardCopyOption.REPLACE_EXISTING);
         }
 
         writeJpfConfigs(atcClass, outputDir, spfCode);

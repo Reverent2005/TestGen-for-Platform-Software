@@ -1,0 +1,10 @@
+test ArraylibGenerated47 {
+    sequence: set -> set;
+
+    inputs {
+        set[0].index = 7;
+        set[0].value = 2;
+        set[1].index = 11;
+        set[1].value = 7;
+    }
+}

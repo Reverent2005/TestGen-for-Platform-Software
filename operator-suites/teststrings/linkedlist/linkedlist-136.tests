@@ -1,0 +1,7 @@
+test LinkedlistGenerated136 {
+    sequence: removeFirst -> removeFirst -> indexOf;
+
+    inputs {
+        indexOf[2].value = 7;
+    }
+}

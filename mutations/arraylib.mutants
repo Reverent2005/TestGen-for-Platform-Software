@@ -1,0 +1,93 @@
+/*
+ * MUTATION SET — EXAMPLE 5, IntArray
+ * Library under test: libraries/arraylib/Helper.java
+ * Test string:        specs/IntArray.tests   (set -> set -> get -> sum -> indexOf)
+ *
+ * The two survivors here are both the same gap seen twice: `sum` and `indexOf`
+ * are specified by the RANGE of their answer rather than by its value, because
+ * the grammar cannot quantify over the elements of A.  Everything the spec does
+ * pin down — which cell was written, which cell was read, and that a read leaves
+ * the array alone — kills its mutant.
+ */
+
+mutant ARRAY_SET_WRITES_NOT_COUNTED {
+    description: set stores the value but never counts the write
+    operator:    statement-deletion
+    in:          set
+    find:        writes = writes + 1;
+    replace:
+}
+
+mutant ARRAY_SET_WRONG_CELL {
+    description: set always writes cell 0, whatever index it was given
+    operator:    argument-replacement
+    in:          set
+    find:        A[index] = value;
+    replace:     A[0] = value;
+}
+
+mutant ARRAY_GET_WRONG_CELL {
+    description: get always reads cell 0, whatever index it was given
+    operator:    argument-replacement
+    in:          get
+    find:        int elem = A[index];
+    replace:     int elem = A[0];
+}
+
+mutant ARRAY_GET_MUTATES_STATE {
+    description: get is no longer read-only — it counts itself as a write
+    operator:    side-effect-insertion
+    in:          get
+    find:        int elem = A[index];
+    replace:     writes = writes + 1; int elem = A[index];
+}
+
+mutant ARRAY_SUM_SKIPS_FIRST {
+    description: sum starts from cell 1, so the first cell is never added in
+    operator:    loop-bound-replacement
+    in:          sum
+    find:        for (int i = 0; i < length; i++) {
+    replace:     for (int i = 1; i < length; i++) {
+    expect:      survives
+    note:        IntArray.spec constrains sum's answer to total >= 0, not to the actual total, because the grammar cannot quantify over A's elements. Both 18 and 11 satisfy it. Closing this needs a summing quantifier in the grammar, not a different test string.
+}
+
+mutant ARRAY_INDEXOF_ALWAYS_FIRST {
+    description: indexOf reports cell 0 for every value it finds
+    operator:    return-value-replacement
+    in:          indexOf
+    find:        return i;
+    replace:     return 0;
+    expect:      survives
+    note:        indexOf is specified by its range, -1 <= position < length, so any in-range answer holds. The value written into cell 1 is looked up on purpose, which would catch this if the spec could say A[position] == value — it cannot, because the position is what is being defined.
+}
+
+/*
+ * ── operator coverage ────────────────────────────────────────────────────────
+ * Three faults of a kind the set above does not reach: an arithmetic operator
+ * replaced, a unary minus introduced, and a loop's comparison widened.
+ */
+
+mutant ARRAY_SUM_SUBTRACTS {
+    description: sum subtracts each cell instead of adding it
+    operator:    arithmetic-operator-replacement
+    in:          sum
+    find:        total = total + A[i];
+    replace:     total = total - A[i];
+}
+
+mutant ARRAY_GET_NEGATES {
+    description: get returns the negation of the cell it read
+    operator:    unary-operator-insertion
+    in:          get
+    find:        int elem = A[index];
+    replace:     int elem = -A[index];
+}
+
+mutant ARRAY_SUM_RUNS_PAST_END {
+    description: sum's loop runs one cell past the end of the array
+    operator:    relational-operator-replacement
+    in:          sum
+    find:        for (int i = 0; i < length; i++) {
+    replace:     for (int i = 0; i <= length; i++) {
+}

@@ -1,13 +1,152 @@
 # Library Testing Dry Runs with Return Value Handling
 
-Three library examples wired into the existing TestGen pipeline, exercising the
-different edge cases of SERVER_OUTPUT propagation.
+Fourteen library examples wired into the existing TestGen pipeline.  Each one is
+a `.spec`, a `.tests` and one or more plain-Java library sources; between them
+they exercise every case the return-value handling has to get right, and every
+kind of thing a data structure's contract has to say.
 
-| # | Library | Test string | Pattern |
-|---|---------|-------------|---------|
+| # | Library | Test string | What it exercises |
+|---|---------|-------------|-------------------|
 | 1 | `Stack<String>` | `push -> push -> pop -> peek` | independent captures, no propagation |
-| 2 | `HashMap<String,Integer>` | `put -> put -> getOldValue -> remove` | nullable, produced-but-unconsumed |
-| 3 | `TaskQueue` | `submit -> getResult -> cancelTask` | full 2-hop forward propagation |
+| 2 | `HashMap<String,Integer>` | `put -> put -> getOldValue -> remove` | a nullable capture, produced but unconsumed |
+| 3 | `TaskQueue` | `submit -> getResult -> cancelTask` | full two-hop forward propagation |
+| 4 | `TicketService` | `numSeatsAvailable -> findAndHoldSeats -> reserveSeats -> numSeatsAvailable` | propagation beside a repeated read-only query |
+| 5 | `IntArray` | `set -> set -> get -> sum -> indexOf` | primitive `int` captures over indexed state |
+| 6 | `MathLib` | `abs -> gcd -> power -> factorial` | pure functions, specified by a property of the answer |
+| 7 | `Queue<String>` | `enqueue -> enqueue -> dequeue -> front -> isEmpty` | FIFO order pinned down; a `boolean` capture |
+| 8 | `SinglyLinkedList<Integer>` | `addFirst -> addLast -> removeFirst -> indexOf` | both ends of one structure, through a mirror |
+| 9 | `StringSet` | `add -> add -> contains -> remove` | an idempotent call, and a `boolean` SERVER_OUTPUT |
+| 10 | `BinarySearchTree` | `insert -> insert -> insert -> contains -> min -> delete` | a precondition bought to strengthen a postcondition |
+| 11 | `MinHeap<Integer>` | `insert -> insert -> insert -> peekMin -> extractMin` | a value named before the call and after it |
+| 12 | `Graph` | `addVertex -> addVertex -> addEdge -> degree -> hasEdge` | two parameters against one piece of state |
+| 13 | `LruCache` **(custom)** | `put -> put -> put -> get -> restore` | a **nullable** SERVER_OUTPUT that is **propagated** |
+| 14 | `OrderService` **(4 classes)** | `restock -> placeOrder -> ship -> stockLevel` | **libraries that interact** — one spec over four classes |
+
+Examples 1–3 are the original three; 4 transcribes a published coding challenge;
+5–12 are the standard containers and the integer maths library; 13 and 14 were
+written for this set — 13 for the one shape of value the others leave out, and 14
+because every other example is a single class.
+
+### Why a custom library
+
+`LruCache` is Example 13 and it is not a textbook container.  It exists because
+the other twelve leave one combination uncovered: a value the callee **invents**,
+which may legitimately be **null**, and which the caller then has to **use**.
+
+* Example 2's `oldVal` is nullable, produced, never consumed.
+* Example 3's `taskId` is never null, produced, consumed twice.
+* Example 13's `evictedKey` is nullable, produced three times, consumed once.
+
+`put` returns the key it evicted to make room — `null` for the first two calls,
+and a key the cache chose by its own recency book-keeping for the third.
+`restore` then takes that key as a formal parameter, so the propagation scan
+threads the **third** put's value into the last block:
+
+```
+step 1 put:      availableServerOutputs(after) = [evictedKey]               propagated = []
+step 2 put:      availableServerOutputs(after) = [evictedKey]               propagated = []
+step 3 put:      availableServerOutputs(after) = [evictedKey]               propagated = []
+step 4 get:      availableServerOutputs(after) = [evictedKey, cachedValue]  propagated = []
+step 5 restore:  availableServerOutputs(after) = [evictedKey, cachedValue]  propagated = [evictedKey]
+```
+
+```java
+{   // ── block 4: restore ──
+    String evictedKey = evictedKey_2; // SERVER_OUTPUT propagated from put
+    String value = "1";               // CLIENT_INPUT
+    require(4, "restore", "evictedKey != null && !C.containsKey(evictedKey)", ...);
+```
+
+```
+singular case : LruCacheDryRun
+test string   : put -> put -> put -> get -> restore
+
+block 0  put          PRE   ok    key != null && value != null && capacity > 0
+block 0  put          POST  ok    C.get(key) == value
+block 0  put          POST  ok    mostRecent == key
+block 0  put          POST  ok    size <= capacity
+...
+block 3  get          PRE   ok    C.containsKey(key)
+block 3  get          POST  ok    cachedValue == C.get(key)
+block 3  get          POST  ok    mostRecent == key
+block 3  get          POST  ok    size == \old(size)
+block 4  restore      PRE   ok    evictedKey != null && !C.containsKey(evictedKey)
+block 4  restore      POST  ok    C.containsKey(evictedKey)
+block 4  restore      POST  ok    mostRecent == evictedKey
+block 4  restore      POST  ok    size <= capacity
+
+20 condition(s) checked, all hold — the test string runs and meets its pre/postconditions
+```
+
+One call, two parameters, one of each kind: the caller still has the evicted
+entry's value, and only the cache knows which key it threw away.  That asymmetry
+inside a single call is the reason the library was written, and it is what makes
+two of its mutants die against a **precondition** of a later block rather than a
+postcondition of the one that was broken — the propagated value turns the rest of
+the sequence into an oracle for the call that produced it.
+
+### Libraries that interact
+
+Examples 1 to 13 are each one class.  Example 14 is four, and it is here to
+answer a question none of the others can: **does a specification written against
+a façade still catch a fault planted one or two classes further in?**
+
+```
+          Helper            the façade, and the only class the ATC ever calls
+         /      \
+ Catalogue      Ledger      stock levels        orders and their ids
+                   |
+                 Audit      the append-only trail
+```
+
+Nothing about the generated code changes — it still calls `Helper.<method>(...)`
+and still reads `Helper.<name>`.  What changes is that those names now stand for
+state three other classes own:
+
+* the **collections** are aliases, not copies: `Helper.Stock` *is*
+  `Catalogue.Stock`, the same object, so there is no mirror for a fault to hide
+  behind;
+* the **scalars** cannot be aliased, because assigning an `int` copies it, so they
+  are re-read from the collaborators after every call — including after a
+  read-only one. Skipping that in `stockLevel` made its own
+  `events == \old(events)` clause unfalsifiable, and a mutant survived on it
+  until the refresh was put back.
+
+**The clause a single-class example cannot have.** `stockUnits` is the
+catalogue's counter and `orderedUnits` is the ledger's, and neither class can see
+the other. `placeOrder` therefore asserts a conservation law across the two:
+
+```
+stockUnits   == \old(stockUnits)   - quantity
+orderedUnits == \old(orderedUnits) + quantity
+```
+
+Units move between the two classes; they are never created or destroyed. A fault
+in `Catalogue.take`, in `Ledger.open`, or in the way the façade sequences them
+moves one half of that pair and leaves the other, and the conjunction sees it.
+`events` does the same job one class further out: `Helper` never calls `Audit`,
+only `Ledger` does, so every operation that must leave a trace says
+`events == \old(events) + 1` and every operation that must not says
+`events == \old(events)`.
+
+`mutations/orderservice.mutants` measures exactly that, seeding faults at each
+distance with the `file:` field:
+
+| Class | Hops from the façade | Mutants | Killed |
+|---|---|---|---|
+| `Helper` | 0 | 3 | 3 |
+| `Catalogue` | 1 | 5 | 4 |
+| `Ledger` | 1 | 4 | 3 |
+| `Audit` | 2 | 2 | 2 |
+
+**Distance costs nothing.** Both survivors are gaps in what the specification
+says — a counter the spec never relates to the map beside it, and the propagated-id
+gap Example 3 already records — not in how far away the fault was planted.
+
+The propagated `orderId` crosses a class boundary too: `Helper` does not see it
+until `Ledger.open` returns it, and the scan threads it into `ship` exactly as it
+threads `taskId` in Example 3. Propagation is a property of the specification, not
+of the library's internal structure.
 
 ## Test strings
 
@@ -97,11 +236,12 @@ From `pl-platform-testing/`:
 ```bash
 mvn -o compile
 
-# all three examples, with the propagation trace and both generated flavours
+# every example, with the propagation trace and both generated flavours
 java -cp target/classes in.ac.iiitb.plproject.atc.LibraryDryRunExamples
 
-# one example at a time: stack | hashmap | taskqueue
-java -cp target/classes in.ac.iiitb.plproject.atc.LibraryDryRunExamples taskqueue
+# one example at a time: stack | hashmap | taskqueue | ticketservice | arraylib
+#                      | mathlib | queue | linkedlist | set | bst | heap | graph | lrucache
+java -cp target/classes in.ac.iiitb.plproject.atc.LibraryDryRunExamples lrucache
 
 # the regression suite for Sections 4 and 5
 mvn -o test
@@ -142,9 +282,10 @@ described in `how_to_run.md`.
 
 | Path | Contents |
 |------|----------|
-| `specs/Stack.spec`, `specs/HashMapLib.spec`, `specs/TaskQueue.spec` | the JML specs, with `\result` bindings |
+| `specs/*.spec` | the JML specs, with `\result` bindings and a `state` block |
 | `specs/*.tests` | the test strings and their concrete inputs |
-| `libraries/{stack,hashmap,taskqueue}/Helper.java` | the plain-Java libraries under test |
+| `libraries/<key>/*.java` | the plain-Java libraries under test, one directory each — usually one `Helper.java`, four files for Example 14 |
+| `mutations/<key>.mutants` | the seeded faults each library's suite is measured against |
 | `pl-platform-testing/golden/<example>/` | golden copies of both generated flavours |
 | `verify-stubs/`, `verify-generated.sh` | compile-and-run verification of the generated code |
 
@@ -239,7 +380,8 @@ check covers the helpers.
    scope.
 2. **Custom return types** fall back to `Debug.makeSymbolicRef`, which may
    under-constrain individual fields. Flagged with a comment where the fallback is
-   taken; none of the three examples hits it.
+   taken; none of the thirteen examples hits it — every one of them returns a
+   primitive, a boxed primitive or a `String`.
 3. **Propagation is name-based.** `taskId` upstream and `id` downstream would not
    connect. As a mitigation the scan emits a warning when a parameter's *type*
    matches an available SERVER_OUTPUT but its name does not — which is why the
@@ -254,7 +396,16 @@ check covers the helpers.
    `M'[key] = value` part is kept. Noted in the spec file itself.
 6. **`\old()` over a compound expression** is not modelled — only `\old(<name>)`
    snapshots. The rewriter falls back to rewriting the inner expression in place.
-7. **A singular case validates one path, not the sequence in general.** It shows
+7. **A structure the grammar cannot walk needs a mirror.** `LinkedList`, `BST`
+   and `MinHeap` are real chains, trees and heaps, but a spec cannot follow a
+   `next` pointer or index a heap array, so each library exposes a mirror (`L`,
+   `Keys`, `H`, and the derived `head`/`minKey`/`minValue`) that it rebuilds from
+   the real structure after every operation. Rebuilding it *from* the structure
+   rather than maintaining it beside one is what keeps a seeded fault visible:
+   a broken chain produces a broken mirror. Where the mirror is derived matters
+   too — `minValue` is found by scanning the heap rather than by reading its
+   root, or `smallest == minValue` would compare `peekMin`'s answer with itself.
+8. **A singular case validates one path, not the sequence in general.** It shows
    that these concrete inputs satisfy the spec at every step; the symbolic flavour
    is what asks whether *any* inputs would not. The two are complementary, which is
    why both are generated from the same test string.

@@ -1,0 +1,262 @@
+# generated test strings — hashmap
+# name	status	conditions	sequence
+hashmap-001	PASSED	6	put -> put -> put
+hashmap-002	STOPPED	5	put -> put -> getOldValue -> remove
+hashmap-003	STOPPED	1	getOldValue -> put -> put -> put -> remove -> remove
+hashmap-004	STOPPED	7	put -> put -> put -> remove -> getOldValue
+hashmap-005	STOPPED	1	remove -> getOldValue -> put -> getOldValue -> getOldValue -> remove
+hashmap-006	STOPPED	5	put -> put -> getOldValue -> remove
+hashmap-007	STOPPED	1	getOldValue -> getOldValue
+hashmap-008	STOPPED	1	getOldValue -> put -> put -> getOldValue -> remove
+hashmap-009	PASSED	12	put -> put -> put -> put -> put -> put
+hashmap-010	STOPPED	10	put -> put -> put -> remove -> getOldValue
+hashmap-011	STOPPED	11	put -> put -> getOldValue -> remove -> remove
+hashmap-012	STOPPED	1	getOldValue -> getOldValue -> put -> put -> getOldValue
+hashmap-013	STOPPED	1	getOldValue -> put -> getOldValue -> getOldValue -> getOldValue -> remove -> getOldValue
+hashmap-014	STOPPED	1	getOldValue -> put -> put
+hashmap-015	STOPPED	1	remove -> remove -> getOldValue -> put -> getOldValue -> getOldValue -> remove
+hashmap-016	STOPPED	1	remove -> getOldValue -> put
+hashmap-017	STOPPED	1	getOldValue -> put -> remove
+hashmap-018	PASSED	7	put -> put -> remove
+hashmap-019	STOPPED	1	remove -> remove -> put -> getOldValue -> put -> put
+hashmap-020	STOPPED	1	remove -> getOldValue -> getOldValue -> put -> remove
+hashmap-021	STOPPED	3	put -> getOldValue -> put -> remove -> remove
+hashmap-022	STOPPED	1	remove -> remove -> remove -> remove -> put
+hashmap-023	STOPPED	10	put -> put -> put -> getOldValue -> remove
+hashmap-024	STOPPED	1	getOldValue -> remove -> put
+hashmap-025	STOPPED	1	getOldValue -> put -> put -> remove
+hashmap-026	STOPPED	1	getOldValue -> getOldValue -> put -> put -> remove
+hashmap-027	STOPPED	1	getOldValue -> remove -> put
+hashmap-028	STOPPED	3	put -> getOldValue -> put -> remove -> put -> getOldValue -> remove
+hashmap-029	STOPPED	5	put -> put -> remove
+hashmap-030	STOPPED	1	getOldValue -> put -> put -> put -> put -> getOldValue -> remove
+hashmap-031	STOPPED	5	put -> put -> remove -> getOldValue -> remove
+hashmap-032	STOPPED	6	put -> getOldValue -> getOldValue
+hashmap-033	STOPPED	8	put -> put -> remove -> remove -> getOldValue -> remove
+hashmap-034	STOPPED	5	put -> put -> remove -> remove
+hashmap-035	STOPPED	6	put -> remove -> getOldValue -> remove -> put -> getOldValue
+hashmap-036	STOPPED	11	put -> put -> getOldValue -> remove -> remove
+hashmap-037	STOPPED	3	put -> getOldValue -> remove -> remove
+hashmap-038	STOPPED	1	remove -> put -> remove -> put -> put -> getOldValue
+hashmap-039	STOPPED	1	remove -> put -> getOldValue -> put
+hashmap-040	STOPPED	8	put -> put -> getOldValue -> remove -> remove
+hashmap-041	STOPPED	1	getOldValue -> put -> remove -> remove
+hashmap-042	PASSED	7	put -> getOldValue -> put
+hashmap-043	STOPPED	8	put -> put -> getOldValue -> remove
+hashmap-044	STOPPED	3	put -> getOldValue -> put -> getOldValue -> remove
+hashmap-045	STOPPED	1	getOldValue -> put -> put -> getOldValue
+hashmap-046	STOPPED	5	put -> put -> getOldValue -> getOldValue -> remove
+hashmap-047	PASSED	9	put -> put -> put -> remove
+hashmap-048	STOPPED	7	put -> put -> put -> getOldValue -> remove
+hashmap-049	STOPPED	5	put -> put -> getOldValue -> put -> remove
+hashmap-050	STOPPED	1	remove -> getOldValue -> put -> put -> remove
+hashmap-051	STOPPED	10	put -> put -> put -> getOldValue -> getOldValue -> remove
+hashmap-052	PASSED	4	put -> put
+hashmap-053	STOPPED	1	getOldValue -> getOldValue -> put -> remove
+hashmap-054	STOPPED	3	put -> getOldValue -> remove
+hashmap-055	STOPPED	7	put -> put -> put -> getOldValue -> put -> getOldValue -> remove
+hashmap-056	STOPPED	1	getOldValue -> put
+hashmap-057	STOPPED	11	put -> put -> getOldValue -> remove -> remove
+hashmap-058	STOPPED	3	put -> remove -> getOldValue
+hashmap-059	STOPPED	3	put -> getOldValue -> getOldValue -> remove -> put
+hashmap-060	STOPPED	1	getOldValue -> getOldValue -> put -> remove -> remove -> getOldValue
+hashmap-061	PASSED	13	put -> put -> getOldValue -> getOldValue -> remove
+hashmap-062	PASSED	13	put -> getOldValue -> put -> getOldValue -> remove
+hashmap-063	STOPPED	1	remove -> getOldValue
+hashmap-064	STOPPED	5	put -> put -> getOldValue -> getOldValue -> remove
+hashmap-065	STOPPED	1	remove -> put -> put -> getOldValue -> getOldValue -> put
+hashmap-066	STOPPED	1	getOldValue -> remove -> put -> getOldValue
+hashmap-067	STOPPED	1	getOldValue -> getOldValue -> remove -> getOldValue
+hashmap-068	STOPPED	1	getOldValue -> getOldValue -> getOldValue
+hashmap-069	STOPPED	5	put -> put -> getOldValue -> remove
+hashmap-070	STOPPED	1	remove -> getOldValue -> put -> getOldValue -> remove
+hashmap-071	STOPPED	5	put -> put -> getOldValue -> remove
+hashmap-072	STOPPED	1	remove -> remove -> put -> put -> remove -> put -> remove
+hashmap-073	STOPPED	1	remove -> put -> remove
+hashmap-074	PASSED	7	put -> put -> getOldValue
+hashmap-075	STOPPED	1	getOldValue -> put -> getOldValue -> remove -> remove
+hashmap-076	STOPPED	3	put -> remove -> getOldValue -> put -> getOldValue -> remove
+hashmap-077	STOPPED	1	remove -> put -> put -> put -> getOldValue -> put -> getOldValue
+hashmap-078	STOPPED	1	getOldValue -> getOldValue -> remove -> put -> put
+hashmap-079	STOPPED	1	getOldValue -> remove -> remove -> remove -> remove
+hashmap-080	STOPPED	3	put -> getOldValue -> put -> remove -> put -> getOldValue -> remove
+hashmap-081	STOPPED	1	getOldValue -> getOldValue -> getOldValue -> put -> remove -> put -> remove
+hashmap-082	STOPPED	8	put -> put -> getOldValue -> remove
+hashmap-083	STOPPED	14	put -> put -> getOldValue -> getOldValue -> remove -> remove
+hashmap-084	PASSED	15	put -> put -> put -> getOldValue -> getOldValue -> remove
+hashmap-085	STOPPED	1	getOldValue -> remove -> getOldValue
+hashmap-086	STOPPED	5	put -> put -> getOldValue -> remove
+hashmap-087	STOPPED	1	getOldValue -> remove -> getOldValue -> remove -> put -> remove -> getOldValue
+hashmap-088	STOPPED	3	put -> getOldValue -> remove
+hashmap-089	STOPPED	1	getOldValue -> put -> put -> remove
+hashmap-090	STOPPED	1	getOldValue -> put -> remove -> remove -> put
+hashmap-091	STOPPED	1	remove -> getOldValue -> put
+hashmap-092	STOPPED	5	put -> put -> remove
+hashmap-093	PASSED	7	put -> put -> getOldValue
+hashmap-094	STOPPED	1	remove -> remove
+hashmap-095	STOPPED	3	put -> getOldValue -> remove
+hashmap-096	STOPPED	3	put -> getOldValue -> getOldValue -> remove
+hashmap-097	STOPPED	1	remove -> getOldValue -> getOldValue
+hashmap-098	STOPPED	1	getOldValue -> put -> remove -> getOldValue -> remove -> put
+hashmap-099	STOPPED	1	remove -> put -> put -> remove -> getOldValue
+hashmap-100	PASSED	12	put -> put -> put -> put -> put -> put
+hashmap-101	STOPPED	7	put -> put -> put -> getOldValue -> remove
+hashmap-102	STOPPED	1	getOldValue -> getOldValue -> remove -> put -> getOldValue
+hashmap-103	PASSED	5	put -> remove
+hashmap-104	STOPPED	3	put -> remove -> getOldValue
+hashmap-105	STOPPED	1	remove -> put -> put
+hashmap-106	STOPPED	1	getOldValue -> remove -> put -> put -> remove
+hashmap-107	STOPPED	6	put -> remove -> remove
+hashmap-108	STOPPED	1	getOldValue -> getOldValue -> put -> getOldValue -> getOldValue -> remove
+hashmap-109	PASSED	5	put -> getOldValue
+hashmap-110	STOPPED	5	put -> put -> getOldValue -> getOldValue -> remove
+hashmap-111	STOPPED	5	put -> put -> remove
+hashmap-112	STOPPED	1	remove -> getOldValue -> put
+hashmap-113	STOPPED	3	put -> remove -> remove -> remove -> remove -> getOldValue -> getOldValue
+hashmap-114	STOPPED	3	put -> getOldValue -> remove
+hashmap-115	STOPPED	7	put -> put -> put -> getOldValue -> remove
+hashmap-116	STOPPED	8	put -> put -> getOldValue -> remove -> remove
+hashmap-117	STOPPED	1	getOldValue -> put -> put
+hashmap-118	STOPPED	7	put -> put -> put -> getOldValue -> remove
+hashmap-119	STOPPED	1	remove -> getOldValue -> remove -> remove -> put -> put -> remove
+hashmap-120	PASSED	10	put -> put -> getOldValue -> remove
+hashmap-121	STOPPED	1	remove -> put -> put -> put -> getOldValue -> remove -> remove
+hashmap-122	STOPPED	5	put -> put -> getOldValue
+hashmap-123	STOPPED	1	getOldValue -> remove -> getOldValue -> put -> put
+hashmap-124	STOPPED	3	put -> remove -> put -> put -> getOldValue -> remove -> remove
+hashmap-125	STOPPED	5	put -> put -> remove -> getOldValue -> remove
+hashmap-126	PASSED	14	put -> put -> put -> getOldValue -> put -> remove
+hashmap-127	STOPPED	1	remove -> put -> remove -> remove
+hashmap-128	PASSED	9	put -> put -> put -> getOldValue
+hashmap-129	STOPPED	10	put -> put -> put -> getOldValue -> remove
+hashmap-130	STOPPED	3	put -> remove -> put -> put -> getOldValue -> remove
+hashmap-131	STOPPED	5	put -> put -> getOldValue -> getOldValue -> put -> remove
+hashmap-132	STOPPED	1	getOldValue -> remove -> remove
+hashmap-133	STOPPED	1	getOldValue -> put -> remove -> remove -> remove -> remove
+hashmap-134	PASSED	13	put -> put -> remove -> getOldValue -> getOldValue
+hashmap-135	STOPPED	8	put -> getOldValue -> put -> getOldValue
+hashmap-136	STOPPED	7	put -> put -> put -> getOldValue -> remove
+hashmap-137	PASSED	15	put -> remove -> put -> put -> getOldValue -> remove
+hashmap-138	STOPPED	1	remove -> getOldValue -> put -> put
+hashmap-139	PASSED	11	put -> put -> put -> put -> remove
+hashmap-140	STOPPED	6	put -> getOldValue -> getOldValue -> remove
+hashmap-141	STOPPED	5	put -> put -> remove
+hashmap-142	PASSED	12	put -> put -> put -> getOldValue -> remove
+hashmap-143	PASSED	12	put -> put -> put -> getOldValue -> remove
+hashmap-144	STOPPED	10	put -> put -> put -> getOldValue -> remove
+hashmap-145	STOPPED	5	put -> put -> getOldValue
+hashmap-146	STOPPED	5	put -> put -> remove -> getOldValue -> remove
+hashmap-147	STOPPED	1	getOldValue -> remove
+hashmap-148	STOPPED	8	put -> put -> getOldValue -> remove
+hashmap-149	STOPPED	1	remove -> getOldValue -> getOldValue -> put -> getOldValue -> put
+hashmap-150	STOPPED	1	remove -> getOldValue -> remove -> getOldValue -> getOldValue -> remove -> getOldValue
+hashmap-151	STOPPED	3	put -> remove -> put -> getOldValue
+hashmap-152	STOPPED	1	getOldValue -> remove
+hashmap-153	STOPPED	5	put -> put -> getOldValue
+hashmap-154	STOPPED	1	remove -> getOldValue -> getOldValue -> remove -> getOldValue -> remove -> remove
+hashmap-155	STOPPED	1	getOldValue -> put -> put -> remove
+hashmap-156	STOPPED	5	put -> put -> remove
+hashmap-157	STOPPED	3	put -> remove -> getOldValue
+hashmap-158	STOPPED	1	getOldValue -> put -> put -> remove
+hashmap-159	STOPPED	3	put -> getOldValue -> put -> remove
+hashmap-160	STOPPED	10	put -> put -> put -> getOldValue -> remove
+hashmap-161	PASSED	13	put -> put -> getOldValue -> getOldValue -> remove
+hashmap-162	STOPPED	6	put -> remove -> getOldValue -> getOldValue -> put
+hashmap-163	PASSED	12	put -> put -> put -> getOldValue -> remove
+hashmap-164	STOPPED	5	put -> put -> remove -> getOldValue -> getOldValue
+hashmap-165	STOPPED	3	put -> remove -> getOldValue
+hashmap-166	STOPPED	6	put -> remove -> getOldValue -> getOldValue
+hashmap-167	STOPPED	1	getOldValue -> put
+hashmap-168	PASSED	12	put -> put -> put -> getOldValue -> remove
+hashmap-169	STOPPED	3	put -> getOldValue
+hashmap-170	STOPPED	1	remove -> remove -> put -> getOldValue -> put
+hashmap-171	STOPPED	8	put -> put -> remove -> getOldValue -> put -> remove
+hashmap-172	STOPPED	3	put -> remove -> put -> getOldValue
+hashmap-173	STOPPED	8	put -> put -> getOldValue -> remove -> remove
+hashmap-174	STOPPED	6	put -> getOldValue -> remove
+hashmap-175	STOPPED	1	getOldValue -> remove -> put
+hashmap-176	STOPPED	5	put -> put -> getOldValue -> getOldValue -> getOldValue
+hashmap-177	STOPPED	5	put -> put -> remove -> remove
+hashmap-178	STOPPED	7	put -> put -> put -> getOldValue -> remove
+hashmap-179	STOPPED	1	remove -> put -> getOldValue -> getOldValue -> put -> remove -> getOldValue
+hashmap-180	STOPPED	7	put -> put -> put -> getOldValue -> remove
+hashmap-181	STOPPED	5	put -> put -> getOldValue -> put -> remove
+hashmap-182	STOPPED	5	put -> put -> getOldValue -> remove -> getOldValue -> remove
+hashmap-183	STOPPED	1	getOldValue -> put -> getOldValue -> put -> remove -> remove
+hashmap-184	PASSED	12	put -> put -> put -> getOldValue -> remove
+hashmap-185	STOPPED	1	getOldValue -> remove -> getOldValue
+hashmap-186	STOPPED	6	put -> getOldValue -> getOldValue
+hashmap-187	STOPPED	3	put -> getOldValue -> put
+hashmap-188	STOPPED	1	getOldValue -> put -> getOldValue -> put -> remove
+hashmap-189	STOPPED	3	put -> remove -> getOldValue -> remove -> put -> put
+hashmap-190	STOPPED	1	getOldValue -> remove -> put -> put
+hashmap-191	STOPPED	5	put -> put -> getOldValue -> getOldValue -> remove -> remove
+hashmap-192	STOPPED	3	put -> remove -> put -> getOldValue -> remove
+hashmap-193	STOPPED	1	getOldValue -> getOldValue -> put -> remove
+hashmap-194	STOPPED	1	remove -> getOldValue -> getOldValue
+hashmap-195	STOPPED	1	getOldValue -> getOldValue
+hashmap-196	STOPPED	6	put -> remove -> getOldValue -> put
+hashmap-197	STOPPED	7	put -> put -> put -> getOldValue -> remove
+hashmap-198	STOPPED	3	put -> getOldValue -> remove -> remove
+hashmap-199	STOPPED	5	put -> put -> getOldValue
+hashmap-200	PASSED	9	put -> put -> put -> remove
+hashmap-201	STOPPED	3	put -> getOldValue -> put -> put -> remove -> remove
+hashmap-202	STOPPED	1	getOldValue -> getOldValue -> remove
+hashmap-203	STOPPED	1	remove -> put -> remove -> getOldValue -> remove
+hashmap-204	STOPPED	1	getOldValue -> remove -> put
+hashmap-205	STOPPED	6	put -> remove -> remove
+hashmap-206	STOPPED	3	put -> getOldValue -> remove -> put
+hashmap-207	PASSED	12	put -> put -> put -> getOldValue -> remove
+hashmap-208	STOPPED	12	put -> put -> put -> getOldValue -> put -> remove
+hashmap-209	PASSED	12	put -> put -> put -> getOldValue -> remove
+hashmap-210	STOPPED	5	put -> put -> getOldValue -> getOldValue
+hashmap-211	STOPPED	3	put -> remove -> put -> put -> getOldValue -> remove
+hashmap-212	STOPPED	5	put -> put -> getOldValue -> getOldValue -> getOldValue -> remove
+hashmap-213	STOPPED	7	put -> put -> put -> getOldValue -> remove
+hashmap-214	PASSED	12	put -> put -> getOldValue -> remove -> put
+hashmap-215	STOPPED	1	getOldValue -> getOldValue -> remove -> put -> put
+hashmap-216	STOPPED	3	put -> remove
+hashmap-217	STOPPED	5	put -> put -> getOldValue -> remove
+hashmap-218	STOPPED	10	put -> put -> put -> getOldValue -> remove -> getOldValue
+hashmap-219	STOPPED	1	getOldValue -> put -> remove -> remove -> remove -> remove -> getOldValue
+hashmap-220	PASSED	9	put -> put -> put -> remove
+hashmap-221	STOPPED	5	put -> put -> getOldValue
+hashmap-222	PASSED	4	put -> put
+hashmap-223	STOPPED	1	remove -> remove -> put -> put
+hashmap-224	STOPPED	15	put -> put -> getOldValue -> put -> put -> remove -> getOldValue
+hashmap-225	STOPPED	1	remove -> put -> getOldValue -> getOldValue -> put
+hashmap-226	STOPPED	1	getOldValue -> getOldValue -> put -> put -> getOldValue -> remove
+hashmap-227	PASSED	12	put -> put -> put -> getOldValue -> remove
+hashmap-228	STOPPED	1	getOldValue -> put -> getOldValue -> remove -> remove -> getOldValue
+hashmap-229	STOPPED	10	put -> put -> put -> getOldValue -> remove
+hashmap-230	STOPPED	1	remove -> put -> getOldValue -> getOldValue -> put
+hashmap-231	STOPPED	8	put -> remove -> put -> getOldValue -> remove
+hashmap-232	STOPPED	3	put -> getOldValue -> remove -> getOldValue -> put
+hashmap-233	STOPPED	1	remove -> getOldValue -> put -> put -> put
+hashmap-234	STOPPED	1	getOldValue -> remove -> getOldValue -> put -> remove -> put -> remove
+hashmap-235	STOPPED	1	remove -> getOldValue -> put
+hashmap-236	STOPPED	8	put -> put -> getOldValue -> remove -> remove
+hashmap-237	STOPPED	1	remove -> getOldValue -> put -> put -> getOldValue
+hashmap-238	STOPPED	6	put -> getOldValue -> remove
+hashmap-239	STOPPED	3	put -> remove -> getOldValue -> getOldValue
+hashmap-240	STOPPED	5	put -> put -> remove -> getOldValue -> put -> put
+hashmap-241	STOPPED	1	remove -> remove -> getOldValue -> getOldValue
+hashmap-242	STOPPED	1	remove -> put -> getOldValue -> put
+hashmap-243	STOPPED	10	put -> put -> put -> getOldValue -> remove
+hashmap-244	PASSED	9	put -> put -> put -> remove
+hashmap-245	STOPPED	5	put -> put -> getOldValue -> remove
+hashmap-246	STOPPED	1	getOldValue -> put -> put -> remove
+hashmap-247	STOPPED	5	put -> put -> remove -> getOldValue -> remove -> remove -> remove
+hashmap-248	STOPPED	5	put -> put -> getOldValue -> remove -> remove
+hashmap-249	STOPPED	1	getOldValue -> remove
+hashmap-250	PASSED	10	put -> put -> remove -> getOldValue
+hashmap-251	STOPPED	1	remove -> put
+hashmap-252	STOPPED	3	put -> getOldValue -> remove
+hashmap-253	STOPPED	3	put -> remove
+hashmap-254	STOPPED	5	put -> put -> getOldValue
+hashmap-255	STOPPED	3	put -> getOldValue -> put -> getOldValue
+hashmap-256	STOPPED	1	getOldValue -> remove -> put
+hashmap-257	STOPPED	5	put -> put -> getOldValue -> getOldValue -> getOldValue -> getOldValue -> remove
+hashmap-258	PASSED	8	put -> getOldValue -> getOldValue
+hashmap-259	STOPPED	1	remove -> put -> put -> getOldValue
+hashmap-260	STOPPED	1	remove -> put -> getOldValue -> remove -> remove

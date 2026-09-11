@@ -1,0 +1,10 @@
+test MathlibGenerated60 {
+    sequence: gcd -> gcd;
+
+    inputs {
+        gcd[0].a = 2;
+        gcd[0].b = 5;
+        gcd[1].a = 4;
+        gcd[1].b = 48;
+    }
+}

@@ -1,0 +1,14 @@
+test MathlibGenerated239 {
+    sequence: factorial -> gcd -> gcd -> gcd -> factorial;
+
+    inputs {
+        factorial[0].n = 4;
+        gcd[1].a = 4;
+        gcd[1].b = 48;
+        gcd[2].a = 1;
+        gcd[2].b = 18;
+        gcd[3].a = 3;
+        gcd[3].b = 48;
+        factorial[4].n = 7;
+    }
+}

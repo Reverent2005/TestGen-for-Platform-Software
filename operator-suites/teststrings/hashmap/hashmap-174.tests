@@ -1,0 +1,10 @@
+test HashmapGenerated174 {
+    sequence: put -> getOldValue -> remove;
+
+    inputs {
+        put[0].key = "alpha";
+        put[0].value = 10;
+        getOldValue[1].key = "alpha";
+        remove[2].key = "beta";
+    }
+}

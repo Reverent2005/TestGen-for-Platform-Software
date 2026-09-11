@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -19,15 +20,37 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Drives the three library dry runs described in the implementation spec through
- * the existing pipeline: spec text -> AST -> propagation scan -> ATC IR ->
- * Symbolic IR -> SPF file + JUnit file.
+ * Drives every library dry run through the existing pipeline: spec text -&gt; AST
+ * -&gt; propagation scan -&gt; ATC IR -&gt; Symbolic IR -&gt; SPF file + JUnit file.
  *
  * <pre>
- *   1. Stack&lt;String&gt;             push -&gt; push -&gt; pop -&gt; peek
- *   2. HashMap&lt;String,Integer&gt;   put -&gt; put -&gt; getOldValue -&gt; remove
- *   3. TaskQueue                  submit -&gt; getResult -&gt; cancelTask
+ *    1. Stack&lt;String&gt;             push -&gt; push -&gt; pop -&gt; peek
+ *    2. HashMap&lt;String,Integer&gt;   put -&gt; put -&gt; getOldValue -&gt; remove
+ *    3. TaskQueue                  submit -&gt; getResult -&gt; cancelTask
+ *    4. TicketService              numSeatsAvailable -&gt; findAndHoldSeats
+ *                                    -&gt; reserveSeats -&gt; numSeatsAvailable
+ *    5. IntArray                   set -&gt; set -&gt; get -&gt; sum -&gt; indexOf
+ *    6. MathLib                    abs -&gt; gcd -&gt; power -&gt; factorial
+ *    7. Queue&lt;String&gt;             enqueue -&gt; enqueue -&gt; dequeue -&gt; front
+ *                                    -&gt; isEmpty
+ *    8. SinglyLinkedList           addFirst -&gt; addLast -&gt; removeFirst -&gt; indexOf
+ *    9. StringSet                  add -&gt; add -&gt; contains -&gt; remove
+ *   10. BinarySearchTree           insert -&gt; insert -&gt; insert -&gt; contains
+ *                                    -&gt; min -&gt; delete
+ *   11. MinHeap&lt;Integer&gt;         insert -&gt; insert -&gt; insert -&gt; peekMin
+ *                                    -&gt; extractMin
+ *   12. Graph                      addVertex -&gt; addVertex -&gt; addEdge -&gt; degree
+ *                                    -&gt; hasEdge
+ *   13. LruCache (custom)          put -&gt; put -&gt; put -&gt; get -&gt; restore
+ *   14. OrderService               restock -&gt; placeOrder -&gt; ship -&gt; stockLevel
  * </pre>
+ *
+ * Example 14 is the only one whose library is several classes calling each other;
+ * every other is a single {@code Helper}.
+ *
+ * Adding one means adding an {@link Example} constant here and to {@link #ALL};
+ * every script and test that walks the examples reads that list rather than a
+ * copy of it.
  *
  * Run it from the {@code pl-platform-testing} directory:
  * <pre>
@@ -37,23 +60,50 @@ import java.util.Map;
  */
 public class LibraryDryRunExamples {
 
-    /** One example: its spec file, its library source and its test string. */
+    /** One example: its spec file, its library sources and its test string. */
     public static class Example {
         public final String key;
         public final String title;
         public final String specPath;
         public final String testStringPath;
-        public final String librarySourcePath;
+        /**
+         * The library under test, as one or more {@code .java} files copied in
+         * beside the generated code.
+         *
+         * <p>Most examples are a single {@code Helper.java}.  An example whose
+         * library is several classes that call each other lists them all, with the
+         * façade the generated ATC calls — {@code Helper.java} — first; the files
+         * keep their own names in the output directory, so they compile as the
+         * multi-class library they are.
+         */
+        public final List<String> librarySourcePaths;
         public final String outputDir;
 
         Example(String key, String title, String specPath, String testStringPath,
                 String librarySourcePath, String outputDir) {
+            this(key, title, specPath, testStringPath,
+                 Collections.singletonList(librarySourcePath), outputDir);
+        }
+
+        Example(String key, String title, String specPath, String testStringPath,
+                List<String> librarySourcePaths, String outputDir) {
             this.key = key;
             this.title = title;
             this.specPath = specPath;
             this.testStringPath = testStringPath;
-            this.librarySourcePath = librarySourcePath;
+            this.librarySourcePaths =
+                    Collections.unmodifiableList(new ArrayList<String>(librarySourcePaths));
             this.outputDir = outputDir;
+        }
+
+        /** The façade the generated code calls: the first library source. */
+        public String librarySourcePath() {
+            return librarySourcePaths.get(0);
+        }
+
+        /** True when the library under test is more than one class. */
+        public boolean isMultiClass() {
+            return librarySourcePaths.size() > 1;
         }
     }
 
@@ -75,8 +125,75 @@ public class LibraryDryRunExamples {
             ROOT + "/specs/TaskQueue.spec", ROOT + "/specs/TaskQueue.tests",
             ROOT + "/libraries/taskqueue/Helper.java", "outputs/example3-taskqueue");
 
+    public static final Example TICKETSERVICE = new Example(
+            "ticketservice", "EXAMPLE 4 — TicketService (propagation beside a repeated read-only query)",
+            ROOT + "/specs/TicketService.spec", ROOT + "/specs/TicketService.tests",
+            ROOT + "/libraries/ticketservice/Helper.java", "outputs/example4-ticketservice");
+
+    public static final Example ARRAYLIB = new Example(
+            "arraylib", "EXAMPLE 5 — IntArray (primitive int captures over indexed state)",
+            ROOT + "/specs/IntArray.spec", ROOT + "/specs/IntArray.tests",
+            ROOT + "/libraries/arraylib/Helper.java", "outputs/example5-arraylib");
+
+    public static final Example MATHLIB = new Example(
+            "mathlib", "EXAMPLE 6 — MathLib (pure functions specified by a property of the answer)",
+            ROOT + "/specs/MathLib.spec", ROOT + "/specs/MathLib.tests",
+            ROOT + "/libraries/mathlib/Helper.java", "outputs/example6-mathlib");
+
+    public static final Example QUEUE = new Example(
+            "queue", "EXAMPLE 7 — Queue<String> (FIFO order pinned down, and a boolean capture)",
+            ROOT + "/specs/Queue.spec", ROOT + "/specs/Queue.tests",
+            ROOT + "/libraries/queue/Helper.java", "outputs/example7-queue");
+
+    public static final Example LINKEDLIST = new Example(
+            "linkedlist", "EXAMPLE 8 — SinglyLinkedList<Integer> (both ends of one structure)",
+            ROOT + "/specs/LinkedList.spec", ROOT + "/specs/LinkedList.tests",
+            ROOT + "/libraries/linkedlist/Helper.java", "outputs/example8-linkedlist");
+
+    public static final Example SET = new Example(
+            "set", "EXAMPLE 9 — StringSet (an idempotent call, and a boolean SERVER_OUTPUT)",
+            ROOT + "/specs/StringSet.spec", ROOT + "/specs/StringSet.tests",
+            ROOT + "/libraries/set/Helper.java", "outputs/example9-set");
+
+    public static final Example BST = new Example(
+            "bst", "EXAMPLE 10 — BinarySearchTree (a precondition bought to strengthen a postcondition)",
+            ROOT + "/specs/BinarySearchTree.spec", ROOT + "/specs/BinarySearchTree.tests",
+            ROOT + "/libraries/bst/Helper.java", "outputs/example10-bst");
+
+    public static final Example HEAP = new Example(
+            "heap", "EXAMPLE 11 — MinHeap<Integer> (a value named before the call and after it)",
+            ROOT + "/specs/MinHeap.spec", ROOT + "/specs/MinHeap.tests",
+            ROOT + "/libraries/heap/Helper.java", "outputs/example11-heap");
+
+    public static final Example GRAPH = new Example(
+            "graph", "EXAMPLE 12 — Graph (two parameters against one piece of state)",
+            ROOT + "/specs/Graph.spec", ROOT + "/specs/Graph.tests",
+            ROOT + "/libraries/graph/Helper.java", "outputs/example12-graph");
+
+    public static final Example LRUCACHE = new Example(
+            "lrucache", "EXAMPLE 13 — LruCache, the custom library (a nullable SERVER_OUTPUT, propagated)",
+            ROOT + "/specs/LruCache.spec", ROOT + "/specs/LruCache.tests",
+            ROOT + "/libraries/lrucache/Helper.java", "outputs/example13-lrucache");
+
+    /**
+     * The only example whose library is more than one class: a façade over a
+     * catalogue, a ledger and an audit trail.  Every source is listed, façade
+     * first, and all of them are copied in beside the generated code.
+     */
+    public static final Example ORDERSERVICE = new Example(
+            "orderservice", "EXAMPLE 14 — OrderService (four classes interacting behind one façade)",
+            ROOT + "/specs/OrderService.spec", ROOT + "/specs/OrderService.tests",
+            Arrays.asList(ROOT + "/libraries/orderservice/Helper.java",
+                          ROOT + "/libraries/orderservice/Catalogue.java",
+                          ROOT + "/libraries/orderservice/Ledger.java",
+                          ROOT + "/libraries/orderservice/Audit.java"),
+            "outputs/example14-orderservice");
+
     public static final List<Example> ALL =
-            Collections.unmodifiableList(Arrays.asList(STACK, HASHMAP, TASKQUEUE));
+            Collections.unmodifiableList(Arrays.asList(
+                    STACK, HASHMAP, TASKQUEUE, TICKETSERVICE,
+                    ARRAYLIB, MATHLIB, QUEUE, LINKEDLIST, SET, BST, HEAP, GRAPH, LRUCACHE,
+                    ORDERSERVICE));
 
     /** What one run produced, kept so tests can assert on it without re-running. */
     public static class Result {
@@ -112,7 +229,8 @@ public class LibraryDryRunExamples {
             for (String arg : args) {
                 Example match = byKey(arg);
                 if (match == null) {
-                    System.err.println("Unknown example: " + arg + " (expected one of stack, hashmap, taskqueue)");
+                    System.err.println("Unknown example: " + arg
+                            + " (expected one of " + keys() + ")");
                     return;
                 }
                 selected.add(match);
@@ -127,6 +245,44 @@ public class LibraryDryRunExamples {
         }
     }
 
+    /**
+     * The same example, but generated from a different copy of the library into a
+     * different directory — how the mutation runner replays an example against a
+     * seeded fault without disturbing the checked-in outputs.
+     */
+    public static Example variantOf(Example base, String librarySourcePath, String outputDir) {
+        return variantOf(base, Collections.singletonList(librarySourcePath), outputDir);
+    }
+
+    /** The multi-class form: every library source replaced, in the same order. */
+    public static Example variantOf(Example base, List<String> librarySourcePaths,
+                                    String outputDir) {
+        return variantOf(base, librarySourcePaths, base.testStringPath, outputDir);
+    }
+
+    /**
+     * The same spec and library, run against a DIFFERENT test string.
+     *
+     * <p>This is what lets one library be exercised by a whole family of sequences
+     * rather than by the single one checked in beside its spec: the spec is fixed,
+     * the library is fixed, and the sequence is the variable.
+     */
+    public static Example variantOf(Example base, List<String> librarySourcePaths,
+                                    String testStringPath, String outputDir) {
+        return new Example(base.key, base.title, base.specPath, testStringPath,
+                           librarySourcePaths, outputDir);
+    }
+
+    /** The keys of every registered example, in order, for usage messages. */
+    public static String keys() {
+        StringBuilder sb = new StringBuilder();
+        for (Example example : ALL) {
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(example.key);
+        }
+        return sb.toString();
+    }
+
     public static Example byKey(String key) {
         for (Example example : ALL) {
             if (example.key.equalsIgnoreCase(key)) return example;
@@ -134,7 +290,7 @@ public class LibraryDryRunExamples {
         return null;
     }
 
-    /** Runs all three examples and returns their results keyed by example key. */
+    /** Runs every registered example and returns the results keyed by example key. */
     public static Map<String, Result> runAll() throws IOException {
         Map<String, Result> results = new LinkedHashMap<String, Result>();
         for (Example example : ALL) {
@@ -151,7 +307,7 @@ public class LibraryDryRunExamples {
             System.out.println("================================================================");
             System.out.println("spec        : " + example.specPath);
             System.out.println("test string : " + example.testStringPath);
-            System.out.println("library     : " + example.librarySourcePath);
+            System.out.println("library     : " + String.join(", ", example.librarySourcePaths));
             System.out.println();
         }
 
@@ -180,7 +336,7 @@ public class LibraryDryRunExamples {
 
         SpfWrapper wrapper = new SpfWrapper();
         SpfWrapper.LibraryRunResult files = wrapper.runLibraryExample(
-                atcIr, example.outputDir, example.librarySourcePath, singularCaseCode);
+                atcIr, example.outputDir, example.librarySourcePaths, singularCaseCode);
 
         if (verbose) {
             System.out.println("--- STEP A: propagation scan trace ---");

@@ -1,0 +1,14 @@
+test HashmapGenerated243 {
+    sequence: put -> put -> put -> getOldValue -> remove;
+
+    inputs {
+        put[0].key = "alpha";
+        put[0].value = 20;
+        put[1].key = "session";
+        put[1].value = 10;
+        put[2].key = "gamma";
+        put[2].value = 0;
+        getOldValue[3].key = "alpha";
+        remove[4].key = "beta";
+    }
+}

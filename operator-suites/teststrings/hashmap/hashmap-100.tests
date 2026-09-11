@@ -1,0 +1,18 @@
+test HashmapGenerated100 {
+    sequence: put -> put -> put -> put -> put -> put;
+
+    inputs {
+        put[0].key = "alpha";
+        put[0].value = 1;
+        put[1].key = "beta";
+        put[1].value = 7;
+        put[2].key = "session";
+        put[2].value = 10;
+        put[3].key = "beta";
+        put[3].value = 20;
+        put[4].key = "session";
+        put[4].value = 1;
+        put[5].key = "alpha";
+        put[5].value = 0;
+    }
+}

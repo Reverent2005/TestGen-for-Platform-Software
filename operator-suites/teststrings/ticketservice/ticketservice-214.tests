@@ -1,0 +1,8 @@
+test TicketserviceGenerated214 {
+    sequence: numSeatsAvailable -> numSeatsAvailable -> numSeatsAvailable -> reserveSeats -> numSeatsAvailable;
+
+    inputs {
+        reserveSeats[3].seatHoldId = 0;
+        reserveSeats[3].customerEmail = "beta";
+    }
+}

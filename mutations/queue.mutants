@@ -1,0 +1,81 @@
+/*
+ * MUTATION SET — EXAMPLE 7, Queue<String>
+ * Library under test: libraries/queue/Helper.java
+ * Test string:        specs/Queue.tests   (enqueue -> enqueue -> dequeue -> front -> isEmpty)
+ *
+ * QUEUE_DEQUEUE_FROM_BACK is the one to read beside mutations/stack.mutants.
+ * Its mirror image there, STACK_POP_FROM_BOTTOM, SURVIVES: Stack.spec binds
+ * \result to a name and never says which element that name holds.  Queue.spec
+ * says `dequeuedElem == \old(head)`, and the same fault dies.  The difference is
+ * in the specification, not in the runner or the test string.
+ */
+
+mutant QUEUE_DEQUEUE_FROM_BACK {
+    description: dequeue serves the newest element instead of the oldest
+    operator:    argument-replacement
+    in:          dequeue
+    find:        String dequeuedElem = Q.remove(0);
+    replace:     String dequeuedElem = Q.remove(Q.size() - 1);
+}
+
+mutant QUEUE_ENQUEUE_SIZE_NOT_UPDATED {
+    description: enqueue stores the element but leaves size at its old value
+    operator:    statement-deletion
+    in:          enqueue
+    find:        size = Q.size();
+    replace:
+}
+
+mutant QUEUE_ENQUEUE_AT_FRONT {
+    description: enqueue inserts at the front, turning the queue into a stack
+    operator:    argument-replacement
+    in:          enqueue
+    find:        Q.add(elem);
+    replace:     Q.add(0, elem);
+    expect:      survives
+    note:        head is re-derived from Q[0] after every operation, so a queue filled backwards is still self-consistent: dequeue returns what head named, front returns what head names now, and the sizes are unchanged. Queue.spec constrains the relationship between head and the calls, never the end that enqueue writes to — the same gap STACK_PUSH_AT_BOTTOM records for Example 1.
+}
+
+mutant QUEUE_HEAD_NOT_REFRESHED {
+    description: dequeue removes the element but leaves head pointing at it
+    operator:    statement-deletion
+    in:          dequeue
+    find:        head = Q.isEmpty() ? null : Q.get(0);
+    replace:
+}
+
+mutant QUEUE_FRONT_MUTATES_STATE {
+    description: front is no longer read-only — it bumps size on the way out
+    operator:    side-effect-insertion
+    in:          front
+    find:        return Q.get(0);
+    replace:     size = size + 1; return Q.get(0);
+}
+
+mutant QUEUE_ISEMPTY_ALWAYS_TRUE {
+    description: isEmpty reports an empty queue whatever it holds
+    operator:    return-value-replacement
+    in:          isEmpty
+    find:        return Q.isEmpty();
+    replace:     return true;
+}
+
+/*
+ * ── operator coverage ────────────────────────────────────────────────────────
+ */
+
+mutant QUEUE_ISEMPTY_NEGATED {
+    description: isEmpty reports the opposite of whether the queue is empty
+    operator:    unary-operator-insertion
+    in:          isEmpty
+    find:        return Q.isEmpty();
+    replace:     return !Q.isEmpty();
+}
+
+mutant QUEUE_ENQUEUE_HEAD_FROM_BACK {
+    description: enqueue points head at the newest element rather than the oldest
+    operator:    argument-replacement
+    in:          enqueue
+    find:        head = Q.get(0);
+    replace:     head = Q.get(Q.size() - 1);
+}

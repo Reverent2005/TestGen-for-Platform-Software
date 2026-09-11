@@ -1,0 +1,9 @@
+test TaskqueueGenerated90 {
+    sequence: getResult -> getResult -> submit;
+
+    inputs {
+        getResult[0].taskId = 2;
+        getResult[1].taskId = 3;
+        submit[2].payload = "beta";
+    }
+}

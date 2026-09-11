@@ -1,0 +1,11 @@
+test MathlibGenerated38 {
+    sequence: gcd -> abs -> gcd;
+
+    inputs {
+        gcd[0].a = 1;
+        gcd[0].b = -17;
+        abs[1].x = 4;
+        gcd[2].a = 18;
+        gcd[2].b = -17;
+    }
+}

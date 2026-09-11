@@ -1,0 +1,27 @@
+/*
+ * EXAMPLE 14 — OrderService, singular case.
+ *
+ * Ten widgets are stocked, four are ordered, the order is shipped, and the shelf
+ * is counted again.  The quantities are chosen so that every number in the run is
+ * distinct: 10 in, 4 out, 6 left, one order, two audit events.  A fault that
+ * confused any of those counters for another shows up as a different number
+ * rather than as a coincidence.
+ *
+ * orderId is NOT bound here.  It is the ledger's to choose — Helper does not even
+ * see it until Ledger.open returns — so it is captured from placeOrder and
+ * threaded into ship by the propagation scan.  That the value crosses a class
+ * boundary on the way changes nothing about how it is threaded, which is the
+ * point: propagation is a property of the specification, not of the library's
+ * internal structure.
+ */
+test OrderServiceDryRun {
+    sequence: restock -> placeOrder -> ship -> stockLevel;
+
+    inputs {
+        restock[0].sku = "widget";
+        restock[0].quantity = 10;
+        placeOrder[1].sku = "widget";
+        placeOrder[1].quantity = 4;
+        stockLevel[3].sku = "widget";
+    }
+}

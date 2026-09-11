@@ -1,0 +1,8 @@
+test ArraylibGenerated103 {
+    sequence: get -> get;
+
+    inputs {
+        get[0].index = 2;
+        get[1].index = 1;
+    }
+}

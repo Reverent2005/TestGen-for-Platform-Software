@@ -1,0 +1,6 @@
+test QueueGenerated32 {
+    sequence: isEmpty -> dequeue;
+
+    inputs {
+    }
+}

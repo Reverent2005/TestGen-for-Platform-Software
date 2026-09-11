@@ -1,0 +1,82 @@
+/*
+ * MUTATION SET — EXAMPLE 12, Graph
+ * Library under test: libraries/graph/Helper.java
+ * Test string:        specs/Graph.tests   (addVertex -> addVertex -> addEdge -> degree -> hasEdge)
+ *
+ * The point of asserting both directions of an undirected edge is
+ * GRAPH_ADDEDGE_ONE_DIRECTION: a library that records A—B but not B—A answers
+ * degree("A") and hasEdge("A","B") correctly and is wrong all the same.  Only the
+ * second conjunct of addEdge's postcondition sees it.
+ */
+
+mutant GRAPH_ADDEDGE_ONE_DIRECTION {
+    description: addEdge records the edge from one side only
+    operator:    statement-deletion
+    in:          addEdge
+    find:        Adj.get(to).add(from);
+    replace:
+}
+
+mutant GRAPH_ADDEDGE_NOT_COUNTED {
+    description: addEdge joins the vertices but never counts the edge
+    operator:    statement-deletion
+    in:          addEdge
+    find:        edgeCount = edgeCount + 1;
+    replace:
+}
+
+mutant GRAPH_ADDVERTEX_DROPS_VERTEX {
+    description: addVertex allocates an adjacency list but never records the vertex
+    operator:    statement-deletion
+    in:          addVertex
+    find:        V.add(name);
+    replace:
+}
+
+mutant GRAPH_DEGREE_ALWAYS_ZERO {
+    description: degree answers 0 for every vertex
+    operator:    return-value-replacement
+    in:          degree
+    find:        return Adj.get(name).size();
+    replace:     return 0;
+}
+
+mutant GRAPH_DEGREE_MUTATES_STATE {
+    description: degree is no longer read-only — it counts itself as an edge
+    operator:    side-effect-insertion
+    in:          degree
+    find:        return Adj.get(name).size();
+    replace:     edgeCount = edgeCount + 1; return Adj.get(name).size();
+}
+
+mutant GRAPH_HASEDGE_ALWAYS_TRUE {
+    description: hasEdge reports every pair of vertices as connected
+    operator:    return-value-replacement
+    in:          hasEdge
+    find:        return Adj.get(from).contains(to);
+    replace:     return true;
+    expect:      survives
+    note:        the test string only ever asks about the pair it just joined, so an answer that is always yes is right the one time it is asked. Adding a third vertex and asking about an unjoined pair kills this with no change to Graph.spec.
+}
+
+/*
+ * ── operator coverage ────────────────────────────────────────────────────────
+ */
+
+mutant GRAPH_ADDEDGE_CLEARS_NEIGHBOURS {
+    description: recording the far side of an edge empties that vertex's neighbours instead
+    operator:    method-call-replacement
+    in:          addEdge
+    find:        Adj.get(to).add(from);
+    replace:     Adj.get(to).clear();
+}
+
+mutant GRAPH_ADDVERTEX_REDECLARES {
+    description: addVertex re-initialises a vertex that already exists, dropping its edges
+    operator:    conditional-operator-insertion
+    in:          addVertex
+    find:        if (!V.contains(name)) {
+    replace:     if (V.contains(name) || !V.contains(name)) {
+    expect:      survives
+    note:        the test string declares each vertex once and only then joins them, so the re-initialising branch never runs over a vertex that has edges. A test string that declared "A" again after addEdge would kill this with no change to Graph.spec.
+}

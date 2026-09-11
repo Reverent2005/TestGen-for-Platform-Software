@@ -1,0 +1,6 @@
+test QueueGenerated24 {
+    sequence: front -> isEmpty;
+
+    inputs {
+    }
+}

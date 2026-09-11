@@ -1,0 +1,90 @@
+/*
+ * MUTATION SET — EXAMPLE 11, MinHeap<Integer>
+ * Library under test: libraries/heap/Helper.java
+ * Test string:        specs/MinHeap.tests   (insert -> insert -> insert -> peekMin -> extractMin)
+ *
+ * HEAP_NO_SIFT_UP is the mutant that justifies the way minValue is computed.  If
+ * the mirror echoed H[0], `smallest == minValue` would compare peekMin's answer
+ * with itself and this fault would survive; because minValue is found by scanning
+ * H, the clause says "the root is the smallest element" and the fault dies.
+ */
+
+mutant HEAP_NO_SIFT_UP {
+    description: insert appends without restoring heap order, so the root is not the smallest
+    operator:    statement-deletion
+    in:          insert
+    find:        siftUp(H.size() - 1);
+    replace:
+}
+
+mutant HEAP_SIFT_UP_WRONG_DIRECTION {
+    description: sift-up stops when the child is smaller instead of when it is larger
+    operator:    conditional-operator-insertion
+    in:          siftUp
+    find:        if (H.get(child) >= H.get(parent)) {
+    replace:     if (H.get(child) <= H.get(parent)) {
+}
+
+mutant HEAP_EXTRACT_TAKES_LAST {
+    description: extractMin returns the last element of the array rather than the root
+    operator:    argument-replacement
+    in:          extractMin
+    find:        Integer removedMin = H.get(0);
+    replace:     Integer removedMin = H.get(H.size() - 1);
+}
+
+mutant HEAP_EXTRACT_MIRROR_STALE {
+    description: extractMin removes the element but never rebuilds the mirror
+    operator:    statement-deletion
+    in:          extractMin
+    find:        refresh();
+    replace:
+}
+
+mutant HEAP_PEEK_MUTATES_STATE {
+    description: peekMin is no longer read-only — it bumps size on the way out
+    operator:    side-effect-insertion
+    in:          peekMin
+    find:        return H.get(0);
+    replace:     size = size + 1; return H.get(0);
+}
+
+mutant HEAP_EXTRACT_NO_REFILL {
+    description: extractMin drops the last element instead of moving it to the root
+    operator:    statement-deletion
+    in:          extractMin
+    find:        H.set(0, last);
+    replace:
+    expect:      survives
+    note:        the sequence ends at extractMin, and MinHeap.spec says nothing about what the heap holds afterwards beyond its size — which this fault gets right, because the element was removed either way. A second extractMin would find the hole; the specification needs no change.
+}
+
+/*
+ * ── operator coverage ────────────────────────────────────────────────────────
+ * A heap is index arithmetic and comparisons, so it is where an arithmetic
+ * operator, a loop bound and a logical connective can each be broken on their own.
+ */
+
+mutant HEAP_WRONG_PARENT_INDEX {
+    description: sift-up computes the parent index with a plus, so it compares a node with itself
+    operator:    arithmetic-operator-replacement
+    in:          siftUp
+    find:        int parent = (child - 1) / 2;
+    replace:     int parent = (child + 1) / 2;
+}
+
+mutant HEAP_SIFT_UP_STOPS_ONE_SHORT {
+    description: sift-up stops at index 1, so nothing ever reaches the root
+    operator:    loop-bound-replacement
+    in:          siftUp
+    find:        while (child > 0) {
+    replace:     while (child > 1) {
+}
+
+mutant HEAP_SIFT_DOWN_UNGUARDED {
+    description: sift-down reads the left child without first checking it exists
+    operator:    conditional-operator-replacement
+    in:          siftDown
+    find:        if (left < H.size() && H.get(left) < H.get(smallest)) {
+    replace:     if (left < H.size() || H.get(left) < H.get(smallest)) {
+}

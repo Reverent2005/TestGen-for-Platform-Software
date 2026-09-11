@@ -1,0 +1,8 @@
+test MathlibGenerated232 {
+    sequence: factorial -> abs;
+
+    inputs {
+        factorial[0].n = 4;
+        abs[1].x = 7;
+    }
+}

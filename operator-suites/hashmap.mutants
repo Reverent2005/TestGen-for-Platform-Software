@@ -1,0 +1,313 @@
+/*
+ * GENERATED MUTATION SUITE — hashmap
+ *
+ * Produced by OperatorMutantGenerator from:
+ *   ../libraries/hashmap/Helper.java
+ *
+ * DO NOT EDIT. Regenerate with ./run-operator-suites.sh hashmap
+ *
+ * Every operator in MutationOperator is applied to every line of the library
+ * that admits it, so this file is what the specification is measured against
+ * when nobody is choosing the faults. It is the counterpart of the
+ * hand-written set in mutations/hashmap.mutants:
+ * that one asks whether the suite catches the faults we thought of, this one
+ * asks what fraction of all faults of each KIND it catches.
+ *
+ * `expect` is absent throughout: a generated mutant carries no prediction,
+ * and some of these are equivalent to the original and cannot be killed by
+ * anyone. The run measures; it does not check a declaration.
+ */
+
+mutant HASHMAP_GEN_SDL_1 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        public static Map<String, Integer> M = new HashMap<String, Integer>();
+    replace:     
+}
+
+mutant HASHMAP_GEN_SEI_2 {
+    description: a write to size is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        public static Map<String, Integer> M = new HashMap<String, Integer>();
+    replace:     public static Map<String, Integer> M = new HashMap<String, Integer>(); size = size + 1;
+}
+
+mutant HASHMAP_GEN_CRP_3 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int size = 0;
+    replace:     public static int size = 1;
+}
+
+mutant HASHMAP_GEN_CRP_4 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int size = 0;
+    replace:     public static int size = -1;
+}
+
+mutant HASHMAP_GEN_ARP_5 {
+    description: the two arguments to put() are swapped, in put()
+    operator:    argument-replacement
+    in:          put
+    file:        Helper.java
+    find:        Integer oldVal = M.put(key, value);
+    replace:     Integer oldVal = M.put(value, key);
+}
+
+mutant HASHMAP_GEN_MCR_6 {
+    description: .put( becomes .putIfAbsent(, in put()
+    operator:    method-call-replacement
+    in:          put
+    file:        Helper.java
+    find:        Integer oldVal = M.put(key, value);
+    replace:     Integer oldVal = M.putIfAbsent(key, value);
+}
+
+mutant HASHMAP_GEN_AOI_7 {
+    description: the value assigned to size is shifted by + 1, in put()
+    operator:    arithmetic-operator-insertion
+    in:          put
+    file:        Helper.java
+    find:        size = M.size();
+    replace:     size = M.size() + 1;
+}
+
+mutant HASHMAP_GEN_AOI_8 {
+    description: the value assigned to size is shifted by - 1, in put()
+    operator:    arithmetic-operator-insertion
+    in:          put
+    file:        Helper.java
+    find:        size = M.size();
+    replace:     size = M.size() - 1;
+}
+
+mutant HASHMAP_GEN_UOI_9 {
+    description: the value assigned to size is negated, in put()
+    operator:    unary-operator-insertion
+    in:          put
+    file:        Helper.java
+    find:        size = M.size();
+    replace:     size = -(M.size());
+}
+
+mutant HASHMAP_GEN_ABS_10 {
+    description: the value assigned to size is forced negative, in put()
+    operator:    absolute-value-insertion
+    in:          put
+    file:        Helper.java
+    find:        size = M.size();
+    replace:     size = -Math.abs(M.size());
+}
+
+mutant HASHMAP_GEN_SDL_11 {
+    description: the statement is removed, in put()
+    operator:    statement-deletion
+    in:          put
+    file:        Helper.java
+    find:        size = M.size();
+    replace:     
+}
+
+mutant HASHMAP_GEN_MCR_12 {
+    description: .size() becomes .hashCode(), in put()
+    operator:    method-call-replacement
+    in:          put
+    file:        Helper.java
+    find:        size = M.size();
+    replace:     size = M.hashCode();
+}
+
+mutant HASHMAP_GEN_UOI_13 {
+    description: the returned value is negated, in put()
+    operator:    unary-operator-insertion
+    in:          put
+    file:        Helper.java
+    find:        return oldVal;
+    replace:     return -(oldVal);
+}
+
+mutant HASHMAP_GEN_ABS_14 {
+    description: the returned value is forced negative, in put()
+    operator:    absolute-value-insertion
+    in:          put
+    file:        Helper.java
+    find:        return oldVal;
+    replace:     return -Math.abs(oldVal);
+}
+
+mutant HASHMAP_GEN_RVR_15 {
+    description: the answer becomes 0, in put()
+    operator:    return-value-replacement
+    in:          put
+    file:        Helper.java
+    find:        return oldVal;
+    replace:     return 0;
+}
+
+mutant HASHMAP_GEN_RVR_16 {
+    description: the answer becomes 1, in put()
+    operator:    return-value-replacement
+    in:          put
+    file:        Helper.java
+    find:        return oldVal;
+    replace:     return 1;
+}
+
+mutant HASHMAP_GEN_RVR_17 {
+    description: the answer becomes -1, in put()
+    operator:    return-value-replacement
+    in:          put
+    file:        Helper.java
+    find:        return oldVal;
+    replace:     return -1;
+}
+
+mutant HASHMAP_GEN_SEI_18 {
+    description: a write to size is inserted before the return, in put()
+    operator:    side-effect-insertion
+    in:          put
+    file:        Helper.java
+    find:        return oldVal;
+    replace:     size = size + 1; return oldVal;
+}
+
+mutant HASHMAP_GEN_UOI_19 {
+    description: the returned value is negated, in getOldValue()
+    operator:    unary-operator-insertion
+    in:          getOldValue
+    file:        Helper.java
+    find:        return M.get(key);
+    replace:     return -(M.get(key));
+}
+
+mutant HASHMAP_GEN_ABS_20 {
+    description: the returned value is forced negative, in getOldValue()
+    operator:    absolute-value-insertion
+    in:          getOldValue
+    file:        Helper.java
+    find:        return M.get(key);
+    replace:     return -Math.abs(M.get(key));
+}
+
+mutant HASHMAP_GEN_RVR_21 {
+    description: the answer becomes 0, in getOldValue()
+    operator:    return-value-replacement
+    in:          getOldValue
+    file:        Helper.java
+    find:        return M.get(key);
+    replace:     return 0;
+}
+
+mutant HASHMAP_GEN_RVR_22 {
+    description: the answer becomes 1, in getOldValue()
+    operator:    return-value-replacement
+    in:          getOldValue
+    file:        Helper.java
+    find:        return M.get(key);
+    replace:     return 1;
+}
+
+mutant HASHMAP_GEN_RVR_23 {
+    description: the answer becomes -1, in getOldValue()
+    operator:    return-value-replacement
+    in:          getOldValue
+    file:        Helper.java
+    find:        return M.get(key);
+    replace:     return -1;
+}
+
+mutant HASHMAP_GEN_ARP_24 {
+    description: the argument to get() is shifted by + 1, in getOldValue()
+    operator:    argument-replacement
+    in:          getOldValue
+    file:        Helper.java
+    find:        return M.get(key);
+    replace:     return M.get(key + 1);
+}
+
+mutant HASHMAP_GEN_ARP_25 {
+    description: the argument to get() is shifted by - 1, in getOldValue()
+    operator:    argument-replacement
+    in:          getOldValue
+    file:        Helper.java
+    find:        return M.get(key);
+    replace:     return M.get(key - 1);
+}
+
+mutant HASHMAP_GEN_MCR_26 {
+    description: .get( becomes .remove(, in getOldValue()
+    operator:    method-call-replacement
+    in:          getOldValue
+    file:        Helper.java
+    find:        return M.get(key);
+    replace:     return M.remove(key);
+}
+
+mutant HASHMAP_GEN_SEI_27 {
+    description: a write to size is inserted before the return, in getOldValue()
+    operator:    side-effect-insertion
+    in:          getOldValue
+    file:        Helper.java
+    find:        return M.get(key);
+    replace:     size = size + 1; return M.get(key);
+}
+
+mutant HASHMAP_GEN_SDL_28 {
+    description: the statement is removed, in remove()
+    operator:    statement-deletion
+    in:          remove
+    file:        Helper.java
+    find:        M.remove(key);
+    replace:     
+}
+
+mutant HASHMAP_GEN_STR_29 {
+    description: the statement runs twice, in remove()
+    operator:    statement-replacement
+    in:          remove
+    file:        Helper.java
+    find:        M.remove(key);
+    replace:     M.remove(key); M.remove(key);
+}
+
+mutant HASHMAP_GEN_ARP_30 {
+    description: the argument to remove() is shifted by + 1, in remove()
+    operator:    argument-replacement
+    in:          remove
+    file:        Helper.java
+    find:        M.remove(key);
+    replace:     M.remove(key + 1);
+}
+
+mutant HASHMAP_GEN_ARP_31 {
+    description: the argument to remove() is shifted by - 1, in remove()
+    operator:    argument-replacement
+    in:          remove
+    file:        Helper.java
+    find:        M.remove(key);
+    replace:     M.remove(key - 1);
+}
+
+mutant HASHMAP_GEN_MCR_32 {
+    description: .remove( becomes .get(, in remove()
+    operator:    method-call-replacement
+    in:          remove
+    file:        Helper.java
+    find:        M.remove(key);
+    replace:     M.get(key);
+}
+
+mutant HASHMAP_GEN_SEI_33 {
+    description: a write to size is inserted after the statement, in remove()
+    operator:    side-effect-insertion
+    in:          remove
+    file:        Helper.java
+    find:        M.remove(key);
+    replace:     M.remove(key); size = size + 1;
+}
+

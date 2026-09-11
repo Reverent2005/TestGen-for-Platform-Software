@@ -1,0 +1,6 @@
+test QueueGenerated69 {
+    sequence: front -> front;
+
+    inputs {
+    }
+}

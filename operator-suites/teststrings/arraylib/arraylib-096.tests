@@ -1,0 +1,10 @@
+test ArraylibGenerated96 {
+    sequence: set -> get -> sum -> indexOf;
+
+    inputs {
+        set[0].index = 1;
+        set[0].value = 3;
+        get[1].index = 2;
+        indexOf[3].value = 1;
+    }
+}

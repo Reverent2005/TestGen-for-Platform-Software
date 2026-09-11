@@ -1,0 +1,11 @@
+test TaskqueueGenerated20 {
+    sequence: cancelTask -> cancelTask -> cancelTask -> cancelTask -> submit -> cancelTask -> getResult;
+
+    inputs {
+        cancelTask[0].taskId = 2;
+        cancelTask[1].taskId = 3;
+        cancelTask[2].taskId = 3;
+        cancelTask[3].taskId = 7;
+        submit[4].payload = "render-report";
+    }
+}

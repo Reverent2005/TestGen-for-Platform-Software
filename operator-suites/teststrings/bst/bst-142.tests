@@ -1,0 +1,9 @@
+test BstGenerated142 {
+    sequence: delete -> contains -> contains;
+
+    inputs {
+        delete[0].key = 3;
+        contains[1].key = 3;
+        contains[2].key = 70;
+    }
+}

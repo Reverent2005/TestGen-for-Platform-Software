@@ -1,0 +1,11 @@
+test ArraylibGenerated33 {
+    sequence: set -> sum -> set -> indexOf;
+
+    inputs {
+        set[0].index = 0;
+        set[0].value = 3;
+        set[2].index = 3;
+        set[2].value = 3;
+        indexOf[3].value = 3;
+    }
+}

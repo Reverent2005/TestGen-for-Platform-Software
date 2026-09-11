@@ -1,0 +1,9 @@
+test HashmapGenerated169 {
+    sequence: put -> getOldValue;
+
+    inputs {
+        put[0].key = "gamma";
+        put[0].value = 0;
+        getOldValue[1].key = "session";
+    }
+}

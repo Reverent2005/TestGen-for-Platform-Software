@@ -1,0 +1,11 @@
+test ArraylibGenerated63 {
+    sequence: set -> get -> set;
+
+    inputs {
+        set[0].index = 3;
+        set[0].value = 0;
+        get[1].index = 2;
+        set[2].index = 3;
+        set[2].value = 3;
+    }
+}

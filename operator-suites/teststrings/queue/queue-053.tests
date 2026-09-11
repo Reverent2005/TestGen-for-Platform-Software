@@ -1,0 +1,7 @@
+test QueueGenerated53 {
+    sequence: isEmpty -> enqueue;
+
+    inputs {
+        enqueue[1].elem = "gamma";
+    }
+}

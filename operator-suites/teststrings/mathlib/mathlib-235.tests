@@ -1,0 +1,10 @@
+test MathlibGenerated235 {
+    sequence: gcd -> power;
+
+    inputs {
+        gcd[0].a = 2;
+        gcd[0].b = -17;
+        power[1].base = 18;
+        power[1].exponent = 1;
+    }
+}

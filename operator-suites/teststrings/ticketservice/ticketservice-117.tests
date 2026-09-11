@@ -1,0 +1,9 @@
+test TicketserviceGenerated117 {
+    sequence: findAndHoldSeats -> reserveSeats -> numSeatsAvailable;
+
+    inputs {
+        findAndHoldSeats[0].numSeats = 7;
+        findAndHoldSeats[0].customerEmail = "alice@example.com";
+        reserveSeats[1].customerEmail = "alpha";
+    }
+}

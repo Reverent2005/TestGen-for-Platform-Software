@@ -1,0 +1,12 @@
+test MathlibGenerated240 {
+    sequence: power -> factorial -> power -> factorial;
+
+    inputs {
+        power[0].base = 0;
+        power[0].exponent = 5;
+        factorial[1].n = 1;
+        power[2].base = 4;
+        power[2].exponent = 0;
+        factorial[3].n = 0;
+    }
+}

@@ -1,0 +1,11 @@
+test ArraylibGenerated245 {
+    sequence: get -> set -> set -> sum;
+
+    inputs {
+        get[0].index = 2;
+        set[1].index = 3;
+        set[1].value = 11;
+        set[2].index = 7;
+        set[2].value = 3;
+    }
+}

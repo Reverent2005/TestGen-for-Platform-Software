@@ -1,0 +1,8 @@
+test QueueGenerated140 {
+    sequence: enqueue -> enqueue -> dequeue -> dequeue -> dequeue -> front -> isEmpty;
+
+    inputs {
+        enqueue[0].elem = "second";
+        enqueue[1].elem = "alpha";
+    }
+}

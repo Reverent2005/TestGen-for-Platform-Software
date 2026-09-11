@@ -1,0 +1,15 @@
+test ArraylibGenerated132 {
+    sequence: get -> set -> set -> get -> indexOf -> indexOf -> get;
+
+    inputs {
+        get[0].index = 2;
+        set[1].index = 7;
+        set[1].value = 7;
+        set[2].index = 7;
+        set[2].value = 0;
+        get[3].index = 0;
+        indexOf[4].value = 7;
+        indexOf[5].value = 11;
+        get[6].index = 2;
+    }
+}

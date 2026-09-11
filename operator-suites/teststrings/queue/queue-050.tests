@@ -1,0 +1,7 @@
+test QueueGenerated50 {
+    sequence: front -> front -> enqueue -> front;
+
+    inputs {
+        enqueue[2].elem = "beta";
+    }
+}

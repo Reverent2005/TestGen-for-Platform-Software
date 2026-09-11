@@ -1,0 +1,8 @@
+test ArraylibGenerated30 {
+    sequence: sum -> get -> sum -> get;
+
+    inputs {
+        get[1].index = 0;
+        get[3].index = 3;
+    }
+}

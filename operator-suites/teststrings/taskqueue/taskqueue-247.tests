@@ -1,0 +1,8 @@
+test TaskqueueGenerated247 {
+    sequence: submit -> submit;
+
+    inputs {
+        submit[0].payload = "render-report";
+        submit[1].payload = "gamma";
+    }
+}

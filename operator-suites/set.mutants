@@ -1,0 +1,259 @@
+/*
+ * GENERATED MUTATION SUITE — set
+ *
+ * Produced by OperatorMutantGenerator from:
+ *   ../libraries/set/Helper.java
+ *
+ * DO NOT EDIT. Regenerate with ./run-operator-suites.sh set
+ *
+ * Every operator in MutationOperator is applied to every line of the library
+ * that admits it, so this file is what the specification is measured against
+ * when nobody is choosing the faults. It is the counterpart of the
+ * hand-written set in mutations/set.mutants:
+ * that one asks whether the suite catches the faults we thought of, this one
+ * asks what fraction of all faults of each KIND it catches.
+ *
+ * `expect` is absent throughout: a generated mutant carries no prediction,
+ * and some of these are equivalent to the original and cannot be killed by
+ * anyone. The run measures; it does not check a declaration.
+ */
+
+mutant SET_GEN_SDL_1 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        public static Set<String> E = new LinkedHashSet<String>();
+    replace:     
+}
+
+mutant SET_GEN_SEI_2 {
+    description: a write to size is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        public static Set<String> E = new LinkedHashSet<String>();
+    replace:     public static Set<String> E = new LinkedHashSet<String>(); size = size + 1;
+}
+
+mutant SET_GEN_CRP_3 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int size = 0;
+    replace:     public static int size = 1;
+}
+
+mutant SET_GEN_CRP_4 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int size = 0;
+    replace:     public static int size = -1;
+}
+
+mutant SET_GEN_ARP_5 {
+    description: the argument to add() is shifted by + 1, in add()
+    operator:    argument-replacement
+    in:          add
+    file:        Helper.java
+    find:        boolean added = E.add(elem);
+    replace:     boolean added = E.add(elem + 1);
+}
+
+mutant SET_GEN_ARP_6 {
+    description: the argument to add() is shifted by - 1, in add()
+    operator:    argument-replacement
+    in:          add
+    file:        Helper.java
+    find:        boolean added = E.add(elem);
+    replace:     boolean added = E.add(elem - 1);
+}
+
+mutant SET_GEN_MCR_7 {
+    description: .add( becomes .contains(, in add()
+    operator:    method-call-replacement
+    in:          add
+    file:        Helper.java
+    find:        boolean added = E.add(elem);
+    replace:     boolean added = E.contains(elem);
+}
+
+mutant SET_GEN_AOI_8 {
+    description: the value assigned to size is shifted by + 1, in add()
+    operator:    arithmetic-operator-insertion
+    in:          add
+    file:        Helper.java
+    find:        size = E.size();
+    replace:     size = E.size() + 1;
+}
+
+mutant SET_GEN_AOI_9 {
+    description: the value assigned to size is shifted by - 1, in add()
+    operator:    arithmetic-operator-insertion
+    in:          add
+    file:        Helper.java
+    find:        size = E.size();
+    replace:     size = E.size() - 1;
+}
+
+mutant SET_GEN_UOI_10 {
+    description: the value assigned to size is negated, in add()
+    operator:    unary-operator-insertion
+    in:          add
+    file:        Helper.java
+    find:        size = E.size();
+    replace:     size = -(E.size());
+}
+
+mutant SET_GEN_ABS_11 {
+    description: the value assigned to size is forced negative, in add()
+    operator:    absolute-value-insertion
+    in:          add
+    file:        Helper.java
+    find:        size = E.size();
+    replace:     size = -Math.abs(E.size());
+}
+
+mutant SET_GEN_SDL_12 {
+    description: the statement is removed, in add()
+    operator:    statement-deletion
+    in:          add
+    file:        Helper.java
+    find:        size = E.size();
+    replace:     
+}
+
+mutant SET_GEN_MCR_13 {
+    description: .size() becomes .hashCode(), in add()
+    operator:    method-call-replacement
+    in:          add
+    file:        Helper.java
+    find:        size = E.size();
+    replace:     size = E.hashCode();
+}
+
+mutant SET_GEN_RVR_14 {
+    description: the answer is always true, in add()
+    operator:    return-value-replacement
+    in:          add
+    file:        Helper.java
+    find:        return added;
+    replace:     return true;
+}
+
+mutant SET_GEN_RVR_15 {
+    description: the answer is always false, in add()
+    operator:    return-value-replacement
+    in:          add
+    file:        Helper.java
+    find:        return added;
+    replace:     return false;
+}
+
+mutant SET_GEN_SEI_16 {
+    description: a write to size is inserted before the return, in add()
+    operator:    side-effect-insertion
+    in:          add
+    file:        Helper.java
+    find:        return added;
+    replace:     size = size + 1; return added;
+}
+
+mutant SET_GEN_RVR_17 {
+    description: the answer is always true, in contains()
+    operator:    return-value-replacement
+    in:          contains
+    file:        Helper.java
+    find:        return E.contains(elem);
+    replace:     return true;
+}
+
+mutant SET_GEN_RVR_18 {
+    description: the answer is always false, in contains()
+    operator:    return-value-replacement
+    in:          contains
+    file:        Helper.java
+    find:        return E.contains(elem);
+    replace:     return false;
+}
+
+mutant SET_GEN_ARP_19 {
+    description: the argument to contains() is shifted by + 1, in contains()
+    operator:    argument-replacement
+    in:          contains
+    file:        Helper.java
+    find:        return E.contains(elem);
+    replace:     return E.contains(elem + 1);
+}
+
+mutant SET_GEN_ARP_20 {
+    description: the argument to contains() is shifted by - 1, in contains()
+    operator:    argument-replacement
+    in:          contains
+    file:        Helper.java
+    find:        return E.contains(elem);
+    replace:     return E.contains(elem - 1);
+}
+
+mutant SET_GEN_SEI_21 {
+    description: a write to size is inserted before the return, in contains()
+    operator:    side-effect-insertion
+    in:          contains
+    file:        Helper.java
+    find:        return E.contains(elem);
+    replace:     size = size + 1; return E.contains(elem);
+}
+
+mutant SET_GEN_SDL_22 {
+    description: the statement is removed, in remove()
+    operator:    statement-deletion
+    in:          remove
+    file:        Helper.java
+    find:        E.remove(elem);
+    replace:     
+}
+
+mutant SET_GEN_STR_23 {
+    description: the statement runs twice, in remove()
+    operator:    statement-replacement
+    in:          remove
+    file:        Helper.java
+    find:        E.remove(elem);
+    replace:     E.remove(elem); E.remove(elem);
+}
+
+mutant SET_GEN_ARP_24 {
+    description: the argument to remove() is shifted by + 1, in remove()
+    operator:    argument-replacement
+    in:          remove
+    file:        Helper.java
+    find:        E.remove(elem);
+    replace:     E.remove(elem + 1);
+}
+
+mutant SET_GEN_ARP_25 {
+    description: the argument to remove() is shifted by - 1, in remove()
+    operator:    argument-replacement
+    in:          remove
+    file:        Helper.java
+    find:        E.remove(elem);
+    replace:     E.remove(elem - 1);
+}
+
+mutant SET_GEN_MCR_26 {
+    description: .remove( becomes .get(, in remove()
+    operator:    method-call-replacement
+    in:          remove
+    file:        Helper.java
+    find:        E.remove(elem);
+    replace:     E.get(elem);
+}
+
+mutant SET_GEN_SEI_27 {
+    description: a write to size is inserted after the statement, in remove()
+    operator:    side-effect-insertion
+    in:          remove
+    file:        Helper.java
+    find:        E.remove(elem);
+    replace:     E.remove(elem); size = size + 1;
+}
+

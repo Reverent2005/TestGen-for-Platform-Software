@@ -1,0 +1,8 @@
+test SetGenerated68 {
+    sequence: contains -> contains;
+
+    inputs {
+        contains[0].elem = "gamma";
+        contains[1].elem = "gamma";
+    }
+}

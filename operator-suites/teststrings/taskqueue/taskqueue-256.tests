@@ -1,0 +1,8 @@
+test TaskqueueGenerated256 {
+    sequence: getResult -> submit;
+
+    inputs {
+        getResult[0].taskId = 1;
+        submit[1].payload = "alpha";
+    }
+}

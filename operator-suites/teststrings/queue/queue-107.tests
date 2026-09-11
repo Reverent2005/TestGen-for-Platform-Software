@@ -1,0 +1,7 @@
+test QueueGenerated107 {
+    sequence: dequeue -> enqueue -> dequeue;
+
+    inputs {
+        enqueue[1].elem = "alpha";
+    }
+}

@@ -1,0 +1,20 @@
+/*
+ * EXAMPLE 7 — Queue<String>, singular case.
+ *
+ * Two different elements go in, so the run distinguishes first-in-first-out from
+ * last-in-first-out: "first" must come back from dequeue and "second" must then
+ * be at the front.  A queue that served the newest element first would satisfy
+ * every clause about size and still fail `dequeuedElem == \old(head)`.
+ *
+ * The state variable that names the element at the front of the queue is called
+ * `head` rather than `front`, so that the query function can keep the obvious
+ * name front() without shadowing the field its own postcondition reads.
+ */
+test QueueDryRun {
+    sequence: enqueue -> enqueue -> dequeue -> front -> isEmpty;
+
+    inputs {
+        enqueue[0].elem = "first";
+        enqueue[1].elem = "second";
+    }
+}

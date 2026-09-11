@@ -1,0 +1,8 @@
+test TaskqueueGenerated113 {
+    sequence: cancelTask -> submit -> getResult;
+
+    inputs {
+        cancelTask[0].taskId = 3;
+        submit[1].payload = "gamma";
+    }
+}

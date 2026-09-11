@@ -1,0 +1,1178 @@
+/*
+ * GENERATED MUTATION SUITE — bst
+ *
+ * Produced by OperatorMutantGenerator from:
+ *   ../libraries/bst/Helper.java
+ *
+ * DO NOT EDIT. Regenerate with ./run-operator-suites.sh bst
+ *
+ * Every operator in MutationOperator is applied to every line of the library
+ * that admits it, so this file is what the specification is measured against
+ * when nobody is choosing the faults. It is the counterpart of the
+ * hand-written set in mutations/bst.mutants:
+ * that one asks whether the suite catches the faults we thought of, this one
+ * asks what fraction of all faults of each KIND it catches.
+ *
+ * `expect` is absent throughout: a generated mutant carries no prediction,
+ * and some of these are equivalent to the original and cannot be killed by
+ * anyone. The run measures; it does not check a declaration.
+ */
+
+mutant BST_GEN_SDL_1 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        int key;
+    replace:     
+}
+
+mutant BST_GEN_SEI_2 {
+    description: a write to size is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        int key;
+    replace:     int key; size = size + 1;
+}
+
+mutant BST_GEN_SDL_3 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        Node left;
+    replace:     
+}
+
+mutant BST_GEN_SEI_4 {
+    description: a write to size is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        Node left;
+    replace:     Node left; size = size + 1;
+}
+
+mutant BST_GEN_SDL_5 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        Node right;
+    replace:     
+}
+
+mutant BST_GEN_SEI_6 {
+    description: a write to size is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        Node right;
+    replace:     Node right; size = size + 1;
+}
+
+mutant BST_GEN_SDL_7 {
+    description: the statement is removed, in Helper.java
+    operator:    statement-deletion
+    file:        Helper.java
+    find:        public static Set<Integer> Keys = new LinkedHashSet<Integer>();
+    replace:     
+}
+
+mutant BST_GEN_SEI_8 {
+    description: a write to size is inserted after the statement, in Helper.java
+    operator:    side-effect-insertion
+    file:        Helper.java
+    find:        public static Set<Integer> Keys = new LinkedHashSet<Integer>();
+    replace:     public static Set<Integer> Keys = new LinkedHashSet<Integer>(); size = size + 1;
+}
+
+mutant BST_GEN_CRP_9 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int size = 0;
+    replace:     public static int size = 1;
+}
+
+mutant BST_GEN_CRP_10 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int size = 0;
+    replace:     public static int size = -1;
+}
+
+mutant BST_GEN_CRP_11 {
+    description: the literal 0 becomes 1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int minKey = 0;
+    replace:     public static int minKey = 1;
+}
+
+mutant BST_GEN_CRP_12 {
+    description: the literal 0 becomes -1, in Helper.java
+    operator:    constant-replacement
+    file:        Helper.java
+    find:        public static int minKey = 0;
+    replace:     public static int minKey = -1;
+}
+
+mutant BST_GEN_SDL_13 {
+    description: the statement is removed, in insert()
+    operator:    statement-deletion
+    in:          insert
+    file:        Helper.java
+    find:        root = insertInto(root, key);
+    replace:     
+}
+
+mutant BST_GEN_SEI_14 {
+    description: a write to size is inserted after the statement, in insert()
+    operator:    side-effect-insertion
+    in:          insert
+    file:        Helper.java
+    find:        root = insertInto(root, key);
+    replace:     root = insertInto(root, key); size = size + 1;
+}
+
+mutant BST_GEN_SDL_15 {
+    description: the statement is removed, in insert()
+    operator:    statement-deletion
+    in:          insert
+    file:        Helper.java
+    find:        refresh();
+    replace:     
+}
+
+mutant BST_GEN_SEI_16 {
+    description: a write to size is inserted after the statement, in insert()
+    operator:    side-effect-insertion
+    in:          insert
+    file:        Helper.java
+    find:        refresh();
+    replace:     refresh(); size = size + 1;
+}
+
+mutant BST_GEN_ROR_17 {
+    description: == becomes <=, in insertInto()
+    operator:    relational-operator-replacement
+    in:          insertInto
+    file:        Helper.java
+    find:        if (node == null) {
+    replace:     if (node <= null) {
+}
+
+mutant BST_GEN_ROR_18 {
+    description: == becomes >=, in insertInto()
+    operator:    relational-operator-replacement
+    in:          insertInto
+    file:        Helper.java
+    find:        if (node == null) {
+    replace:     if (node >= null) {
+}
+
+mutant BST_GEN_ROR_19 {
+    description: == becomes !=, in insertInto()
+    operator:    relational-operator-replacement
+    in:          insertInto
+    file:        Helper.java
+    find:        if (node == null) {
+    replace:     if (node != null) {
+}
+
+mutant BST_GEN_ROR_20 {
+    description: == becomes <, in insertInto()
+    operator:    relational-operator-replacement
+    in:          insertInto
+    file:        Helper.java
+    find:        if (node == null) {
+    replace:     if (node < null) {
+}
+
+mutant BST_GEN_ROR_21 {
+    description: == becomes >, in insertInto()
+    operator:    relational-operator-replacement
+    in:          insertInto
+    file:        Helper.java
+    find:        if (node == null) {
+    replace:     if (node > null) {
+}
+
+mutant BST_GEN_COI_22 {
+    description: the guard is negated, in insertInto()
+    operator:    conditional-operator-insertion
+    in:          insertInto
+    file:        Helper.java
+    find:        if (node == null) {
+    replace:     if (!(node == null)) {
+}
+
+mutant BST_GEN_CTC_23 {
+    description: the branch is always taken, in insertInto()
+    operator:    condition-to-constant
+    in:          insertInto
+    file:        Helper.java
+    find:        if (node == null) {
+    replace:     if (true) {
+}
+
+mutant BST_GEN_CTC_24 {
+    description: the branch is never taken, in insertInto()
+    operator:    condition-to-constant
+    in:          insertInto
+    file:        Helper.java
+    find:        if (node == null) {
+    replace:     if (false) {
+}
+
+mutant BST_GEN_RVR_25 {
+    description: the answer becomes null, in insertInto()
+    operator:    return-value-replacement
+    in:          insertInto
+    file:        Helper.java
+    find:        return new Node(key);
+    replace:     return null;
+}
+
+mutant BST_GEN_SEI_26 {
+    description: a write to size is inserted before the return, in insertInto()
+    operator:    side-effect-insertion
+    in:          insertInto
+    file:        Helper.java
+    find:        return new Node(key);
+    replace:     size = size + 1; return new Node(key);
+}
+
+mutant BST_GEN_ROR_27 {
+    description: < becomes <=, in insertInto()
+    operator:    relational-operator-replacement
+    in:          insertInto
+    file:        Helper.java
+    find:        if (key < node.key) {
+    replace:     if (key <= node.key) {
+}
+
+mutant BST_GEN_ROR_28 {
+    description: < becomes >=, in insertInto()
+    operator:    relational-operator-replacement
+    in:          insertInto
+    file:        Helper.java
+    find:        if (key < node.key) {
+    replace:     if (key >= node.key) {
+}
+
+mutant BST_GEN_ROR_29 {
+    description: < becomes ==, in insertInto()
+    operator:    relational-operator-replacement
+    in:          insertInto
+    file:        Helper.java
+    find:        if (key < node.key) {
+    replace:     if (key == node.key) {
+}
+
+mutant BST_GEN_ROR_30 {
+    description: < becomes !=, in insertInto()
+    operator:    relational-operator-replacement
+    in:          insertInto
+    file:        Helper.java
+    find:        if (key < node.key) {
+    replace:     if (key != node.key) {
+}
+
+mutant BST_GEN_ROR_31 {
+    description: < becomes >, in insertInto()
+    operator:    relational-operator-replacement
+    in:          insertInto
+    file:        Helper.java
+    find:        if (key < node.key) {
+    replace:     if (key > node.key) {
+}
+
+mutant BST_GEN_COI_32 {
+    description: the guard is negated, in insertInto()
+    operator:    conditional-operator-insertion
+    in:          insertInto
+    file:        Helper.java
+    find:        if (key < node.key) {
+    replace:     if (!(key < node.key)) {
+}
+
+mutant BST_GEN_CTC_33 {
+    description: the branch is always taken, in insertInto()
+    operator:    condition-to-constant
+    in:          insertInto
+    file:        Helper.java
+    find:        if (key < node.key) {
+    replace:     if (true) {
+}
+
+mutant BST_GEN_CTC_34 {
+    description: the branch is never taken, in insertInto()
+    operator:    condition-to-constant
+    in:          insertInto
+    file:        Helper.java
+    find:        if (key < node.key) {
+    replace:     if (false) {
+}
+
+mutant BST_GEN_SDL_35 {
+    description: the statement is removed, in insertInto()
+    operator:    statement-deletion
+    in:          insertInto
+    file:        Helper.java
+    find:        node.left = insertInto(node.left, key);
+    replace:     
+}
+
+mutant BST_GEN_SEI_36 {
+    description: a write to size is inserted after the statement, in insertInto()
+    operator:    side-effect-insertion
+    in:          insertInto
+    file:        Helper.java
+    find:        node.left = insertInto(node.left, key);
+    replace:     node.left = insertInto(node.left, key); size = size + 1;
+}
+
+mutant BST_GEN_SDL_37 {
+    description: the statement is removed, in insertInto()
+    operator:    statement-deletion
+    in:          insertInto
+    file:        Helper.java
+    find:        node.right = insertInto(node.right, key);
+    replace:     
+}
+
+mutant BST_GEN_SEI_38 {
+    description: a write to size is inserted after the statement, in insertInto()
+    operator:    side-effect-insertion
+    in:          insertInto
+    file:        Helper.java
+    find:        node.right = insertInto(node.right, key);
+    replace:     node.right = insertInto(node.right, key); size = size + 1;
+}
+
+mutant BST_GEN_RVR_39 {
+    description: the answer becomes null, in insertInto()
+    operator:    return-value-replacement
+    in:          insertInto
+    file:        Helper.java
+    find:        return node;
+    replace:     return null;
+}
+
+mutant BST_GEN_SEI_40 {
+    description: a write to size is inserted before the return, in insertInto()
+    operator:    side-effect-insertion
+    in:          insertInto
+    file:        Helper.java
+    find:        return node;
+    replace:     size = size + 1; return node;
+}
+
+mutant BST_GEN_ROR_41 {
+    description: != becomes <=, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        while (cursor != null) {
+    replace:     while (cursor <= null) {
+}
+
+mutant BST_GEN_ROR_42 {
+    description: != becomes >=, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        while (cursor != null) {
+    replace:     while (cursor >= null) {
+}
+
+mutant BST_GEN_ROR_43 {
+    description: != becomes ==, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        while (cursor != null) {
+    replace:     while (cursor == null) {
+}
+
+mutant BST_GEN_ROR_44 {
+    description: != becomes <, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        while (cursor != null) {
+    replace:     while (cursor < null) {
+}
+
+mutant BST_GEN_ROR_45 {
+    description: != becomes >, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        while (cursor != null) {
+    replace:     while (cursor > null) {
+}
+
+mutant BST_GEN_COI_46 {
+    description: the guard is negated, in contains()
+    operator:    conditional-operator-insertion
+    in:          contains
+    file:        Helper.java
+    find:        while (cursor != null) {
+    replace:     while (!(cursor != null)) {
+}
+
+mutant BST_GEN_ROR_47 {
+    description: == becomes <=, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        if (key == cursor.key) {
+    replace:     if (key <= cursor.key) {
+}
+
+mutant BST_GEN_ROR_48 {
+    description: == becomes >=, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        if (key == cursor.key) {
+    replace:     if (key >= cursor.key) {
+}
+
+mutant BST_GEN_ROR_49 {
+    description: == becomes !=, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        if (key == cursor.key) {
+    replace:     if (key != cursor.key) {
+}
+
+mutant BST_GEN_ROR_50 {
+    description: == becomes <, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        if (key == cursor.key) {
+    replace:     if (key < cursor.key) {
+}
+
+mutant BST_GEN_ROR_51 {
+    description: == becomes >, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        if (key == cursor.key) {
+    replace:     if (key > cursor.key) {
+}
+
+mutant BST_GEN_COI_52 {
+    description: the guard is negated, in contains()
+    operator:    conditional-operator-insertion
+    in:          contains
+    file:        Helper.java
+    find:        if (key == cursor.key) {
+    replace:     if (!(key == cursor.key)) {
+}
+
+mutant BST_GEN_CTC_53 {
+    description: the branch is always taken, in contains()
+    operator:    condition-to-constant
+    in:          contains
+    file:        Helper.java
+    find:        if (key == cursor.key) {
+    replace:     if (true) {
+}
+
+mutant BST_GEN_CTC_54 {
+    description: the branch is never taken, in contains()
+    operator:    condition-to-constant
+    in:          contains
+    file:        Helper.java
+    find:        if (key == cursor.key) {
+    replace:     if (false) {
+}
+
+mutant BST_GEN_RVR_55 {
+    description: the answer is always false, in contains()
+    operator:    return-value-replacement
+    in:          contains
+    file:        Helper.java
+    find:        return true;
+    replace:     return false;
+}
+
+mutant BST_GEN_SEI_56 {
+    description: a write to size is inserted before the return, in contains()
+    operator:    side-effect-insertion
+    in:          contains
+    file:        Helper.java
+    find:        return true;
+    replace:     size = size + 1; return true;
+}
+
+mutant BST_GEN_ROR_57 {
+    description: < becomes <=, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        if (key < cursor.key) {
+    replace:     if (key <= cursor.key) {
+}
+
+mutant BST_GEN_ROR_58 {
+    description: < becomes >=, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        if (key < cursor.key) {
+    replace:     if (key >= cursor.key) {
+}
+
+mutant BST_GEN_ROR_59 {
+    description: < becomes ==, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        if (key < cursor.key) {
+    replace:     if (key == cursor.key) {
+}
+
+mutant BST_GEN_ROR_60 {
+    description: < becomes !=, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        if (key < cursor.key) {
+    replace:     if (key != cursor.key) {
+}
+
+mutant BST_GEN_ROR_61 {
+    description: < becomes >, in contains()
+    operator:    relational-operator-replacement
+    in:          contains
+    file:        Helper.java
+    find:        if (key < cursor.key) {
+    replace:     if (key > cursor.key) {
+}
+
+mutant BST_GEN_COI_62 {
+    description: the guard is negated, in contains()
+    operator:    conditional-operator-insertion
+    in:          contains
+    file:        Helper.java
+    find:        if (key < cursor.key) {
+    replace:     if (!(key < cursor.key)) {
+}
+
+mutant BST_GEN_CTC_63 {
+    description: the branch is always taken, in contains()
+    operator:    condition-to-constant
+    in:          contains
+    file:        Helper.java
+    find:        if (key < cursor.key) {
+    replace:     if (true) {
+}
+
+mutant BST_GEN_CTC_64 {
+    description: the branch is never taken, in contains()
+    operator:    condition-to-constant
+    in:          contains
+    file:        Helper.java
+    find:        if (key < cursor.key) {
+    replace:     if (false) {
+}
+
+mutant BST_GEN_SDL_65 {
+    description: the statement is removed, in contains()
+    operator:    statement-deletion
+    in:          contains
+    file:        Helper.java
+    find:        cursor = cursor.left;
+    replace:     
+}
+
+mutant BST_GEN_SEI_66 {
+    description: a write to size is inserted after the statement, in contains()
+    operator:    side-effect-insertion
+    in:          contains
+    file:        Helper.java
+    find:        cursor = cursor.left;
+    replace:     cursor = cursor.left; size = size + 1;
+}
+
+mutant BST_GEN_SDL_67 {
+    description: the statement is removed, in contains()
+    operator:    statement-deletion
+    in:          contains
+    file:        Helper.java
+    find:        cursor = cursor.right;
+    replace:     
+}
+
+mutant BST_GEN_SEI_68 {
+    description: a write to size is inserted after the statement, in contains()
+    operator:    side-effect-insertion
+    in:          contains
+    file:        Helper.java
+    find:        cursor = cursor.right;
+    replace:     cursor = cursor.right; size = size + 1;
+}
+
+mutant BST_GEN_RVR_69 {
+    description: the answer is always true, in contains()
+    operator:    return-value-replacement
+    in:          contains
+    file:        Helper.java
+    find:        return false;
+    replace:     return true;
+}
+
+mutant BST_GEN_SEI_70 {
+    description: a write to size is inserted before the return, in contains()
+    operator:    side-effect-insertion
+    in:          contains
+    file:        Helper.java
+    find:        return false;
+    replace:     size = size + 1; return false;
+}
+
+mutant BST_GEN_ROR_71 {
+    description: != becomes <=, in min()
+    operator:    relational-operator-replacement
+    in:          min
+    file:        Helper.java
+    find:        while (cursor.left != null) {
+    replace:     while (cursor.left <= null) {
+}
+
+mutant BST_GEN_ROR_72 {
+    description: != becomes >=, in min()
+    operator:    relational-operator-replacement
+    in:          min
+    file:        Helper.java
+    find:        while (cursor.left != null) {
+    replace:     while (cursor.left >= null) {
+}
+
+mutant BST_GEN_ROR_73 {
+    description: != becomes ==, in min()
+    operator:    relational-operator-replacement
+    in:          min
+    file:        Helper.java
+    find:        while (cursor.left != null) {
+    replace:     while (cursor.left == null) {
+}
+
+mutant BST_GEN_ROR_74 {
+    description: != becomes <, in min()
+    operator:    relational-operator-replacement
+    in:          min
+    file:        Helper.java
+    find:        while (cursor.left != null) {
+    replace:     while (cursor.left < null) {
+}
+
+mutant BST_GEN_ROR_75 {
+    description: != becomes >, in min()
+    operator:    relational-operator-replacement
+    in:          min
+    file:        Helper.java
+    find:        while (cursor.left != null) {
+    replace:     while (cursor.left > null) {
+}
+
+mutant BST_GEN_COI_76 {
+    description: the guard is negated, in min()
+    operator:    conditional-operator-insertion
+    in:          min
+    file:        Helper.java
+    find:        while (cursor.left != null) {
+    replace:     while (!(cursor.left != null)) {
+}
+
+mutant BST_GEN_UOI_77 {
+    description: the returned value is negated, in min()
+    operator:    unary-operator-insertion
+    in:          min
+    file:        Helper.java
+    find:        return cursor.key;
+    replace:     return -(cursor.key);
+}
+
+mutant BST_GEN_ABS_78 {
+    description: the returned value is forced negative, in min()
+    operator:    absolute-value-insertion
+    in:          min
+    file:        Helper.java
+    find:        return cursor.key;
+    replace:     return -Math.abs(cursor.key);
+}
+
+mutant BST_GEN_RVR_79 {
+    description: the answer becomes 0, in min()
+    operator:    return-value-replacement
+    in:          min
+    file:        Helper.java
+    find:        return cursor.key;
+    replace:     return 0;
+}
+
+mutant BST_GEN_RVR_80 {
+    description: the answer becomes 1, in min()
+    operator:    return-value-replacement
+    in:          min
+    file:        Helper.java
+    find:        return cursor.key;
+    replace:     return 1;
+}
+
+mutant BST_GEN_RVR_81 {
+    description: the answer becomes -1, in min()
+    operator:    return-value-replacement
+    in:          min
+    file:        Helper.java
+    find:        return cursor.key;
+    replace:     return -1;
+}
+
+mutant BST_GEN_SEI_82 {
+    description: a write to size is inserted before the return, in min()
+    operator:    side-effect-insertion
+    in:          min
+    file:        Helper.java
+    find:        return cursor.key;
+    replace:     size = size + 1; return cursor.key;
+}
+
+mutant BST_GEN_SDL_83 {
+    description: the statement is removed, in delete()
+    operator:    statement-deletion
+    in:          delete
+    file:        Helper.java
+    find:        root = deleteFrom(root, key);
+    replace:     
+}
+
+mutant BST_GEN_SEI_84 {
+    description: a write to size is inserted after the statement, in delete()
+    operator:    side-effect-insertion
+    in:          delete
+    file:        Helper.java
+    find:        root = deleteFrom(root, key);
+    replace:     root = deleteFrom(root, key); size = size + 1;
+}
+
+mutant BST_GEN_SEI_85 {
+    description: a write to size is inserted before the return, in deleteFrom()
+    operator:    side-effect-insertion
+    in:          deleteFrom
+    file:        Helper.java
+    find:        return null;
+    replace:     size = size + 1; return null;
+}
+
+mutant BST_GEN_SDL_86 {
+    description: the statement is removed, in deleteFrom()
+    operator:    statement-deletion
+    in:          deleteFrom
+    file:        Helper.java
+    find:        node.left = deleteFrom(node.left, key);
+    replace:     
+}
+
+mutant BST_GEN_SEI_87 {
+    description: a write to size is inserted after the statement, in deleteFrom()
+    operator:    side-effect-insertion
+    in:          deleteFrom
+    file:        Helper.java
+    find:        node.left = deleteFrom(node.left, key);
+    replace:     node.left = deleteFrom(node.left, key); size = size + 1;
+}
+
+mutant BST_GEN_ROR_88 {
+    description: > becomes <=, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (key > node.key) {
+    replace:     } else if (key <= node.key) {
+}
+
+mutant BST_GEN_ROR_89 {
+    description: > becomes >=, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (key > node.key) {
+    replace:     } else if (key >= node.key) {
+}
+
+mutant BST_GEN_ROR_90 {
+    description: > becomes ==, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (key > node.key) {
+    replace:     } else if (key == node.key) {
+}
+
+mutant BST_GEN_ROR_91 {
+    description: > becomes !=, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (key > node.key) {
+    replace:     } else if (key != node.key) {
+}
+
+mutant BST_GEN_ROR_92 {
+    description: > becomes <, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (key > node.key) {
+    replace:     } else if (key < node.key) {
+}
+
+mutant BST_GEN_SDL_93 {
+    description: the statement is removed, in deleteFrom()
+    operator:    statement-deletion
+    in:          deleteFrom
+    file:        Helper.java
+    find:        node.right = deleteFrom(node.right, key);
+    replace:     
+}
+
+mutant BST_GEN_SEI_94 {
+    description: a write to size is inserted after the statement, in deleteFrom()
+    operator:    side-effect-insertion
+    in:          deleteFrom
+    file:        Helper.java
+    find:        node.right = deleteFrom(node.right, key);
+    replace:     node.right = deleteFrom(node.right, key); size = size + 1;
+}
+
+mutant BST_GEN_ROR_95 {
+    description: == becomes <=, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (node.left == null) {
+    replace:     } else if (node.left <= null) {
+}
+
+mutant BST_GEN_ROR_96 {
+    description: == becomes >=, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (node.left == null) {
+    replace:     } else if (node.left >= null) {
+}
+
+mutant BST_GEN_ROR_97 {
+    description: == becomes !=, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (node.left == null) {
+    replace:     } else if (node.left != null) {
+}
+
+mutant BST_GEN_ROR_98 {
+    description: == becomes <, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (node.left == null) {
+    replace:     } else if (node.left < null) {
+}
+
+mutant BST_GEN_ROR_99 {
+    description: == becomes >, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (node.left == null) {
+    replace:     } else if (node.left > null) {
+}
+
+mutant BST_GEN_RVR_100 {
+    description: the answer becomes null, in deleteFrom()
+    operator:    return-value-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        return node.right;
+    replace:     return null;
+}
+
+mutant BST_GEN_SEI_101 {
+    description: a write to size is inserted before the return, in deleteFrom()
+    operator:    side-effect-insertion
+    in:          deleteFrom
+    file:        Helper.java
+    find:        return node.right;
+    replace:     size = size + 1; return node.right;
+}
+
+mutant BST_GEN_ROR_102 {
+    description: == becomes <=, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (node.right == null) {
+    replace:     } else if (node.right <= null) {
+}
+
+mutant BST_GEN_ROR_103 {
+    description: == becomes >=, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (node.right == null) {
+    replace:     } else if (node.right >= null) {
+}
+
+mutant BST_GEN_ROR_104 {
+    description: == becomes !=, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (node.right == null) {
+    replace:     } else if (node.right != null) {
+}
+
+mutant BST_GEN_ROR_105 {
+    description: == becomes <, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (node.right == null) {
+    replace:     } else if (node.right < null) {
+}
+
+mutant BST_GEN_ROR_106 {
+    description: == becomes >, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        } else if (node.right == null) {
+    replace:     } else if (node.right > null) {
+}
+
+mutant BST_GEN_RVR_107 {
+    description: the answer becomes null, in deleteFrom()
+    operator:    return-value-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        return node.left;
+    replace:     return null;
+}
+
+mutant BST_GEN_SEI_108 {
+    description: a write to size is inserted before the return, in deleteFrom()
+    operator:    side-effect-insertion
+    in:          deleteFrom
+    file:        Helper.java
+    find:        return node.left;
+    replace:     size = size + 1; return node.left;
+}
+
+mutant BST_GEN_ROR_109 {
+    description: != becomes <=, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        while (successor.left != null) {
+    replace:     while (successor.left <= null) {
+}
+
+mutant BST_GEN_ROR_110 {
+    description: != becomes >=, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        while (successor.left != null) {
+    replace:     while (successor.left >= null) {
+}
+
+mutant BST_GEN_ROR_111 {
+    description: != becomes ==, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        while (successor.left != null) {
+    replace:     while (successor.left == null) {
+}
+
+mutant BST_GEN_ROR_112 {
+    description: != becomes <, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        while (successor.left != null) {
+    replace:     while (successor.left < null) {
+}
+
+mutant BST_GEN_ROR_113 {
+    description: != becomes >, in deleteFrom()
+    operator:    relational-operator-replacement
+    in:          deleteFrom
+    file:        Helper.java
+    find:        while (successor.left != null) {
+    replace:     while (successor.left > null) {
+}
+
+mutant BST_GEN_COI_114 {
+    description: the guard is negated, in deleteFrom()
+    operator:    conditional-operator-insertion
+    in:          deleteFrom
+    file:        Helper.java
+    find:        while (successor.left != null) {
+    replace:     while (!(successor.left != null)) {
+}
+
+mutant BST_GEN_SDL_115 {
+    description: the statement is removed, in deleteFrom()
+    operator:    statement-deletion
+    in:          deleteFrom
+    file:        Helper.java
+    find:        successor = successor.left;
+    replace:     
+}
+
+mutant BST_GEN_SEI_116 {
+    description: a write to size is inserted after the statement, in deleteFrom()
+    operator:    side-effect-insertion
+    in:          deleteFrom
+    file:        Helper.java
+    find:        successor = successor.left;
+    replace:     successor = successor.left; size = size + 1;
+}
+
+mutant BST_GEN_SDL_117 {
+    description: the statement is removed, in deleteFrom()
+    operator:    statement-deletion
+    in:          deleteFrom
+    file:        Helper.java
+    find:        node.key = successor.key;
+    replace:     
+}
+
+mutant BST_GEN_SEI_118 {
+    description: a write to size is inserted after the statement, in deleteFrom()
+    operator:    side-effect-insertion
+    in:          deleteFrom
+    file:        Helper.java
+    find:        node.key = successor.key;
+    replace:     node.key = successor.key; size = size + 1;
+}
+
+mutant BST_GEN_SDL_119 {
+    description: the statement is removed, in deleteFrom()
+    operator:    statement-deletion
+    in:          deleteFrom
+    file:        Helper.java
+    find:        node.right = deleteFrom(node.right, successor.key);
+    replace:     
+}
+
+mutant BST_GEN_SEI_120 {
+    description: a write to size is inserted after the statement, in deleteFrom()
+    operator:    side-effect-insertion
+    in:          deleteFrom
+    file:        Helper.java
+    find:        node.right = deleteFrom(node.right, successor.key);
+    replace:     node.right = deleteFrom(node.right, successor.key); size = size + 1;
+}
+
+mutant BST_GEN_SDL_121 {
+    description: the statement is removed, in collect()
+    operator:    statement-deletion
+    in:          collect
+    file:        Helper.java
+    find:        collect(node.left);
+    replace:     
+}
+
+mutant BST_GEN_SEI_122 {
+    description: a write to size is inserted after the statement, in collect()
+    operator:    side-effect-insertion
+    in:          collect
+    file:        Helper.java
+    find:        collect(node.left);
+    replace:     collect(node.left); size = size + 1;
+}
+
+mutant BST_GEN_SDL_123 {
+    description: the statement is removed, in collect()
+    operator:    statement-deletion
+    in:          collect
+    file:        Helper.java
+    find:        Keys.add(node.key);
+    replace:     
+}
+
+mutant BST_GEN_STR_124 {
+    description: the statement runs twice, in collect()
+    operator:    statement-replacement
+    in:          collect
+    file:        Helper.java
+    find:        Keys.add(node.key);
+    replace:     Keys.add(node.key); Keys.add(node.key);
+}
+
+mutant BST_GEN_ARP_125 {
+    description: the argument to add() is shifted by + 1, in collect()
+    operator:    argument-replacement
+    in:          collect
+    file:        Helper.java
+    find:        Keys.add(node.key);
+    replace:     Keys.add(node.key + 1);
+}
+
+mutant BST_GEN_ARP_126 {
+    description: the argument to add() is shifted by - 1, in collect()
+    operator:    argument-replacement
+    in:          collect
+    file:        Helper.java
+    find:        Keys.add(node.key);
+    replace:     Keys.add(node.key - 1);
+}
+
+mutant BST_GEN_MCR_127 {
+    description: .add( becomes .contains(, in collect()
+    operator:    method-call-replacement
+    in:          collect
+    file:        Helper.java
+    find:        Keys.add(node.key);
+    replace:     Keys.contains(node.key);
+}
+
+mutant BST_GEN_SEI_128 {
+    description: a write to size is inserted after the statement, in collect()
+    operator:    side-effect-insertion
+    in:          collect
+    file:        Helper.java
+    find:        Keys.add(node.key);
+    replace:     Keys.add(node.key); size = size + 1;
+}
+
+mutant BST_GEN_SDL_129 {
+    description: the statement is removed, in collect()
+    operator:    statement-deletion
+    in:          collect
+    file:        Helper.java
+    find:        collect(node.right);
+    replace:     
+}
+
+mutant BST_GEN_SEI_130 {
+    description: a write to size is inserted after the statement, in collect()
+    operator:    side-effect-insertion
+    in:          collect
+    file:        Helper.java
+    find:        collect(node.right);
+    replace:     collect(node.right); size = size + 1;
+}
+

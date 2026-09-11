@@ -1,0 +1,7 @@
+test QueueGenerated113 {
+    sequence: dequeue -> enqueue;
+
+    inputs {
+        enqueue[1].elem = "second";
+    }
+}
